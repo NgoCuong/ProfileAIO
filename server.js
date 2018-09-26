@@ -11,6 +11,11 @@ app.use(bodyParser.json());
 // Create link to Angular build directory
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));
+app.use('/home', express.static('public'));
+app.use('/profile', express.static('public'));
+app.use('/proxygen', express.static('public'));
+app.use('/login', express.static('public'));
+app.use('/register', express.static('public'));
 
 // Create a database variable outside of the database connection callback to reuse the connection pool in your app.
 //var db;
