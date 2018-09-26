@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));
 app.use('/home', express.static('public'));
-app.use('/profile', express.static(path.join(__dirname, 'dist')));
+//app.use('/profile', express.static(distDir));
 
 // app.use('*', (req, res, next) => {
 //   res.status(200).json({ success: false, message: 'Does not match any resource of the routing.' });
