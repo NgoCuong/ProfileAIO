@@ -67,6 +67,11 @@ app.get("/api/contacts", function(req, res) {
   });
 });
 
+app.all('/*', function(req, res, next) {
+  // Just send the index.html for other files to support HTML5Mode
+  res.sendFile('index.html', { root: __dirname });
+});
+
 app.post("/api/contacts", function(req, res) {
   var newContact = req.body;
   newContact.createDate = new Date();
@@ -90,11 +95,11 @@ app.post("/api/contacts", function(req, res) {
  *    DELETE: deletes contact by id
  */
 
-app.get("/api/contacts/:id", function(req, res) {
-});
+// app.get("/api/contacts/:id", function(req, res) {
+// });
 
-app.put("/api/contacts/:id", function(req, res) {
-});
+// app.put("/api/contacts/:id", function(req, res) {
+// });
 
-app.delete("/api/contacts/:id", function(req, res) {
-});
+// app.delete("/api/contacts/:id", function(req, res) {
+// });
