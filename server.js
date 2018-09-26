@@ -11,8 +11,12 @@ app.use(bodyParser.json());
 // Create link to Angular build directory
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));
-app.use('/home', express.static('public'));
-//app.use('/profile', express.static(distDir));
+
+// Send all other requests to the Angular app
+app.get('*', (req, res) => {
+
+  res.sendFile(path.join(__dirname, 'dist/index.html'));
+});
 
 // app.use('*', (req, res, next) => {
 //   res.status(200).json({ success: false, message: 'Does not match any resource of the routing.' });
