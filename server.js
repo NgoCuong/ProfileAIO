@@ -13,13 +13,6 @@ app.use(bodyParser.json());
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));
 
-// Send all other requests to the Angular app
-app.get('*', (req, res) => {
-
-  console.log(path.join(distDir, 'index.html'));
-  res.sendFile(path.join(distDir, 'index.html'));
-});
-
 // app.use('*', (req, res, next) => {
 //   res.status(200).json({ success: false, message: 'Does not match any resource of the routing.' });
 // });
@@ -33,26 +26,21 @@ var db;
      process.exit(1);
    }
 
-//   // Save database object from the callback for reuse.
+   // Save database object from the callback for reuse.
    db = client.db();
    console.log("Database connection ready");
 
-//   // Initialize the app.
+   // Initialize the app.
    var server = app.listen(process.env.PORT || 8080, function () {
      var port = server.address().port;
      console.log("App now running on port", port);
    });
  });
 
-// Initialize the app.
-// var server = app.listen(process.env.PORT || 8080, function () {
-//   var port = server.address().port;
-//   console.log("App now running on port", port);
-// });
 
-
-
+ // SAMPLE REST API BELOW
 // CONTACTS API ROUTES BELOW
+
 
 // Generic error handler used by all endpoints.
 function handleError(res, reason, message, code) {
@@ -76,10 +64,6 @@ app.get("/api/contacts", function(req, res) {
 });
 
 
-app.all('/*', function(req, res, next) {
-  // Just send the index.html for other files to support HTML5Mode
-  res.sendFile('index.html', { root: __dirname });
-});
 
 app.post("/api/contacts", function(req, res) {
   var newContact = req.body;
@@ -112,3 +96,13 @@ app.post("/api/contacts", function(req, res) {
 
 // app.delete("/api/contacts/:id", function(req, res) {
 // });
+
+
+
+
+// DONT REMOVE THIS. THIS SHOULD BE AT THE END OF FILE.
+// Send all other requests to the Angular app
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(distDir, 'index.html'));
+});
