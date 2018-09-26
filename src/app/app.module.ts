@@ -7,6 +7,9 @@ import { LoginComponent } from './login/login.component';
 import { AppRoutingModule } from './/app-routing.module';
 import { RegisterComponent } from './register/register.component';
 import { NavbarComponent } from './navbar/navbar.component';
+import { HomeComponent } from './home/home.component';
+import { ProfileaioComponent } from './profileaio/profileaio.component';
+import { ProxygenComponent } from './proxygen/proxygen.component';
 
 
 @NgModule({
@@ -15,6 +18,9 @@ import { NavbarComponent } from './navbar/navbar.component';
     LoginComponent,
     RegisterComponent,
     NavbarComponent,
+    HomeComponent,
+    ProfileaioComponent,
+    ProxygenComponent,
   ],
   imports: [
     BrowserModule,
