@@ -55,7 +55,6 @@ git push heroku master
 * [Express](https://expressjs.com/) - Web Framework for Node.js
 
 Aside from the basic CRUD stack, this app also uses:
-* [Semantic UI](http://semantic-ui.com/) - Front end user interface library
 
 ## Acknowledgments
 
