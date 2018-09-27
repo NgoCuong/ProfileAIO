@@ -1,27 +1,62 @@
-# ProfileAio
+# Heroku-MEAN-Stack-Example
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.7.4.
+This project is a Mongo, Express, Angular, Node application build on the Heroku platform. With this stack you are able to build a simple application with create/read/update/delete (CRUD) functionality, the basic functions of persistent storage. This functionality allows us to build a rest API server and with Angular, display a single page application.
 
-## Development server
+## View live demo
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+View sample app on Heroku here: 
 
-## Code scaffolding
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### Prerequisities
 
-## Build
+This application requires Heroku if you want to run it locally.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+* [Heroku](https://devcenter.heroku.com/) - View this to get started.
 
-## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### Installing
 
-## Running end-to-end tests
+Go to the directory and create a heroku project:
+```
+heroku create <PROJECT-NAME>
+```
+You also need to provision the database:
+```
+heroku addons:create mongolab
+```
+Install npm packages:
+```
+npm install
+```
+You also need to setup .env file. (more instructions soon)
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+## Running the tests
 
-## Further help
+Test documentation here.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+## Deployment
+
+Add additional notes about how to deploy this on a live system
+Local deployment:
+```
+heroku local web
+```
+Then go to: http://localhost:5000/
+Heroku deployment:
+```
+git push heroku master
+```
+
+## Built With
+
+* [Angular](https://v5.angular.io/) - The front-end framework used
+* [Mongo](https://docs.mongodb.com/manual/) - Mongo DB database
+* [NODE](https://nodejs.org/en/) - JavaScript runtime for server and has a package manager (NPM)  
+* [Express](https://expressjs.com/) - Web Framework for Node.js
+
+Aside from the basic CRUD stack, this app also uses:
+* [Semantic UI](http://semantic-ui.com/) - Front end user interface library
+
+## Acknowledgments
+
+Original starter project from [this tutorial](https://devcenter.heroku.com/articles/mean-apps-restful-api)
