@@ -7,11 +7,11 @@ var ObjectID = mongodb.ObjectID;
 port = 1987;
 var CONTACTS_COLLECTION = "contacts";
 var app = express();
-
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.text());
 routes(app);
-app.listen(port);
-console.log("API server started on port: " + port);
+// app.listen(port);
+// console.log("API server started on port: " + port);
 
 // var app = express();
 // app.use(bodyParser.json());
