@@ -20,9 +20,9 @@ routes(app);
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));
 
-// app.use('*', (req, res, next) => {
-//   res.status(200).json({ success: false, message: 'Does not match any resource of the routing.' });
-// });
+app.use('*', (req, res, next) => {
+  res.status(200).json({ success: false, message: 'Does not match any resource of the routing.' });
+});
 // Create a database variable outside of the database connection callback to reuse the connection pool in your app.
 // var db;
 
@@ -37,12 +37,13 @@ app.use(express.static(distDir));
 //    db = client.db();
 //    console.log("Database connection ready");
 
-//    // Initialize the app.
-//    var server = app.listen(process.env.PORT || 8080, function () {
-//      var port = server.address().port;
-//      console.log("App now running on port", port);
-//    });
-//  });
+
+// Initialize the app.
+var server = app.listen(process.env.PORT || 8080, function () {
+  var port = server.address().port;
+  console.log("App now running on port", port);
+});
+
 
 
 //  // SAMPLE REST API BELOW
@@ -109,7 +110,7 @@ app.use(express.static(distDir));
 
 // DONT REMOVE THIS. THIS SHOULD BE AT THE END OF FILE.
 // Send all other requests to the Angular app
-
+// routes(routes);
 app.get('*', (req, res) => {
   res.sendFile(path.join(distDir, 'index.html'));
 });
