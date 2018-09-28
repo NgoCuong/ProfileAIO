@@ -12,8 +12,8 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { HomeComponent } from './home/home.component';
 import { ProfileaioComponent } from './profileaio/profileaio.component';
 import { ProxygenComponent } from './proxygen/proxygen.component';
-import { UserService } from './-services/user.service';
-import { ProfileService } from './-services/profile.service';
+import { UserService } from './_services/user.service';
+import { ProfileService } from './_services/profile.service';
 
 
 @NgModule({
