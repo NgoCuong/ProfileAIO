@@ -12,6 +12,7 @@ import { HomeComponent } from './home/home.component';
 import { ProfileaioComponent } from './profileaio/profileaio.component';
 import { ProxygenComponent } from './proxygen/proxygen.component';
 import { UserService } from './-services/user.service';
+import { ProfileService } from './-services/profile.service';
 
 
 @NgModule({
@@ -29,7 +30,7 @@ import { UserService } from './-services/user.service';
     AppRoutingModule,
     FormsModule
   ],
-  providers: [UserService],
+  providers: [UserService, ProfileService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
