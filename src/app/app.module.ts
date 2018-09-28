@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 
 import { AppComponent } from './app.component';
@@ -10,6 +11,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { HomeComponent } from './home/home.component';
 import { ProfileaioComponent } from './profileaio/profileaio.component';
 import { ProxygenComponent } from './proxygen/proxygen.component';
+import { UserService } from './-services/user.service';
 
 
 @NgModule({
@@ -24,9 +26,10 @@ import { ProxygenComponent } from './proxygen/proxygen.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule
   ],
-  providers: [],
+  providers: [UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
