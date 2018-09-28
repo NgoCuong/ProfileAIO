@@ -16,9 +16,9 @@ routes(app);
 // var app = express();
 // app.use(bodyParser.json());
 
-// // Create link to Angular build directory
-// var distDir = __dirname + "/dist/";
-// app.use(express.static(distDir));
+// Create link to Angular build directory
+var distDir = __dirname + "/dist/";
+app.use(express.static(distDir));
 
 // app.use('*', (req, res, next) => {
 //   res.status(200).json({ success: false, message: 'Does not match any resource of the routing.' });
@@ -110,6 +110,6 @@ routes(app);
 // DONT REMOVE THIS. THIS SHOULD BE AT THE END OF FILE.
 // Send all other requests to the Angular app
 
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(distDir, 'index.html'));
-// });
+app.get('*', (req, res) => {
+  res.sendFile(path.join(distDir, 'index.html'));
+});
