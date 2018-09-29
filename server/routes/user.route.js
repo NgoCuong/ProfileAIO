@@ -41,7 +41,7 @@ router.post("/register", function (req, res) {
         // // add hashed password to user object
         // user.hash = bcrypt.hashSync(userParam.password, 10);
 
-        var user = { email: email, password : password};
+        var user = { email: email, password: password };
         User.create(
             user,
             function (err, newUser) {
@@ -50,17 +50,19 @@ router.post("/register", function (req, res) {
                 deferred.resolve();
             });
     }
-
-
-
-    // User.create(newUser, function (err, user) {
-    //     if (err) {
-    //         handleError(res, err.message, "Failed to create new contact.");
-    //     } else {
-    //         res.status(201).json(user);
-    //     }
-    // });
+    return deferred.promise;
 });
+
+
+
+
+// User.create(newUser, function (err, user) {
+//     if (err) {
+//         handleError(res, err.message, "Failed to create new contact.");
+//     } else {
+//         res.status(201).json(user);
+//     }
+// });
 
 
 // function create(userParam) {
