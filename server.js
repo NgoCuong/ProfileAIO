@@ -8,29 +8,27 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 
-var mongoose = require('mongoose');
-
-var http = require ('http');         // For serving a basic web page.
+console.log("TEST STARTED");
+// var http = require ('http');         // For serving a basic web page.
 var mongoose = require ("mongoose"); // The reason for this demo.
 
-// Here we find an appropriate database to connect to, defaulting to
-// localhost if we don't find one.
-var uristring =
-process.env.MONGOLAB_URI ||
-process.env.MONGOHQ_URL ||
-'mongodb://localhost/HelloMongoose';
 
-// The http server will listen to an appropriate port, or default to
-// port 5000.
-var theport = process.env.PORT || 5000;
+// Create link to Angular build directory
+var distDir = __dirname + "/dist/";
+app.use(express.static(distDir));
+// Send all other requests to the Angular app
+app.get('*', (req, res) => {
+  res.sendFile(path.join(distDir, 'index.html'));
+});
 
 // Makes connection asynchronously.  Mongoose will queue up database
 // operations and release them when the connection is complete.
-mongoose.connect(uristring, function (err, res) {
-  if (err) {
-  console.log ('ERROR connecting to: ' + uristring + '. ' + err);
+mongoose.connect("mongodb://localhost/profile", function(err, suc) {
+  if(err) {
+    console.log("error connecting");
+  
   } else {
-  console.log ('Succeeded connected to: ' + uristring);
+    console.log("sucess");
   }
 });
 
@@ -90,9 +88,6 @@ app.post("/api/contacts", function(req, res) {
 });
 
 
-// Create link to Angular build directory
-var distDir = __dirname + "/dist/";
-app.use(express.static(distDir));
 
 // start server
 var server = app.listen(process.env.PORT || 8080, function () {
@@ -105,10 +100,7 @@ var server = app.listen(process.env.PORT || 8080, function () {
 // var userRoutes = require("./server/controllers/user");
 // app.use("/user", userRoutes);
 
-// Send all other requests to the Angular app
-app.get('*', (req, res) => {
-  res.sendFile(path.join(distDir, 'index.html'));
-});
+
 
 // // Generic error handler used by all endpoints.
 // function handleError(res, reason, message, code) {
