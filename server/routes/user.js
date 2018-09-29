@@ -2,7 +2,7 @@ var express = require("express");
 var router = express.Router;
 var User = require("../models/user");
 
-router.get("/api/contacts", function (req, res) {
+router.get("/contacts", function (req, res) {
     User.find({}, function (err, users) {
         if (err) {
             handleError(res, err.message, "Failed to get contacts.");
@@ -12,7 +12,7 @@ router.get("/api/contacts", function (req, res) {
     })
 });
 
-router.post("/api/contacts", function (req, res) {
+router.post("/contacts", function (req, res) {
     var email = req.body.email;
     var password = req.body.password;
     var date = new Date();
