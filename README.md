@@ -39,9 +39,11 @@ Test documentation here.
 Add additional notes about how to deploy this on a live system
 Local deployment:
 ```
+sudo mongod
 heroku local web
 ```
 Then go to: http://localhost:5000/
+
 Heroku deployment:
 ```
 git push heroku master
@@ -53,6 +55,7 @@ git push heroku master
 * [Mongo](https://docs.mongodb.com/manual/) - Mongo DB database
 * [NODE](https://nodejs.org/en/) - JavaScript runtime for server and has a package manager (NPM)  
 * [Express](https://expressjs.com/) - Web Framework for Node.js
+* [Bootstrap4](https://getbootstrap.com/docs/4.0/getting-started/introduction/) - The front-end framework for designing
 
 Aside from the basic CRUD stack, this app also uses:
 
