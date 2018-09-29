@@ -10,7 +10,6 @@ export class UserService {
   create(user: User) {
     console.log('User created');
     console.log(user);
-    // return this.http.post('/api/users', user);
     return this.http.post('https://nameless-hollows-54410.herokuapp.com'
      + '/api/contacts', user);
 
