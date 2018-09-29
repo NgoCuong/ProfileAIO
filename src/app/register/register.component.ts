@@ -30,7 +30,7 @@ export class RegisterComponent implements OnInit {
           this.router.navigate(['/login']);
         },
         error => {
-          console.log('Register error: ' + error);
+          console.log('Register error: ' + error.message);
           this.loading = false;
         });
   }
