@@ -4,8 +4,7 @@ var router = express.Router;
 var userService = require('../services/user.service');
 
 // routes
-// router.post('/register', register);
-// router.get('/', getAll);
+router.post('/register', register);
 
  
 module.exports = router;
