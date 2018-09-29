@@ -23,7 +23,7 @@ app.get('*', (req, res) => {
 
 // Makes connection asynchronously.  Mongoose will queue up database
 // operations and release them when the connection is complete.
-mongoose.connect("mongodb://localhost/profile", function(err, suc) {
+mongoose.connect(process.env.MONGOLAB_URI || "mongodb://localhost/profile", function(err, suc) {
   if(err) {
     console.log("error connecting");
   
