@@ -30,6 +30,14 @@ app.use(express.static(distDir));
 //   console.log("Database connection ready");
 
 // });
+ 
+// start server
+var server = app.listen(process.env.PORT || 8080, function () {
+  var port = server.address().port;
+  console.log("App now running on port", port);
+});
+
+
 
 // routes
 var userRoutes = require("./server/controllers/user");
@@ -40,14 +48,6 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(distDir, 'index.html'));
 });
 
-
-
- 
-// start server
-var server = app.listen(process.env.PORT || 8080, function () {
-  var port = server.address().port;
-  console.log("App now running on port", port);
-});
 
 
 
