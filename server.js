@@ -40,8 +40,8 @@ var server = app.listen(process.env.PORT || 8080, function () {
 
 
 // routes
-var userRoutes = require("./server/controllers/user");
-app.use("/user", userRoutes);
+// var userRoutes = require("./server/controllers/user");
+// app.use("/user", userRoutes);
 
 // Send all other requests to the Angular app
 app.get('*', (req, res) => {
