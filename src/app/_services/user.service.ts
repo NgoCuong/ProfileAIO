@@ -12,7 +12,6 @@ export class UserService {
     console.log(user);
     return this.http.post('https://nameless-hollows-54410.herokuapp.com'
      + '/user/register', { email : user.email, password: user.password1 });
-
   }
 
 }

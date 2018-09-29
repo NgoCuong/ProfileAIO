@@ -50,7 +50,11 @@ router.post("/register", function (req, res) {
                 deferred.resolve();
             });
     }
-    return deferred.promise;
+    deferred.promise.then(function () {
+        res.json('successfully registered');
+    }).catch(function (err) {
+        res.status(400).send(err);
+    });
 });
 
 
