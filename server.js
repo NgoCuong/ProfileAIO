@@ -26,6 +26,7 @@ app.get('*', (req, res) => {
 mongoose.connect(process.env.MONGOLAB_URI || "mongodb://localhost/profile", function(err, suc) {
   if(err) {
     console.log("error connecting");
+    console.log(error);
   
   } else {
     console.log("sucess");
