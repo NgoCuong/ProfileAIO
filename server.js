@@ -39,8 +39,8 @@ app.get('*', (req, res) => {
 
 
 // routes
-var userRoutes = require("./server/controllers/user");
-app.use(userRoutes);
+// var userRoutes = require("./server/controllers/user");
+// app.use(userRoutes);
  
 // start server
 var server = app.listen(process.env.PORT || 8080, function () {
