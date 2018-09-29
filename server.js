@@ -13,9 +13,6 @@ app.use(bodyParser.json());
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));
 
-// app.use('*', (req, res, next) => {
-//   res.status(200).json({ success: false, message: 'Does not match any resource of the routing.' });
-// });
 // Create a database variable outside of the database connection callback to reuse the connection pool in your app.
 var db;
 
@@ -48,61 +45,12 @@ function handleError(res, reason, message, code) {
   res.status(code || 500).json({"error": message});
 }
 
-/*  "/api/contacts"
- *    GET: finds all contacts
- *    POST: creates a new contact
- */
-
-app.get("/api/contacts", function(req, res) {
-  db.collection(CONTACTS_COLLECTION).find({}).toArray(function(err, docs) {
-    if (err) {
-      handleError(res, err.message, "Failed to get contacts.");
-    } else {
-      res.status(200).json(docs);
-    }
-  });
-});
+// link route
+var userRoutes = require("./server/routes/user");
+app.use(userRoutes);
 
 
-
-app.post("/api/contacts", function(req, res) {
-  var newContact = req.body;
-  newContact.createDate = new Date();
-
-  if (!req.body.name) {
-    handleError(res, "Invalid user input", "Must provide a name.", 400);
-  } else {
-    db.collection(CONTACTS_COLLECTION).insertOne(newContact, function(err, doc) {
-      if (err) {
-        handleError(res, err.message, "Failed to create new contact.");
-      } else {
-        res.status(201).json(doc.ops[0]);
-      }
-    });
-  }
-});
-
-/*  "/api/contacts/:id"
- *    GET: find contact by id
- *    PUT: update contact by id
- *    DELETE: deletes contact by id
- */
-
-// app.get("/api/contacts/:id", function(req, res) {
-// });
-
-// app.put("/api/contacts/:id", function(req, res) {
-// });
-
-// app.delete("/api/contacts/:id", function(req, res) {
-// });
-
-
-
-
-// DONT REMOVE THIS. THIS SHOULD BE AT THE END OF FILE.
 // Send all other requests to the Angular app
-
 app.get('*', (req, res) => {
   res.sendFile(path.join(distDir, 'index.html'));
 });
