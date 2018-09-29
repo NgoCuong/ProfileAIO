@@ -9,6 +9,25 @@ app.use(bodyParser.json());
 
 var mongoose = require("mongoose");
 mongoose.connect("mongodb://localhost/profile");
+var userSchema = new mongoose.Schema({
+  email: String,
+  password: String
+});
+
+var User = mongoose.model("User", userSchema);
+var boss = new User({
+   email: "boss",
+   password: "password"
+});
+//add to db
+boss.save(function(err, cat) {
+  if(err) {
+    console.log("SOMETHONG WENT WRONG")
+  } else {
+    console.log(user);
+  }
+});
+
 
 // Create link to Angular build directory
 var distDir = __dirname + "/dist/";
