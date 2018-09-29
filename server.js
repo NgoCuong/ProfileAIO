@@ -31,6 +31,12 @@ app.use(express.static(distDir));
 
 // });
 
+// Send all other requests to the Angular app
+app.get('*', (req, res) => {
+  res.sendFile(path.join(distDir, 'index.html'));
+});
+
+
 
 // routes
 var userRoutes = require("./server/controllers/user");
@@ -42,11 +48,6 @@ var server = app.listen(process.env.PORT || 8080, function () {
   console.log("App now running on port", port);
 });
 
-
-// // Send all other requests to the Angular app
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(distDir, 'index.html'));
-// });
 
 
 
