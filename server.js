@@ -20,13 +20,21 @@ var boss = new User({
    password: "password"
 });
 //add to db
-boss.save(function(err, cat) {
+// boss.save(function(err, cat) {
+//   if(err) {
+//     console.log("SOMETHONG WENT WRONG")
+//   } else {
+//     console.log(user);
+//   }
+// });
+
+User.find({}, function(err, users) {
   if(err) {
-    console.log("SOMETHONG WENT WRONG")
+    console.log(err);
   } else {
-    console.log(user);
+    console.log(users);
   }
-});
+})
 
 
 // Create link to Angular build directory
