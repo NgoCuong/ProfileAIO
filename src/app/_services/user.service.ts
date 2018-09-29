@@ -12,7 +12,7 @@ export class UserService {
     console.log(user);
     // return this.http.post('/api/users', user);
     return this.http.post('https://nameless-hollows-54410.herokuapp.com'
-     + '/api/contacts', {'name': user.email, 'email': user.password1 });
+     + '/register', user);
 
   }
 
