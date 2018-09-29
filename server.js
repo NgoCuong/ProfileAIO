@@ -7,12 +7,6 @@ var app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-
-console.log("TEST STARTED");
-// var http = require ('http');         // For serving a basic web page.
-var mongoose = require ("mongoose"); // The reason for this demo.
-
-
 // Create link to Angular build directory
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));
@@ -21,9 +15,12 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(distDir, 'index.html'));
 });
 
+// var http = require ('http');         // For serving a basic web page.
+var mongoose = require ("mongoose"); // The reason for this demo.
+
 // Makes connection asynchronously.  Mongoose will queue up database
 // operations and release them when the connection is complete.
-mongoose.connect(process.env.MONGOLAB_URI || "mongodb://localhost/profile", function(err, suc) {
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/profile", function(err, suc) {
   if(err) {
     console.log("error connecting");
     console.log(err);
@@ -39,27 +36,6 @@ var userSchema = new mongoose.Schema({
 });
 
  var User = mongoose.model("User", userSchema);
-// var boss = new User({
-//    email: "boss",
-//    password: "password"
-// });
-//add to db
-// boss.save(function(err, cat) {
-//   if(err) {
-//     console.log("SOMETHONG WENT WRONG")
-//   } else {
-//     console.log(user);
-//   }
-// });
-
-// User.find({}, function(err, users) {
-//   if(err) {
-//     console.log(err);
-//   } else {
-//     console.log(users);
-//   }
-// })
-
 
 app.get("/api/contacts", function(req, res) {
   User.find({}, function(err, users) {
@@ -72,20 +48,19 @@ app.get("/api/contacts", function(req, res) {
 });
 
 app.post("/api/contacts", function(req, res) {
-  var newContact = req.body;
-  newContact.createDate = new Date();
+  var email = req.body.email;
+  var password = req.body.password;
+  var date = new Date();
 
-  User.create({
-    email: newContact.email,
-    password: newContact.password
-  }, function(err, user) {
+  var newUser = { email: email, password: password, date: date};
+
+  User.create(newUser, function(err, user) {
     if(err) {
       handleError(res, err.message, "Failed to create new contact.");
     } else {
       res.status(201).json(user);
     }
   });
-
 });
 
 
