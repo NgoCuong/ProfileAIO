@@ -14,11 +14,11 @@ var userSchema = new mongoose.Schema({
   password: String
 });
 
-var User = mongoose.model("User", userSchema);
-var boss = new User({
-   email: "boss",
-   password: "password"
-});
+ var User = mongoose.model("User", userSchema);
+// var boss = new User({
+//    email: "boss",
+//    password: "password"
+// });
 //add to db
 // boss.save(function(err, cat) {
 //   if(err) {
@@ -28,13 +28,41 @@ var boss = new User({
 //   }
 // });
 
-User.find({}, function(err, users) {
-  if(err) {
-    console.log(err);
-  } else {
-    console.log(users);
-  }
-})
+// User.find({}, function(err, users) {
+//   if(err) {
+//     console.log(err);
+//   } else {
+//     console.log(users);
+//   }
+// })
+
+
+app.get("/api/contacts", function(req, res) {
+  User.find({}, function(err, users) {
+    if(err) {
+      handleError(res, err.message, "Failed to get contacts."); 
+    } else {
+      res.status(200).json(users);
+    }
+  })
+});
+
+app.post("/api/contacts", function(req, res) {
+  var newContact = req.body;
+  newContact.createDate = new Date();
+
+  User.create({
+    email: newContact.email,
+    password: newContact.password
+  }, function(err, user) {
+    if(err) {
+      handleError(res, err.message, "Failed to create new contact.");
+    } else {
+      res.status(201).json(user);
+    }
+  });
+
+});
 
 
 // Create link to Angular build directory
