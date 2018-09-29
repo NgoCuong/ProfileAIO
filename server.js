@@ -33,7 +33,7 @@ app.use(express.static(distDir));
 
 // routes
 var userRoutes = require("./server/controllers/user");
-app.use(userRoutes);
+app.use("/user", userRoutes);
 
 // Send all other requests to the Angular app
 app.get('*', (req, res) => {

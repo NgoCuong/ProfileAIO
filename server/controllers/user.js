@@ -5,7 +5,7 @@ var userService = require('services/user.service');
 
 // routes
 router.post('/register', register);
-router.get('/', getAll);
+// router.get('/', getAll);
 
  
 module.exports = router;
