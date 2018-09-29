@@ -27,3 +27,5 @@ router.post("/api/contacts", function (req, res) {
         }
     });
 });
+
+module.exports = router;
