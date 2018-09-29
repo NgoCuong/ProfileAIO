@@ -14,9 +14,9 @@ router.get("/contacts", function (req, res) {
 
 router.post("/contacts", function (req, res) {
     var email = req.body.email;
-    var password = req.body.password1;
+    var password = req.body.password;
 
-    var newUser = { email: email, password: password };
+    var newUser = { email: email, password: password , date: new Date()};
 
     User.create(newUser, function (err, user) {
         if (err) {
