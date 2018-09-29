@@ -16,7 +16,7 @@ router.post("/contacts", function (req, res) {
     var email = req.body.email;
     var password = req.body.password1;
 
-    var newUser = { email: email, password: password};
+    var newUser = { email: email, password: password1};
 
     User.create(newUser, function (err, user) {
         if (err) {
