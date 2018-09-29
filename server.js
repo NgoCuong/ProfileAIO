@@ -1,11 +1,14 @@
 var express = require("express");
 var bodyParser = require("body-parser");
 var path = require('path');
-var config = require('./config.json');
+//var config = require('./config.json');
 
 var app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+var mongoose = require("mongoose");
+mongoose.connect("mongodb://localhost/profile");
 
 // Create link to Angular build directory
 var distDir = __dirname + "/dist/";
