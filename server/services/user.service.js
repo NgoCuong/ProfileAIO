@@ -1,51 +1,58 @@
 var config = require('../../config.json');
 var _ = require('lodash');
-var jwt = require('jsonwebtoken');
-var bcrypt = require('bcryptjs');
+// var jwt = require('jsonwebtoken');
+// var bcrypt = require('bcryptjs');
 var Q = require('q');
-var mongo = require('mongoskin');
-var db = mongo.db(config.connectionString, { native_parser: true });
-db.bind('users');
+var mongoose = require('mongoose');
+var db = mongoose.connect(config.connectionString);
 
-var service = {};
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+    console.log("we connected");
+});
 
-service.create = create;
 
-module.exports = service;
 
-function create(userParam) {
-    var deferred = Q.defer();
+// var service = {};
 
-    // validation
-    db.users.findOne(
-        { email: userParam.email },
-        function (err, user) {
-            if (err) deferred.reject(err.name + ': ' + err.message);
+// service.create = create;
 
-            if (user) {
-                // username already exists
-                deferred.reject('Email "' + userParam.email + '" is already taken');
-            } else {
-                createUser();
-            }
-        });
+// module.exports = service;
 
-    function createUser() {
-        // set user object to userParam without the cleartext password
-        var user = _.omit(userParam, 'password');
+// function create(userParam) {
+//     var deferred = Q.defer();
 
-        // add hashed password to user object
-        //user.hash = bcrypt.hashSync(userParam.password, 10);
+//     // validation
+//     db.users.findOne(
+//         { email: userParam.email },
+//         function (err, user) {
+//             if (err) deferred.reject(err.name + ': ' + err.message);
 
-        db.users.insert(
-            user,
-            function (err, doc) {
-                if (err) deferred.reject(err.name + ': ' + err.message);
+//             if (user) {
+//                 // username already exists
+//                 deferred.reject('Email "' + userParam.email + '" is already taken');
+//             } else {
+//                 createUser();
+//             }
+//         });
 
-                deferred.resolve();
-            });
-    }
+//     function createUser() {
+//         // set user object to userParam without the cleartext password
+//         var user = _.omit(userParam, 'password');
 
-    return deferred.promise;
-}
+//         // add hashed password to user object
+//         //user.hash = bcrypt.hashSync(userParam.password, 10);
+
+//         db.users.insert(
+//             user,
+//             function (err, doc) {
+//                 if (err) deferred.reject(err.name + ': ' + err.message);
+
+//                 deferred.resolve();
+//             });
+//     }
+
+//     return deferred.promise;
+// }
 
