@@ -10,10 +10,7 @@ app.use(bodyParser.json());
 // Create link to Angular build directory
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));
-// Send all other requests to the Angular app
-app.get('*', (req, res) => {
-  res.sendFile(path.join(distDir, 'index.html'));
-});
+
 
 // var http = require ('http');         // For serving a basic web page.
 var mongoose = require ("mongoose"); // The reason for this demo.
@@ -63,7 +60,10 @@ app.post("/api/contacts", function(req, res) {
   });
 });
 
-
+// Send all other requests to the Angular app
+app.get('*', (req, res) => {
+  res.sendFile(path.join(distDir, 'index.html'));
+});
 
 // start server
 var server = app.listen(process.env.PORT || 8080, function () {
