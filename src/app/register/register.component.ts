@@ -10,9 +10,6 @@ import { User } from '../_model/user';
 })
 export class RegisterComponent implements OnInit {
   private user: User;
-  private email: string;
-  private password1: string;
-  private password2: string;
   private loading = false;
 
   constructor(
@@ -20,15 +17,12 @@ export class RegisterComponent implements OnInit {
     private userService: UserService) { }
 
   ngOnInit() {
-    this.user = new User();
+    this.user = new User;
   }
 
 
   register() {
     this.loading = true;
-    this.user.email = this.email;
-    this.user.password = this.password1;
-
     this.userService.create(this.user)
       .subscribe(
         data => {

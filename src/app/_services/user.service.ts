@@ -11,7 +11,7 @@ export class UserService {
     console.log('User created');
     console.log(user);
     return this.http.post('https://nameless-hollows-54410.herokuapp.com'
-     + '/api/contacts', user);
+     + '/api/contacts', {email: user.email, password: user.password1});
 
   }
 
