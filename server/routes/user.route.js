@@ -3,16 +3,6 @@ var router = express.Router();
 var User = require("../models/user.model");
 var Q = require('q');
 
-// router.get("/contacts", function (req, res) {
-//     User.find({}, function (err, users) {
-//         if (err) {
-//             handleError(res, err.message, "Failed to get contacts.");
-//         } else {
-//             res.status(200).json(users);
-//         }
-//     })
-// });
-
 router.post("/register", function (req, res) {
     var deferred = Q.defer();
 
