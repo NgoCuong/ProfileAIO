@@ -10,9 +10,9 @@ import { Register } from '../_model/register.model';
 })
 export class RegisterComponent implements OnInit {
   private newUser: Register;
-  private submitted = false;
   private loading = false;
   private confirmPassword: string;
+  private error = false;
 
   constructor(
     private router: Router,
@@ -31,8 +31,9 @@ export class RegisterComponent implements OnInit {
           this.router.navigate(['/login']);
         },
         error => {
-          console.log('Register error: ' + error.message);
+          console.log('Register error: ' + error);
           this.loading = false;
+          this.error = true;
         });
   }
 }

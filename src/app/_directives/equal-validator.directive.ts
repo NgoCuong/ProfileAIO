@@ -1,16 +1,5 @@
-import { Directive, Input } from '@angular/core';
+import { Directive, Input, HostListener, Attribute } from '@angular/core';
 import { AbstractControl, NG_VALIDATORS, Validator, ValidatorFn, Validators } from '@angular/forms';
-
-
-export function equalValidator(nameRe: RegExp): ValidatorFn {
-  return (control: AbstractControl): {[key: string]: any} => {
-    const forbidden = nameRe.test(control.value);
-    return forbidden ? {'inputValue': {value: control.value}} : null;
-  };
-}
-
-
-
 
 @Directive({
   selector: '[appEqualValidator]',
@@ -18,15 +7,43 @@ export function equalValidator(nameRe: RegExp): ValidatorFn {
 })
 
 export class EqualValidatorDirective implements Validator {
+  constructor(@Attribute('appEqualValidator') public appEqualValidator: string,
+    @Attribute('reverse') public reverse: string) { }
 
-  @Input('appEqualValidator') inputValue: string;
-
-  validate(control: AbstractControl): { [key: string]: any } {
-    console.log('inside validator');
-    console.log(this.inputValue);
-
-    return this.inputValue ? equalValidator(new RegExp(this.inputValue, 'i'))(control)
-      : null;
+  private get isReverse() {
+    if (!this.reverse) {
+      return false;
+    }
+    return this.reverse === 'true' ? true : false;
   }
 
+  validate(control: AbstractControl): { [key: string]: any } {
+    // self value
+    let value1 = control.value;
+
+    // control vlaue
+    let value2 = control.root.get(this.appEqualValidator);
+
+    // value not equal
+    if (value2 && value1 !== value2.value && !this.isReverse) {
+      return {
+        validateEqual: false
+      };
+    }
+
+    // value equal and reverse
+    if (value2 && value1 === value2.value && this.isReverse) {
+      delete value2.errors['validateEqual'];
+      if (!Object.keys(value2.errors).length) {
+        value2.setErrors(null);
+      }
+    }
+
+    // value not equal and reverse
+    if (value2 && value1 !== value2.value && this.isReverse) {
+      value2.setErrors({ validateEqual: false });
+    }
+
+    return null;
+  }
 }
