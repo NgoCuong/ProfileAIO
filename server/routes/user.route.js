@@ -47,4 +47,37 @@ router.post("/register", function (req, res) {
     });
 });
 
+router.post("/login", function (req, res) {
+    var deferred = Q.defer();
+
+    var email = req.body.email;
+    var password = req.body.password;
+
+    User.findOne({ email: email, password: password }, function (err, user) {
+        if (err) 
+            deferred.reject(err.name + ': ' + err.message);
+        if(user) {
+            console.log("sucessful loog in");
+            console.log(user);
+            deferred.resolve(user);
+        } else {
+           deferred.resolve(); 
+        }
+    });
+ 
+    deferred.promise.then(function (user) {
+        if (user) {
+            // authentication successful
+            res.send(user);
+        } else {
+            // authentication failed
+            res.status(400).send('Username or password is incorrect');
+        }
+    })
+    .catch(function (err) {
+        res.status(400).send(err);
+    });
+});
+ 
+
 module.exports = router;

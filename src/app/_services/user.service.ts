@@ -14,4 +14,10 @@ export class UserService {
      + '/user/register', { email : newUser.email, password: newUser.password });
   }
 
+  login(email: string, password: string) {
+    return this.http.post('https://nameless-hollows-54410.herokuapp.com'
+     + '/user/login', { email : email, password: password});
+  }
+
+
 }
