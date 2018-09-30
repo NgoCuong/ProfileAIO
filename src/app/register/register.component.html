@@ -9,24 +9,22 @@
                         </div>
                         <div class="card-body">
                         <!-- <form name="form" (ngSubmit)="f.form.valid && register()" #f="ngForm" novalidate> -->
-                        <form name="form" (ngSubmit)="register()" #f="ngForm" novalidate>
+                        <form name="form" (ngSubmit)="register()">
                             <!-- <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !username.valid }"> -->
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" class="form-control form-control-lg rounded-0" name="email" [(ngModel)]="user.email" #email="ngModel" required />
+                                <input type="email" class="form-control form-control-lg rounded-0" name="email" [(ngModel)]="newUser.email"/>
                                 <!-- <div *ngIf="f.submitted && !email.valid" class="help-block">required</div> -->
                             </div>
                             <!-- <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password.valid }"> -->
                             <div class="form-group">
-                                <label for="password1">Password</label>
-                                <input type="password" class="form-control form-control-lg rounded-0" name="password1" [(ngModel)]="user.password1" #password1="ngModel" required
-                                />
+                                <label for="password">Password</label>
+                                <input type="password" class="form-control form-control-lg rounded-0" name="password" [(ngModel)]="newUser.password"/>
                                 <!-- <div *ngIf="f.submitted && !password.valid" class="help-block">Password is required</div> -->
                             </div>
                             <div class="form-group">
-                                <label for="password2">Password</label>
-                                <input type="password" class="form-control form-control-lg rounded-0" name="password2" [(ngModel)]="user.password2" #password2="ngModel" required
-                                />
+                                <label for="confirmPassword">Confirm Password</label>
+                                <input type="password" class="form-control form-control-lg rounded-0" name="confirmPassword" [(ngModel)]="confirmPassword"/>
                                 <!-- <div *ngIf="f.submitted && !password.valid" class="help-block">Password is required</div> -->
                             </div>
                             <div class="form-group">

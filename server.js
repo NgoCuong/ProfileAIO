@@ -23,8 +23,11 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/profile", funct
 });
 
 // routes to api
-var userRoutes = require("./server/routes/user");
-app.use("/api", userRoutes);
+//var userRoutes = require("./server/routes/user");
+//app.use("/api", userRoutes);
+
+var userRoutes = require("./server/routes/user.route");
+app.use("/user", userRoutes);
 
 // Send all other requests to the Angular app
 app.get('*', (req, res) => {
