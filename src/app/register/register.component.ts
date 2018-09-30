@@ -10,6 +10,7 @@ import { Register } from '../_model/register.model';
 })
 export class RegisterComponent implements OnInit {
   private newUser: Register;
+  private submitted = false;
   private loading = false;
   private confirmPassword: string;
 

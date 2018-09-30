@@ -14,6 +14,7 @@ import { ProfileaioComponent } from './profileaio/profileaio.component';
 import { ProxygenComponent } from './proxygen/proxygen.component';
 import { UserService } from './_services/user.service';
 import { ProfileService } from './_services/profile.service';
+import { EqualValidatorDirective } from './_directives/equal-validator.directive';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { ProfileService } from './_services/profile.service';
     HomeComponent,
     ProfileaioComponent,
     ProxygenComponent,
+    EqualValidatorDirective,
   ],
   imports: [
     BrowserModule,
