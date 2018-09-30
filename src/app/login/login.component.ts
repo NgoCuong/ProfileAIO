@@ -11,6 +11,7 @@ export class LoginComponent implements OnInit {
   private email: string;
   private password: string;
   private loading = false;
+  private error = false;
 
   constructor(
     private userService: UserService,
@@ -24,12 +25,11 @@ export class LoginComponent implements OnInit {
     this.userService.login(this.email, this.password)
       .subscribe(
         data => {
-          console.log('Sucessfully Registered');
           this.router.navigate(['/home']);
         },
         error => {
-          console.log('Login failed: ' + error);
           this.loading = false;
+          this.error = true;
         });
   }
 
