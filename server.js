@@ -29,6 +29,9 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/profile", funct
 var userRoutes = require("./server/routes/user.route");
 app.use("/user", userRoutes);
 
+var profileRoutes = require("./server/routes/profile.route");
+app.use("/profile", profileRoutes);
+
 // Send all other requests to the Angular app
 app.get('*', (req, res) => {
   res.sendFile(path.join(distDir, 'index.html'));
