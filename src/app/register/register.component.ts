@@ -12,6 +12,7 @@ export class RegisterComponent implements OnInit {
   private newUser: Register;
   private loading = false;
   private confirmPassword: string;
+  private error = false;
 
   constructor(
     private router: Router,
@@ -26,12 +27,11 @@ export class RegisterComponent implements OnInit {
     this.userService.create(this.newUser)
       .subscribe(
         data => {
-          console.log('Sucessfully Registered');
           this.router.navigate(['/login']);
         },
         error => {
-          console.log('Register error: ' + error.message);
           this.loading = false;
+          this.error = true;
         });
   }
 }
