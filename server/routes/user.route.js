@@ -2,6 +2,8 @@ var express = require("express");
 var router = express.Router();
 var User = require("../models/user.model");
 var Q = require('q');
+var bcrypt = require('bcryptjs');
+
 
 router.post("/register", function (req, res) {
     var deferred = Q.defer();
@@ -26,12 +28,12 @@ router.post("/register", function (req, res) {
 
     function createUser() {
         // set user object to userParam without the cleartext password
-        // var user = _.omit(userParam, 'password');
 
         // // add hashed password to user object
-        // user.hash = bcrypt.hashSync(userParam.password, 10);
 
         var user = { email: email, password: password };
+        // var user = _.omit(userParam, 'password');
+        user.password = bcrypt.hashSync(userParam.password, 10);
         User.create(
             user,
             function (err, newUser) {
