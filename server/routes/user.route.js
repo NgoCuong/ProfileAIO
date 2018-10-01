@@ -51,24 +51,6 @@ router.post("/login", function (req, res) {
     var email = req.body.email;
     var password = req.body.password;
 
-    // findOne({ username: username }, function (err, user) {
-    //     if (err) deferred.reject(err.name + ': ' + err.message);
- 
-    //     if (user && bcrypt.compareSync(password, user.hash)) {
-    //         // authentication successful
-    //         deferred.resolve({
-    //             _id: user._id,
-    //             username: user.username,
-    //             firstName: user.firstName,
-    //             lastName: user.lastName,
-    //             token: jwt.sign({ sub: user._id }, config.secret)
-    //         });
-    //     } else {
-    //         // authentication failed
-    //         deferred.resolve();
-    //     }
-    // });
-
     User.findOne({ email: email }, function (err, user) {
         if (err) 
             deferred.reject(err.name + ': ' + err.message);
