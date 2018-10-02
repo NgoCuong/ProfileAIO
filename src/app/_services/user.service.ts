@@ -14,7 +14,7 @@ export class UserService {
 
   login(email: string, password: string) {
     return this.http.post('https://nameless-hollows-54410.herokuapp.com'
-     + '/user/login', { email : email, password: password});
+     + '/user/login', { username: email, password: password});
   }
 
 
