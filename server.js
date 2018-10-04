@@ -22,6 +22,9 @@ if (!process.env.AUTH0_DOMAIN || !process.env.AUTH0_AUDIENCE) {
   throw 'Make sure you have AUTH0_DOMAIN, and AUTH0_AUDIENCE in your .env file';
 } else {
   console.log("Found AUTH0 env");
+  console.log("AUTH0_DOMAIN: " + process.env.AUTH0_DOMAIN);
+  console.log("AUTH0_AUIDIENCE: " + process.env.AUTH0_AUDIENCE);
+
 }
 
 const checkJwt = jwt({
@@ -34,7 +37,8 @@ const checkJwt = jwt({
   }),
 
   // Validate the audience and the issuer.
-  audience: process.env.AUTH0_AUDIENCE,
+  // audience: process.env.AUTH0_AUDIENCE,
+  aud: process.env.AUTH0_AUDIENCE,
   issuer: `https://${process.env.AUTH0_DOMAIN}/`,
   algorithms: ['RS256']
 });
