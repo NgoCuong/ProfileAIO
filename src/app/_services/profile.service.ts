@@ -1,12 +1,18 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class ProfileService {
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   sendUrl(address: string) {
-    console.log(address);
+
+    this.http.get('https://example.com/api/things')
+      .subscribe(
+        data => console.log(data),
+        err => console.log(err)
+      );
 
   }
 
