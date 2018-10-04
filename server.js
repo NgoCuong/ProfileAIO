@@ -10,16 +10,18 @@ const jwksRsa = require('jwks-rsa');
 const cors = require('cors');
 // require('.env').config();
 
-// if (!process.env.AUTH0_DOMAIN || !process.env.AUTH0_AUDIENCE) {
-//   throw 'Make sure you have AUTH0_DOMAIN, and AUTH0_AUDIENCE in your .env file';
-// }
-AUTH0_AUDIENCE="https://sicko-mode.auth0.com/api/v2/"
-AUTH0_DOMAIN="sicko-mode.auth0.com"
+// AUTH0_AUDIENCE="https://sicko-mode.auth0.com/api/v2/"
+// AUTH0_DOMAIN="sicko-mode.auth0.com"
 
 const corsOptions =  {
   origin: 'http://localhost:4200'
 };
 app.use(cors(corsOptions));
+
+o
+if (!process.env.AUTH0_DOMAIN || !process.env.AUTH0_AUDIENCE) {
+  throw 'Make sure you have AUTH0_DOMAIN, and AUTH0_AUDIENCE in your .env file';
+}
 
 const checkJwt = jwt({
   // Dynamically provide a signing key based on the kid in the header and the singing keys provided by the JWKS endpoint.
@@ -31,8 +33,8 @@ const checkJwt = jwt({
   }),
 
   // Validate the audience and the issuer.
-  audience: process.env.AUTH0_AUDIENCE,
-  issuer: `https://sicko-mode.auth0.com/`,
+  audience: "https://sicko-mode.auth0.com/api/v2/",
+  issuer: "sicko-mode.auth0.com",
   algorithms: ['RS256']
 });
 
