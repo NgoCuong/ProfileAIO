@@ -12,7 +12,10 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/profile">ProfileAIO</a>
+        <a class="nav-link" routerLink="/profile">Profile</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/profileaio">ProfileAIO</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" routerLink="/proxygen">ProxyGen</a>
@@ -25,7 +28,7 @@
         </li>
         <li class="nav-item">
           <a class="nav-link" *ngIf="auth.isAuthenticated()"
-          (click)="auth.logout()">Register</a>
+          (click)="auth.logout()">Logout</a>
         </li>
       </ul>
   </div>

@@ -8,6 +8,7 @@ import { ProfileService } from '../_services/profile.service';
 })
 export class ProfileaioComponent implements OnInit {
   address: string;
+  message: string;
   loading: Boolean = false;
 
 
@@ -18,7 +19,15 @@ export class ProfileaioComponent implements OnInit {
 
   submit() {
     this.loading = true;
-    this.profileService.sendUrl(this.address);
+    // this.profileService.sendUrl(this.address);
+  }
+
+  privateApi() {
+    this.profileService.private();
+  }
+
+  publicApi() {
+    this.profileService.public();
   }
 
 }

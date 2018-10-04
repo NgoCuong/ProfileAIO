@@ -1,19 +1,29 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Http } from '@angular/http';
+import { AuthHttp } from 'angular2-jwt';
+import 'rxjs/add/operator/map';
 
 @Injectable()
 export class ProfileService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private authHttp: AuthHttp) { }
 
-  sendUrl(address: string) {
+  public() {
 
-    this.http.get('https://example.com/api/things')
+    this.authHttp.get('http://localhost:8080/api/public')
       .subscribe(
         data => console.log(data),
         err => console.log(err)
       );
-
   }
 
+  private() {
+
+    this.authHttp.get('http://localhost:8080/api/private')
+      .subscribe(
+        data => console.log(data),
+        err => console.log(err)
+      );
+  }
 }
