@@ -1,40 +1,56 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { Http, RequestOptions, HttpModule } from '@angular/http';
+import { AuthHttp, AuthConfig } from 'angular2-jwt';
 
 
 import { AppComponent } from './app.component';
-import { LoginComponent } from './login/login.component';
 import { AppRoutingModule } from './/app-routing.module';
-import { RegisterComponent } from './register/register.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { HomeComponent } from './home/home.component';
 import { ProfileaioComponent } from './profileaio/profileaio.component';
 import { ProxygenComponent } from './proxygen/proxygen.component';
-import { UserService } from './_services/user.service';
 import { ProfileService } from './_services/profile.service';
-import { EqualValidatorDirective } from './_directives/equal-validator.directive';
+import { AuthService } from './auth/auth.service';
+import { CallbackComponent } from './callback/callback.component';
+import { ProfileComponent } from './profile/profile.component';
+import { TokenInterceptor } from './auth/token.interceptor';
 
+export function authHttpServiceFactory(http: Http, options: RequestOptions) {
+  return new AuthHttp(new AuthConfig({
+    tokenGetter: (() => localStorage.getItem('id_token'))
+  }), http, options);
+}
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
-    RegisterComponent,
     NavbarComponent,
     HomeComponent,
     ProfileaioComponent,
     ProxygenComponent,
-    EqualValidatorDirective,
+    CallbackComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    HttpModule
   ],
-  providers: [UserService, ProfileService],
+  providers: [
+    ProfileService,
+    AuthService,
+    {
+      provide: AuthHttp,
+      useFactory: authHttpServiceFactory,
+      deps: [Http, RequestOptions]
+    }
+  ],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }
