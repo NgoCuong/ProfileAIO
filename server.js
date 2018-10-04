@@ -20,6 +20,8 @@ app.use(cors(corsOptions));
 
 if (!process.env.AUTH0_DOMAIN || !process.env.AUTH0_AUDIENCE) {
   throw 'Make sure you have AUTH0_DOMAIN, and AUTH0_AUDIENCE in your .env file';
+} else {
+  console.log("Found AUTH0 env");
 }
 
 const checkJwt = jwt({
@@ -32,8 +34,8 @@ const checkJwt = jwt({
   }),
 
   // Validate the audience and the issuer.
-  audience: "https://sicko-mode.auth0.com/api/v2/",
-  issuer: "sicko-mode.auth0.com",
+  audience: process.env.AUTH0_AUDIENCE,
+  issuer: `https://${process.env.AUTH0_DOMAIN}/`,
   algorithms: ['RS256']
 });
 
