@@ -11,7 +11,8 @@ export class ProfileService {
 
   public() {
 
-    this.authHttp.get('http://localhost:8080/api/public')
+    // this.authHttp.get('http://localhost:8080/api/public')
+    this.authHttp.get('https://nameless-hollows-54410.herokuapp.com/api/public')
       .subscribe(
         data => console.log(data),
         err => console.log(err)
@@ -20,7 +21,8 @@ export class ProfileService {
 
   private() {
 
-    this.authHttp.get('http://localhost:8080/api/private')
+    // this.authHttp.get('http://localhost:8080/api/private')
+    this.authHttp.get('https://nameless-hollows-54410.herokuapp.com/api/private')
       .subscribe(
         data => console.log(data),
         err => console.log(err)
