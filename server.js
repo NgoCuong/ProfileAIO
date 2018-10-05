@@ -4,19 +4,20 @@ var path = require('path');
 var app = express();
 var mongoose = require("mongoose");
 var checkJwt = require('./server/auth');
+const cors = require('cors');
 
 // Only turn this on for Local
-// const corsOptions =  {
-//   origin: 'http://localhost:4200'
-// };
-// app.use(cors(corsOptions));
+const corsOptions =  {
+  origin: 'http://localhost:4200'
+};
+app.use(cors(corsOptions));
 
 // Create link to Angular build directory
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));
 
 // Makes connection to Mongoose 
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/profile", function (err, suc) {
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/profile", { useNewUrlParser: true }, function (err, suc) {
   if (err) {
     console.log(err);
   }
