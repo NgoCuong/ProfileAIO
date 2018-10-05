@@ -75,7 +75,7 @@ export class AuthService {
   }
 
   public getToken(): string {
-    return localStorage.getItem('access_token');
+    return localStorage.getItem('id_token');
   }
 
 }

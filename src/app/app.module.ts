@@ -18,11 +18,11 @@ import { CallbackComponent } from './callback/callback.component';
 import { ProfileComponent } from './profile/profile.component';
 import { TokenInterceptor } from './auth/token.interceptor';
 
-export function authHttpServiceFactory(http: Http, options: RequestOptions) {
-  return new AuthHttp(new AuthConfig({
-    tokenGetter: (() => localStorage.getItem('id_token'))
-  }), http, options);
-}
+// export function authHttpServiceFactory(http: Http, options: RequestOptions) {
+//   return new AuthHttp(new AuthConfig({
+//     tokenGetter: (() => localStorage.getItem('id_token'))
+//   }), http, options);
+// }
 
 @NgModule({
   declarations: [
@@ -43,12 +43,17 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   ],
   providers: [
     ProfileService,
-    AuthService,
     {
-      provide: AuthHttp,
-      useFactory: authHttpServiceFactory,
-      deps: [Http, RequestOptions]
-    }
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    },
+    AuthService,
+    // {
+    //   provide: AuthHttp,
+    //   useFactory: authHttpServiceFactory,
+    //   deps: [Http, RequestOptions]
+    // }
   ],
   bootstrap: [AppComponent]
 })

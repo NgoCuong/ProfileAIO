@@ -4,12 +4,13 @@ var path = require('path');
 var app = express();
 var mongoose = require("mongoose");
 var checkJwt = require('./server/auth');
+const cors = require('cors');
 
 // Only turn this on for Local
-// const corsOptions =  {
-//   origin: 'http://localhost:4200'
-// };
-// app.use(cors(corsOptions));
+const corsOptions =  {
+  origin: 'http://localhost:4200'
+};
+app.use(cors(corsOptions));
 
 // Create link to Angular build directory
 var distDir = __dirname + "/dist/";
