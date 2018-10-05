@@ -2,8 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { Http, RequestOptions, HttpModule } from '@angular/http';
-import { AuthHttp, AuthConfig } from 'angular2-jwt';
 
 
 import { AppComponent } from './app.component';
@@ -18,11 +16,6 @@ import { CallbackComponent } from './callback/callback.component';
 import { ProfileComponent } from './profile/profile.component';
 import { TokenInterceptor } from './auth/token.interceptor';
 
-// export function authHttpServiceFactory(http: Http, options: RequestOptions) {
-//   return new AuthHttp(new AuthConfig({
-//     tokenGetter: (() => localStorage.getItem('id_token'))
-//   }), http, options);
-// }
 
 @NgModule({
   declarations: [
@@ -39,7 +32,6 @@ import { TokenInterceptor } from './auth/token.interceptor';
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    HttpModule
   ],
   providers: [
     ProfileService,
@@ -49,11 +41,6 @@ import { TokenInterceptor } from './auth/token.interceptor';
       multi: true
     },
     AuthService,
-    // {
-    //   provide: AuthHttp,
-    //   useFactory: authHttpServiceFactory,
-    //   deps: [Http, RequestOptions]
-    // }
   ],
   bootstrap: [AppComponent]
 })

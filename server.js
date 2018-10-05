@@ -17,7 +17,7 @@ var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));
 
 // Makes connection to Mongoose 
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/profile", function (err, suc) {
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/profile", { useNewUrlParser: true }, function (err, suc) {
   if (err) {
     console.log(err);
   }
