@@ -21,13 +21,4 @@ export class ProfileaioComponent implements OnInit {
     this.loading = true;
     // this.profileService.sendUrl(this.address);
   }
-
-  privateApi() {
-    this.profileService.private();
-  }
-
-  publicApi() {
-    this.profileService.public();
-  }
-
 }

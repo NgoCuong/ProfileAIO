@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class ProfileService {
@@ -10,8 +11,7 @@ export class ProfileService {
 
   public() {
 
-    this.http.get('http://localhost:8080/api/public')
-      // this.authHttp.get('https://nameless-hollows-54410.herokuapp.com/api/public')
+    this.http.get(environment.baseURL + '/api/public')
       .subscribe(
         data => console.log(data),
         err => console.log(err)
@@ -19,9 +19,7 @@ export class ProfileService {
   }
 
   private() {
-
-    this.http.get('http://localhost:8080/api/private')
-      // this.authHttp.get('https://nameless-hollows-54410.herokuapp.com/api/private')
+    this.http.get(environment.baseURL + '/api/private')
       .subscribe(
         data => console.log(data),
         err => console.log(err)

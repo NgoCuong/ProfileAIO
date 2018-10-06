@@ -5,6 +5,7 @@ import { ProxygenComponent } from './modules/proxygen/proxygen.component';
 import { HomeComponent } from './modules/home/home.component';
 import { CallbackComponent } from './core/auth/callback/callback.component';
 import { ProfileComponent } from './modules/profile/profile.component';
+import { ApiTestingComponent } from './modules/api-testing/api-testing.component';
 
 const routes: Routes  = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -13,6 +14,7 @@ const routes: Routes  = [
   { path: 'proxygen', component: ProxygenComponent},
   { path: 'callback', component: CallbackComponent},
   { path: 'profile', component: ProfileComponent },
+  { path: 'api', component: ApiTestingComponent},
   { path: '**', redirectTo: '' }
 ];
 
