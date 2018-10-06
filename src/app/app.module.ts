@@ -6,7 +6,6 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './/app-routing.module';
-import { NavbarComponent } from './core/navbar/navbar.component';
 import { HomeComponent } from './modules/home/home.component';
 import { ProfileaioComponent } from './modules/profileaio/profileaio.component';
 import { ProxygenComponent } from './modules/proxygen/proxygen.component';
@@ -16,18 +15,21 @@ import { CallbackComponent } from './core/auth/callback/callback.component';
 import { ProfileComponent } from './modules/profile/profile.component';
 import { TokenInterceptor } from './core/token.interceptor';
 import { HeaderComponent } from './core/header/header.component';
+import { FooterComponent } from './core/footer/footer.component';
+import { ApiTestingComponent } from './modules/api-testing/api-testing.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavbarComponent,
     HomeComponent,
     ProfileaioComponent,
     ProxygenComponent,
     CallbackComponent,
     ProfileComponent,
     HeaderComponent,
+    FooterComponent,
+    ApiTestingComponent
   ],
   imports: [
     BrowserModule,

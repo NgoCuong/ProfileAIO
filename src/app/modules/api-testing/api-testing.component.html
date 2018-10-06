@@ -1,0 +1,29 @@
+<section>
+  <div class="container py-5">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-6 mx-auto">
+            <div class="card rounded-0">
+              <div class="card-header">
+                <h3 class="mb-0">Testing API Authentication</h3>
+              </div>
+              <div class="card-body">
+                <div class="form-group">
+                  <p>This Button is to test the API calling. The private API shuold only return message if the user is logged
+                    in. Check browser's console for messages.</p>
+                </div>
+                <div class="form-group">
+                  <button (click)="privateApi()" class="btn btn-success btn-lg float-right">test private API</button>
+                </div>
+                <div class="form-group">
+                  <button (click)="publicApi()" class="btn btn-success btn-lg float-right">test public API</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
