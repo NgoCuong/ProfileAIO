@@ -6,6 +6,7 @@ import { HomeComponent } from './modules/home/home.component';
 import { CallbackComponent } from './core/auth/callback/callback.component';
 import { ProfileComponent } from './modules/profile/profile.component';
 import { ApiTestingComponent } from './modules/api-testing/api-testing.component';
+import { AuthGuardService } from './core/route-guard/auth-guard.service';
 
 const routes: Routes  = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -13,7 +14,7 @@ const routes: Routes  = [
   { path: 'profileaio', component: ProfileaioComponent},
   { path: 'proxygen', component: ProxygenComponent},
   { path: 'callback', component: CallbackComponent},
-  { path: 'profile', component: ProfileComponent },
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuardService]},
   { path: 'api', component: ApiTestingComponent},
   { path: '**', redirectTo: '' }
 ];

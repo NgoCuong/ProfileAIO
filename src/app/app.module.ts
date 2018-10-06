@@ -17,6 +17,7 @@ import { TokenInterceptor } from './core/token.interceptor';
 import { HeaderComponent } from './core/header/header.component';
 import { FooterComponent } from './core/footer/footer.component';
 import { ApiTestingComponent } from './modules/api-testing/api-testing.component';
+import { AuthGuardService } from './core/route-guard/auth-guard.service';
 
 
 @NgModule({
@@ -45,6 +46,7 @@ import { ApiTestingComponent } from './modules/api-testing/api-testing.component
       multi: true
     },
     AuthService,
+    AuthGuardService
   ],
   bootstrap: [AppComponent]
 })
