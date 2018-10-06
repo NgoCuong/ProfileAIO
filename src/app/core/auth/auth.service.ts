@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
 // import * as auth0 from 'auth0-js';
 import Auth0Lock from 'auth0-lock';

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ProfileService } from '../_services/profile.service';
+import { ProfileService } from '../../core/services/profile.service';
 
 @Component({
   selector: 'app-profileaio',

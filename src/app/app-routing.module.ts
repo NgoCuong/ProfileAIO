@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ProfileaioComponent } from './profileaio/profileaio.component';
-import { ProxygenComponent } from './proxygen/proxygen.component';
-import { HomeComponent } from './home/home.component';
-import { CallbackComponent } from './callback/callback.component';
-import { ProfileComponent } from './profile/profile.component';
+import { ProfileaioComponent } from './modules/profileaio/profileaio.component';
+import { ProxygenComponent } from './modules/proxygen/proxygen.component';
+import { HomeComponent } from './modules/home/home.component';
+import { CallbackComponent } from './core/auth/callback/callback.component';
+import { ProfileComponent } from './modules/profile/profile.component';
 
 const routes: Routes  = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },

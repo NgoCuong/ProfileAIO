@@ -6,15 +6,16 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './/app-routing.module';
-import { NavbarComponent } from './navbar/navbar.component';
-import { HomeComponent } from './home/home.component';
-import { ProfileaioComponent } from './profileaio/profileaio.component';
-import { ProxygenComponent } from './proxygen/proxygen.component';
-import { ProfileService } from './_services/profile.service';
-import { AuthService } from './auth/auth.service';
-import { CallbackComponent } from './callback/callback.component';
-import { ProfileComponent } from './profile/profile.component';
-import { TokenInterceptor } from './auth/token.interceptor';
+import { NavbarComponent } from './core/navbar/navbar.component';
+import { HomeComponent } from './modules/home/home.component';
+import { ProfileaioComponent } from './modules/profileaio/profileaio.component';
+import { ProxygenComponent } from './modules/proxygen/proxygen.component';
+import { ProfileService } from './core/services/profile.service';
+import { AuthService } from './core/auth/auth.service';
+import { CallbackComponent } from './core/auth/callback/callback.component';
+import { ProfileComponent } from './modules/profile/profile.component';
+import { TokenInterceptor } from './core/token.interceptor';
+import { HeaderComponent } from './core/header/header.component';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { TokenInterceptor } from './auth/token.interceptor';
     ProxygenComponent,
     CallbackComponent,
     ProfileComponent,
+    HeaderComponent,
   ],
   imports: [
     BrowserModule,
