@@ -30,7 +30,7 @@ import { AuthGuardService } from './core/route-guard/auth-guard.service';
     ProfileComponent,
     HeaderComponent,
     FooterComponent,
-    ApiTestingComponent
+    ApiTestingComponent,
   ],
   imports: [
     BrowserModule,
