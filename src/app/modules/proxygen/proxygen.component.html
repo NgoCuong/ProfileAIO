@@ -1,26 +1,37 @@
 <section>
-  <h4 *ngIf="auth.isAuthenticated()">
-    You are logged in!
-  </h4>
-  <h4 *ngIf="!auth.isAuthenticated()">
-    You are not logged in! Please
-    <a (click)="auth.login()">Log In</a> to continue.
-  </h4>
+  <div class="container py-5">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-6 mx-auto">
+            <div class="card rounded-0">
+              <div class="card-header">
+                <h3 class="mb-0">Proxy Generatoor</h3>
+              </div>
+              <div class="card-body">
+                <form name="form" (ngSubmit)="submit()" #f="ngForm" novalidate>
 
-  <p>Sit labore labore mollit mollit cupidatat duis officia elit aliquip laborum enim exercitation quis magna. Et exercitation
-    officia pariatur ullamco et exercitation. Duis dolore commodo ea consequat ullamco ut nulla do incididunt excepteur.
-    Sint occaecat minim irure anim. Eu dolor veniam laboris cupidatat Lorem deserunt officia est irure. Minim dolor aliquip
-    fugiat incididunt culpa esse aliqua non ut esse ad minim nisi.</p>
-  <p>Sit labore labore mollit mollit cupidatat duis officia elit aliquip laborum enim exercitation quis magna. Et exercitation
-    officia pariatur ullamco et exercitation. Duis dolore commodo ea consequat ullamco ut nulla do incididunt excepteur.
-    Sint occaecat minim irure anim. Eu dolor veniam laboris cupidatat Lorem deserunt officia est irure. Minim dolor aliquip
-    fugiat incididunt culpa esse aliqua non ut esse ad minim nisi.</p>
-  <p>Sit labore labore mollit mollit cupidatat duis officia elit aliquip laborum enim exercitation quis magna. Et exercitation
-    officia pariatur ullamco et exercitation. Duis dolore commodo ea consequat ullamco ut nulla do incididunt excepteur.
-    Sint occaecat minim irure anim. Eu dolor veniam laboris cupidatat Lorem deserunt officia est irure. Minim dolor aliquip
-    fugiat incididunt culpa esse aliqua non ut esse ad minim nisi.</p>
-  <p>Sit labore labore mollit mollit cupidatat duis officia elit aliquip laborum enim exercitation quis magna. Et exercitation
-    officia pariatur ullamco et exercitation. Duis dolore commodo ea consequat ullamco ut nulla do incididunt excepteur.
-    Sint occaecat minim irure anim. Eu dolor veniam laboris cupidatat Lorem deserunt officia est irure. Minim dolor aliquip
-    fugiat incididunt culpa esse aliqua non ut esse ad minim nisi.</p>
+                  <div class="form-group">
+                    <label for="apiKey">Api Key</label>
+                    <input type="text" class="form-control form-control-lg rounded-0" name="apiKey" [(ngModel)]="apiKey" required />
+                  </div>
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Data Center
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                      <button *ngFor="let item of dataCenter" class="dropdown-item" type="button">{{item}}</button>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <button [disabled]="loading" class="btn btn-success btn-lg float-right">Submit</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>

@@ -7,7 +7,7 @@ import { AuthService } from '../../core/auth/auth.service';
   styleUrls: ['./proxygen.component.css']
 })
 export class ProxygenComponent implements OnInit {
-
+  dataCenter = ['Linode', 'X', 'Y', 'Z'];
   constructor(public auth: AuthService) { }
 
   ngOnInit() {

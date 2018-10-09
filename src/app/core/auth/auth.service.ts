@@ -34,14 +34,17 @@ export class AuthService {
 
   constructor(private router: Router) {
     this.lock.on('authenticated', (authResult: any) => {
-      this.lock.getUserInfo(authResult.accessToken, (error, profile) => {
-        if (error) {
-          throw new Error(error);
-        }
-        this.userProfile = profile;
-        this.setSession(authResult);
-        this.router.navigate(['/']);
-      });
+      this.setSession(authResult);
+      this.getProfile();
+      this.router.navigate(['/']);
+      // this.lock.getUserInfo(authResult.accessToken, (error, profile) => {
+      //   if (error) {
+      //     throw new Error(error);
+      //   }
+      //   this.userProfile = profile;
+      //   this.setSession(authResult);
+      //   this.router.navigate(['/']);
+      // });
     });
   }
 
@@ -76,6 +79,17 @@ export class AuthService {
 
   public getToken(): string {
     return localStorage.getItem('id_token');
+  }
+
+  public getProfile(): any {
+    const token =  localStorage.getItem('access_token');
+    this.lock.getUserInfo(token, (error, profile) => {
+      if (error) {
+        throw new Error(error);
+      }
+      this.userProfile = profile;
+    });
+    return this.userProfile;
   }
 
 }
