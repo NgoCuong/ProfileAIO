@@ -10,9 +10,9 @@ export class AuthService {
 
   auth0Options = {
     theme: {
-      logo: '../../assets/money-tree-logo-dizzyline.png',
+      logo: '../../../assets/profileaio.png',
       primaryColor: '#DFA612',
-      displayName: 'Sick0 Mode',
+      displayName: 'Profile AIO',
     },
     auth: {
       redirectUrl: environment.auth0.callbackURL,
