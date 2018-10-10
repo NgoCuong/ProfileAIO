@@ -32,9 +32,12 @@ hr {
 
    #home-body {
     padding-top: 100px;
-    font-family: 'Roboto', sans-serif;
 	color: #fff;
    } 
+
+   h1 {
+    font-family: 'Roboto Slab', serif;
+   }
 
    #box1{
        /* background-color: #43ABC9; */
