@@ -1,7 +1,7 @@
 {
   "particles": {
     "number": {
-      "value": 147,
+      "value": 90,
       "density": {
         "enable": true,
         "value_area": 800
@@ -36,11 +36,11 @@
       }
     },
     "size": {
-      "value": 3,
+      "value": 2,
       "random": true,
       "anim": {
         "enable": false,
-        "speed": 40,
+        "speed": 30,
         "size_min": 0.1,
         "sync": false
       }
@@ -71,7 +71,7 @@
     "detect_on": "canvas",
     "events": {
       "onhover": {
-        "enable": true,
+        "enable": false,
         "mode": "grab"
       },
       "onclick": {
@@ -84,7 +84,7 @@
       "grab": {
         "distance": 143.85614385614386,
         "line_linked": {
-          "opacity": 1
+          "opacity": 0.5
         }
       },
       "bubble": {

@@ -32,4 +32,36 @@ hr {
 
    #home-body {
     padding-top: 100px;
+	color: #fff;
    } 
+
+   h1 {
+    font-family: 'Roboto Slab', serif;
+   }
+
+   #box1{
+       /* background-color: #43ABC9; */
+       background: -moz-linear-gradient(left, #6819e8 0%, #7437d0 35%, #615fde 68%, #6980f2 100%); /* FF3.6-15 */
+	   background: -webkit-linear-gradient(left, #6819e8 0%,#7437d0 35%,#615fde 68%,#6980f2 100%);
+       background: linear-gradient(to right, #6819e8 0%,#7437d0 35%,#615fde 68%,#6980f2 100%);
+   }
+
+   #box2{
+    /* background: -moz-linear-gradient(left, #6819e8 0%, #7437d0 35%, #615fde 68%, #6980f2 100%); FF3.6-15 */
+	   background: -webkit-linear-gradient(left, #0855ad 0%,#305c8f 35%,#0755ad 68%,#2779d1 100%);
+       /* background: linear-gradient(to right, #6819e8 0%,#7437d0 35%,#615fde 68%,#6980f2 100%); */
+}
+   
+   #particles-js {
+    /* background-image: url("../../assets/lucija-ros-538691-unsplash.jpg");   */
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-size: cover;
+    background-position: center; 
+    z-index: 100;
+    padding-bottom: 10%;
+  }
+
