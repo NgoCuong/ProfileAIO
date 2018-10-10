@@ -25,7 +25,35 @@ export class AuthenticationComponent implements OnInit, OnDestroy {
   }
 
   initialiseInvites() {
-    this.auth.lock.show({container: 'hiw-login-container'});
+    const auth0Options = {
+      container: 'hiw-login-container',
+      theme: {
+        // logo: '../../../assets/profileaio.png',
+        primaryColor: '#ea5323',
+        displayName: 'Profile AIO',
+      },
+      languageDictionary: {
+        title: 'Profile AIO'
+      },
+      auth: {
+        redirectUrl: environment.auth0.callbackURL,
+        responseType: 'token id_token',
+        audience: `https://${environment.auth0.domain}/userinfo`,
+        // params: {
+        //   scope: 'openid profile'
+        // }
+      },
+      // autoclose: true,
+      // oidcConformant: true,
+    };
+
+    const lock = new Auth0Lock(
+      environment.auth0.clientId,
+      environment.auth0.domain,
+      auth0Options
+    );
+
+    lock.show({container: 'hiw-login-container'});
   }
 
   ngOnDestroy() {
