@@ -25,28 +25,6 @@ export class AuthenticationComponent implements OnInit, OnDestroy {
   }
 
   initialiseInvites() {
-    // const auth0Options = {
-    //   container: 'hiw-login-container',
-    //   theme: {
-    //     primaryColor: '#ea5323',
-    //     displayName: 'Profile AIO',
-    //   },
-    //   languageDictionary: {
-    //     title: 'Profile AIO'
-    //   },
-    //   auth: {
-    //     redirectUrl: environment.auth0.callbackURL,
-    //     responseType: 'token id_token',
-    //     audience: `https://${environment.auth0.domain}/userinfo`,
-    //   },
-    // };
-
-    // const lock = new Auth0Lock(
-    //   environment.auth0.clientId,
-    //   environment.auth0.domain,
-    //   auth0Options
-    // );
-
     this.auth.lock.show({container: 'hiw-login-container'});
   }
 
