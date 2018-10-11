@@ -6,21 +6,27 @@
           <div class="col-md-6 mx-auto">
             <div class="card rounded-0">
               <div class="card-header">
-                <h3 class="mb-0">Proxy Generatoor</h3>
+                <h3 class="mb-0">Proxy Generator</h3>
               </div>
               <div class="card-body">
                 <form name="form" (ngSubmit)="submit()" #f="ngForm" novalidate>
 
                   <div class="form-group">
                     <label for="apiKey">Api Key</label>
-                    <input type="text" class="form-control form-control-lg rounded-0" name="apiKey" [(ngModel)]="apiKey" required />
+                    <input type="text" class="form-control form-control-lg rounded-0" name="apiKey" [(ngModel)]="proxyGen.key" required />
                   </div>
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Data Center
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right">
-                      <button *ngFor="let item of dataCenter" class="dropdown-item" type="button">{{item}}</button>
+                  <div class="row">
+                    <div class="form-group col-md-4">
+                      <label for="server">Server</label>
+                      <select id="server" class="form-control" [(ngModel)]="proxyGen.server" name="server" required>
+                        <option *ngFor="let server of Servers" [ngValue]="server">{{server}}</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="location">Location</label>
+                      <select id="location" class="form-control" [(ngModel)]="proxyGen.location" name="location" required>
+                        <option *ngFor="let location of Locations" [ngValue]="location">{{location}}</option>
+                      </select>
                     </div>
                   </div>
                   <div class="form-group">
