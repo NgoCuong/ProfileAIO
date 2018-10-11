@@ -13,14 +13,20 @@
 
                   <div class="form-group">
                     <label for="apiKey">Api Key</label>
-                    <input type="text" class="form-control form-control-lg rounded-0" name="apiKey" [(ngModel)]="apiKey" required />
+                    <input type="text" class="form-control form-control-lg rounded-0" name="apiKey" [(ngModel)]="proxyGen.key" required />
                   </div>
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Data Center
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right">
-                      <button *ngFor="let item of dataCenter" class="dropdown-item" type="button">{{item}}</button>
+                  <div class="row">
+                    <div class="form-group col-md-4">
+                      <label for="server">Server</label>
+                      <select id="server" class="form-control" [(ngModel)]="proxyGen.server" name="server" required>
+                        <option *ngFor="let server of Servers" [ngValue]="server">{{server}}</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="location">Location</label>
+                      <select id="location" class="form-control" [(ngModel)]="proxyGen.location" name="location" required>
+                        <option *ngFor="let location of Locations" [ngValue]="location">{{location}}</option>
+                      </select>
                     </div>
                   </div>
                   <div class="form-group">

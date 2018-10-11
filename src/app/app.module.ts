@@ -19,6 +19,7 @@ import { FooterComponent } from './core/footer/footer.component';
 import { ApiTestingComponent } from './modules/api-testing/api-testing.component';
 import { AuthGuardService } from './core/route-guard/auth-guard.service';
 import { AuthenticationComponent } from './modules/authentication/authentication.component';
+import { ProxyService } from './core/services/proxy.service';
 
 
 @NgModule({
@@ -42,6 +43,7 @@ import { AuthenticationComponent } from './modules/authentication/authentication
   ],
   providers: [
     ProfileService,
+    ProxyService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
