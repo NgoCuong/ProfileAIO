@@ -1,6 +1,6 @@
 
 
-class ProxyGenerator {
+module.exports = class ProxyGenerator {
 
     // #region Constructor
     constructor(accessToken) {
@@ -116,7 +116,7 @@ class ProxyGenerator {
         var promises = [];
 
         try {
-            while (await this.getIpCount() != number && await this.serverLimitReached == false) {
+            for (var i = 0; i < number; ++i) {
                 var rand = this.getRandomInt(0, 10000);
                 promises.push(limit(() => this.createInstance(`server${rand}`, this.pass, this.region)));
             }
@@ -178,11 +178,11 @@ class ProxyGenerator {
 
             for (var i = 0; i < len; i++) {
                 var machine = jsonData.data[i];
-                console.log("Deleting server %s", machine.ipv4);
+                console.log("Deleting server %s", machine.ipv4[0]);
                 this.deleteInstance(machine.id);
             }
             console.log(`Deleted ${len} servers`);
-
+            return `Deleted ${len} servers`;
         } catch (response) {
             console.log(response);
             console.log("Error failed to create instance");
@@ -377,9 +377,10 @@ class ProxyGenerator {
         this.user = user;
         this.pass = pass;
         this.region = region;
+        this.number = proxyNumber;
 
         console.log("Creating servers...")
-        await this.createBatchInstancesLimit(proxyNumber);
+        await this.createBatchInstancesLimit(this.number );
         console.log("Server creation complete!");
 
         while (await this.checkServerStatus() == false) {
@@ -401,19 +402,5 @@ class ProxyGenerator {
         }
         return proxy;
     }
-}
-
-
-
-var x = new ProxyGenerator('3c5686daacefc2ddde5545c155f1de8cadba1077218685ff2f622ebc98285c70');
-//x.generateProxies(35, 'profileaio', 'password123', 'us-east');
-x.deleteAllInstances();
-
-
-
-
-
-
-
-
+};
 
