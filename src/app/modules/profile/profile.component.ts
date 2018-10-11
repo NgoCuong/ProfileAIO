@@ -16,6 +16,6 @@ export class ProfileComponent implements OnInit {
     private auth: AuthService) {}
 
   ngOnInit() {
-    this.profile = this.auth.getProfile();
+    this.profile = JSON.parse(this.auth.getProfile());
   }
 }

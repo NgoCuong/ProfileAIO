@@ -5,7 +5,6 @@ import Auth0Lock from 'auth0-lock';
 
 @Injectable()
 export class AuthService {
-  userProfile: any;
 
   auth0Options = {
     container: 'hiw-login-container',
@@ -38,7 +37,7 @@ export class AuthService {
   constructor(private router: Router) {
     this.lock.on('authenticated', (authResult: any) => {
       this.setSession(authResult);
-      this.getProfile();
+      this.setProfile();
       this.router.navigate(['/']);
     });
   }
@@ -58,6 +57,7 @@ export class AuthService {
     localStorage.removeItem('access_token');
     localStorage.removeItem('id_token');
     localStorage.removeItem('expires_at');
+    localStorage.removeItem('profile');
     this.router.navigate(['/']);
   }
 
@@ -71,14 +71,17 @@ export class AuthService {
     return localStorage.getItem('id_token');
   }
 
-  public getProfile(): any {
+  public setProfile(): any {
     const token =  localStorage.getItem('access_token');
     this.lock.getUserInfo(token, (error, profile) => {
       if (error) {
         throw new Error(error);
       }
-      this.userProfile = profile;
+      localStorage.setItem('profile', JSON.stringify(profile));
     });
-    return this.userProfile;
+  }
+
+  public getProfile(): any {
+    return localStorage.getItem('profile');
   }
 }
