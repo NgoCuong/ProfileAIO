@@ -9,8 +9,22 @@ export class ProxyService {
 
   constructor(private http: HttpClient) { }
 
-  getProxy() {
-    console.log('Proxy Called');
+  getProxy(param) {
+    console.log(param);
+    console.log('sending poost requests: ' + JSON.stringify(param));
+    this.http.post(environment.baseURL + '/api/proxy', param)
+      .subscribe(
+        data => console.log(data),
+        err => console.log(err)
+      );
   }
 
+  deleteAll() {
+    console.log('Deleting All Proxy');
+    this.http.delete(environment.baseURL + '/api/proxy')
+      .subscribe(
+        data => console.log(data),
+        err => console.log(err)
+      );
+  }
 }
