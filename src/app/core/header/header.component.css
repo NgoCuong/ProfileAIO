@@ -37,7 +37,7 @@ a {
   color: rgb(0, 0, 0);
   text-decoration: none;
 }
-li > a:after {
+.underline > a:after {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -54,7 +54,7 @@ li > a:after {
   -webkit-transition: all 0.5s ease-in-out 0s;
   transition: all 0.5s ease-in-out 0s;
 }
-li > a:hover:after {
+.underline > a:hover:after {
   width: 100%;
   visibility: visible;
   -webkit-transform: scaleX(1);
