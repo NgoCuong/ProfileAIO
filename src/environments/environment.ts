@@ -9,6 +9,8 @@ export const environment = {
     clientId: '2NqEEV5hpcusvbL-gjRFe6u1FHZT6muE',
     domain: 'sicko-mode.auth0.com',
     callbackURL: 'http://localhost:4200/callback',
+    // callbackURL: 'https://nameless-hollows-54410.herokuapp.com/callback',
   },
   baseURL: 'http://localhost:8080'
+  // baseURL: 'https://nameless-hollows-54410.herokuapp.com'
 };
