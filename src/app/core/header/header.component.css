@@ -60,3 +60,9 @@ a {
   -webkit-transform: scaleX(1);
   transform: scaleX(1);
 }
+
+
+img {
+  width: 200px;
+  height: 200px;
+}
