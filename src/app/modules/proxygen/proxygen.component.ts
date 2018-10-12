@@ -8,16 +8,21 @@ import { ProxyService } from '../../core/services/proxy.service';
   styleUrls: ['./proxygen.component.css']
 })
 export class ProxygenComponent implements OnInit {
+
   proxyGen = {};
   Servers = ['Linode', 'X', 'Y', 'Z'];
-  Locations = ['Chicago', 'Freemont'];
+  Locations = ['us-west', 'Chicago', 'Freemont'];
+
   constructor(public auth: AuthService, private proxyService: ProxyService) { }
 
   ngOnInit() {
   }
 
   submit() {
-    console.log(this.proxyGen);
-    this.proxyService.getProxy();
+    this.proxyService.getProxy(this.proxyGen);
+  }
+
+  deleteAll() {
+    this.proxyService.deleteAll();
   }
 }
