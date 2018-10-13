@@ -6,10 +6,6 @@ module.exports = class ProxyGenerator {
     constructor(accessToken) {
         this.accessToken = accessToken;
         this.port = '3128';
-        // this.user = 'profileaio';
-        // this.pass = 'pr0fi13ai0';
-        // this.region = 'us-east';
-        this.serverLimitReached = false;
 
         this.bashCommand =
             "yum -y update && " +
@@ -27,6 +23,7 @@ module.exports = class ProxyGenerator {
         this.request = require('request-promise');
         this.pLimit = require('p-limit');
     }
+
     // #endregion
 
     // #region Helpers
@@ -41,23 +38,12 @@ module.exports = class ProxyGenerator {
 
     // get number of servers created
     async getIpCount() {
-        var options = {
-            auth: {
-                'bearer': this.accessToken
-            },
-            method: 'get',
-            json: true,
-        };
 
-        try {
-            var jsonData = await this.request('https://api.linode.com/v4/linode/instances', options)
-                .catch(function (response) {
-                    console.log("Err: " + response.statusCode);
-                });
-            return jsonData.results;
-        } catch (error) {
-            console.log(error);
-        }
+        var response = await this.httpRequest('https://api.linode.com/v4/linode/instances', 'get')
+            .catch(function (response) {
+                console.log("Err: " + response.statusCode);
+            });
+        return response.results;
     }
 
     // #endregion
@@ -136,58 +122,34 @@ module.exports = class ProxyGenerator {
     // #region Delete Linode Servers 
 
     async  deleteInstance(nodeId) {
-        var options = {
-            auth: {
-                'bearer': this.accessToken
-            },
-            method: 'delete',
-            json: true,
-        };
-
-        try {
-            var jsonData = await this.request('https://api.linode.com/v4/linode/instances/' + nodeId, options)
-                .catch(function (reason) {
-                    console.log("\nResponse: " + reason.message);
-                });
-        } catch (response) {
-            console.log(response);
-            console.log("Error failed to delete instance");
-        }
+        await this.httpRequest('https://api.linode.com/v4/linode/instances/' + nodeId, 'delete')
+            .catch(function (reason) {
+                console.log("\nResponse: " + reason.message);
+            });
     }
 
     async deleteAllInstances() {
-        var options = {
-            auth: {
-                'bearer': this.accessToken
-            },
-            method: 'get',
-            json: true,
-        };
 
-        try {
-            var jsonData = await this.request('https://api.linode.com/v4/linode/instances/', options)
-                .catch(function (reason) {
-                    console.log("\nResponse: " + reason.message);
-                });
+        var response = await this.httpRequest('https://api.linode.com/v4/linode/instances', 'get')
+            .catch(function (error) {
+                console.log(error);
+            });
 
-            var len = jsonData.data.length;
-
-            if (len == 0) {
-                console.log("No machines to delete");
-            }
-
-            for (var i = 0; i < len; i++) {
-                var machine = jsonData.data[i];
+        var serverCount = response.data.length;
+        if (serverCount == 0) {
+            console.log("No servers to delete");
+        } else {
+            for (var i = 0; i < serverCount; i++) {
+                var machine = response.data[i];
                 console.log("Deleting server %s", machine.ipv4[0]);
                 this.deleteInstance(machine.id);
             }
-            console.log(`Deleted ${len} servers`);
-            return `Deleted ${len} servers`;
-        } catch (response) {
-            console.log(response);
-            console.log("Error failed to create instance");
+            console.log(`Deleted ${serverCount} servers`);
+            return `Deleted ${serverCount} servers`;
         }
+        return 200;
     }
+
     // #endregion
 
     // #region Execute Remote CLI
@@ -242,7 +204,7 @@ module.exports = class ProxyGenerator {
     }
     // #endregion
 
-    // #region  Fetch Server Ips
+    // #region Fetch Server Ips
 
     // gets all ips per page from api call
     async getPageIps(pageNumber) {
@@ -308,70 +270,82 @@ module.exports = class ProxyGenerator {
     }
 
     // #endregion
-
+    
     // #region Fatch Server Status
 
     // gets all status per page from api call
     async getPageStatus(pageNumber) {
-        var ips = [];
-        var options = {
-            auth: {
-                'bearer': this.accessToken
-            },
-            method: 'get',
-            json: true,
-        };
 
-        try {
-            var jsonData = await this.request(`https://api.linode.com/v4/linode/instances?page=${pageNumber}`, options)
-                .catch(function (reason) {
-                    console.log("\nResponse: " + reason.message);
-                });
+        var response = await this.httpRequest(`https://api.linode.com/v4/linode/instances?page=${pageNumber}`, 'get');
 
-            for (var i = 0; i < jsonData.data.length; i++) {
-                var machine = jsonData.data[i];
-                if (machine.status != 'running') {
-                    return false;
-                }
+        for (var i = 0; i < response.data.length; i++) {
+            var machine = response.data[i];
+            if (machine.status != 'running') {
+                return false;
             }
-            return true;
-        } catch (response) {
-            console.log(response);
         }
+        return true;
     }
 
     // gathers all server status
     async checkServerStatus() {
+
+        var response = await this.httpRequest('https://api.linode.com/v4/linode/instances/', 'get');
+        var pageCount = response.pages;
+
+        for (var i = 1; i < pageCount + 1; ++i) {
+            if (await this.getPageStatus(i) == false) {
+                return false;
+            }
+        }
+
+        console.log('Servers are ready!');
+        return true;
+    }
+
+    // #endregion 
+
+    async httpRequest(uri, requestType) {
         var options = {
-            auth: {
-                'bearer': this.accessToken
-            },
-            method: 'get',
+            auth: {'bearer': this.accessToken},
+            method: requestType,
             json: true,
         };
-
-        try {
-            var jsonData = await this.request('https://api.linode.com/v4/linode/instances/', options)
-                .catch(function (reason) {
-                    console.log("\nResponse: " + reason.message);
-                });
-
-            var pages = jsonData.pages;
-
-            for (var i = 1; i < pages + 1; ++i) {
-                if (await this.getPageStatus(i) == false) {
-                    return false;
+        var result = await this.request(uri, options)
+            .catch(function (reason) {
+                switch(reason.statusCode) {
+                    case 200:
+                        console.log('200 OK	The request was successful');
+                        break;
+                    case 204:
+                        console.log('204 No Content	The server successfully fulfilled the request and there is no additional content to send.');
+                        break;
+                    case 400:
+                        console.log('400 Bad Request You submitted an invalid request (missing parameters, etc.)');
+                        break;
+                    case 401:
+                        console.log('401 Unauthorized You failed to authenticate for this resource.');
+                        break;
+                    case 403:
+                        console.log('403 Forbidden You are authenticated, but dont have permission to do this.');
+                        break;
+                    case 404:
+                        console.log('404 Not Found	The resource youre requesting does not exist.');
+                        break;
+                    case 429:
+                        console.log('429 Too Many Requests	Youve hit a rate limit.');
+                        break;
+                    case 500:
+                        console.log('200 OK	The request was successful');
+                        break;
+                    default:
+                        console.log('Internal Server Error	Please open a Support Ticket.');
                 }
+                return reason.statusCode;
             }
-
-            console.log("Servers are ready!");
-            return true;
-        } catch (response) {
-            console.log(response);
-            console.log("Error failed to create instance");
-        }
+        );
+        return result;
     }
-    // #endregion 
 
     async generateProxies(proxyNumber, user, pass, region) {
         this.user = user;
