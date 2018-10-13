@@ -1,0 +1,25 @@
+.container {
+    /* background: green; */
+    padding-top: 50px;
+    margin-top: 50px;
+}
+
+.col-md-3 {
+    padding-top: 50px;
+    background: pink;
+}
+
+.col-md-9 {
+    /* padding-top: 50px; */
+    /* background: yellow;  	 */
+}
+
+li {
+    /* border: 1px solid black; */
+    text-align: center;
+    padding: 5px;
+}
+ul {
+    list-style: none;
+    padding: 0;
+}
