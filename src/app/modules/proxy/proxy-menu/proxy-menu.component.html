@@ -2,11 +2,11 @@
   <div class="row h-100">
     <div class="col-md-3">
       <ul>
-        <li (click)="createForm('DashBoard');">My Proxy DashBoard</li>
-        <li (click)="createForm('Linode')">Linode</li>
-        <li (click)="createForm('Vultr')">Vultr</li>
-        <li (click)="createForm('Google')">Google</li>
-        <li (click)="createForm('Digital Ocean')">Digital Ocean</li>
+        <li (click)="createForm('DashBoard');" [ngClass]="{'highlight': formType === 'DashBoard'}">My Proxy DashBoard</li>
+        <li (click)="createForm('Linode')" [ngClass]="{'highlight': formType === 'Linode'}">Linode</li>
+        <li (click)="createForm('Vultr')" [ngClass]="{'highlight': formType === 'Vultr'}">Vultr</li>
+        <li (click)="createForm('Google')" [ngClass]="{'highlight': formType === 'Google'}">Google</li>
+        <li (click)="createForm('Digital Ocean')" [ngClass]="{'highlight': formType === 'Digital Ocean'}">Digital Ocean</li>
       </ul>
     </div>
     <div class="col-md-9">
