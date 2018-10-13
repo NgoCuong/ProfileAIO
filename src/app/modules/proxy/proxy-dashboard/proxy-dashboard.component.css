@@ -68,7 +68,7 @@
 .table100.ver2 th {
   font-family: Lato-Bold;
   font-size: 18px;
-  color: #fa4251;
+  color: #636363;
   line-height: 1.4;
 
   background-color: transparent;
@@ -105,4 +105,9 @@
   .table tr.active td {
     background-color:#123456 !important;
     color: white;
+  }
+
+
+  tr:hover {
+    background-color: #F7F7F9;
   }
