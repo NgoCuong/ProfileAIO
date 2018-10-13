@@ -8,7 +8,9 @@ import { saveAs } from 'file-saver';
   styleUrls: ['./profileaio.component.css']
 })
 export class ProfileaioComponent implements OnInit {
+  profiletypes = ['Dashe', 'AIO Plus'];
   address: string;
+  toProfile: string;
   loading: Boolean = false;
   @ViewChild('downloadZipLink') private downloadZipLink: ElementRef;
 
@@ -20,16 +22,21 @@ export class ProfileaioComponent implements OnInit {
 
   async submit() {
     this.loading = true;
-    const blob = await this.profileService.sendUrl(this.address);
+    // const blob = await this.profileService.sendUrl(this.address, this.toProfile);
+    const blog = await this.profileService.createxlsx(this.address);
+
+    const blob = await this.profileService.createxlsx(this.address);
+    // saveAs(blob, "faf.xlsx");
     const url = window.URL.createObjectURL(blob);
     const link = this.downloadZipLink.nativeElement;
     link.href = url;
-    link.download = 'dashe.json';
+    link.download = 'somefile.xlsx';
     link.click();
-
+    this.loading = false;
     window.URL.revokeObjectURL(url);
 
 
   }
+
 
 }

@@ -2,20 +2,95 @@ var express = require("express");
 var router = express.Router();
 var profile = require("../models/profile.model");
 var axios = require("axios");
+const XLSX = require('xlsx');
+
 
 //routes
-router.post('/create', create);
+router.post('/create/:id', create);
+router.get('/testing', CreateXlsxResponse);
 module.exports = router;
 const apiKey = "AIzaSyD65a02MsanOy8KDEvIKfR8lTfO77kJXd4";
 
-async function create(req, res) {
+const ProfileType = Object.freeze( {
+    DASHE: 'dashe',
+    ANBPLUS: 'anbplus',
+    PD: 'pd',
+    CYBER: 'cyber',
+    SPLASHFORCE: 'splashforce',
+    TRIP: 'trip'
+});
+
+async function getReponseFromGoogleExcel(req, res) {
     try{
+        if(doesIdExist(req.params.id.toUpperCase()) == false) return res.status(500).send("NOT SUPPORTED");
+        //get the Sheet names from the google excel
+        var sheetResults = await getSheetNameFromGoogleExcel(parseExcelId(req.body.url), apiKey);
+
+        //Take the first sheetName and add all the info
+        var results = await getJsonFromGoogleExcel(parseExcelId(req.body.url), sheetResults[0], apiKey);
+
+        //Convert the normal json format to the user's choice 
+        var convertedResults = getConvertedProfiles(req.params.id, results);
+
+        //determine what we are sending back to the frontend
+        //xlsx or json or cvs
+        
+
+
+    }catch(error) {
+        console.log(error);
+        res.status(400).send(error);
+    }
+}
+
+async function CreateXlsxResponse(req, res) {
+    try{
+        //data = [ { "agentNo":"324234", "subName":"30, Jul 2013 09:24 AM" }, { "agentNo":"444443", "subName":"30, Jul 2013 09:24 AM" } ];
+        /* create workbook & set props*/
+        var urlthis = 'https://docs.google.com/spreadsheets/d/18bmclCSFakTWte9Vi6fsRNCyW56ljfCCDn2THfDueR4/edit#gid=0';
+        var sheetResults = await getSheetNameFromGoogleExcel(parseExcelId(urlthis), apiKey);
+        console.log(sheetResults);
+        var results = await getJsonFromGoogleExcel(parseExcelId(urlthis), sheetResults[0], apiKey);
+        console.log("Attempting to convert to users choice of profileType");
+        var convertedResults = getConvertedProfiles('anbplus', results);
+        
+        console.log(convertedResults);
+        const wb = { SheetNames: [], Sheets: {} };
+        wb.Props = {
+            Title: "ProfileAIO",
+            Author: "Breadboy"
+        };
+        /*create sheet data & add to workbook*/
+        var ws = XLSX.utils.json_to_sheet(convertedResults);
+        var ws_name = "Profile Sheets";
+        XLSX.utils.book_append_sheet(wb, ws, ws_name);     
+        
+        var wbout = new Buffer(XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' }));
+        var filename = "myDataFile.xlsx";
+        res.setHeader('Content-Disposition', 'attachment; filename=' + filename);
+        res.type('application/octet-stream');
+        res.status(200).send(wbout);
+
+        
+    }catch(error) {
+        console.log(error);
+        res.status(400).send(error);
+    }
+
+
+}
+async function createJsonResponse(req, res) {
+    try{
+        console.log(req.params.id);
+        if(doesIdExist(req.params.id.toUpperCase()) == false) return res.status(500).send("NOT SUPPORTED");
+
         var sheetResults = await getSheetNameFromGoogleExcel(parseExcelId(req.body.url), apiKey);
         console.log(sheetResults);
-        var results = await getJsonFromGoogleExcel(parseExcelId(req.body.url), 'Sheet1', apiKey);
-        console.log(results);
-        res.status(200);
-        res.send(results);
+        var results = await getJsonFromGoogleExcel(parseExcelId(req.body.url), sheetResults[0], apiKey);
+        console.log("Attempting to convert to users choice of profileType");
+        var convertedResults = getConvertedProfiles(req.params.id, results);
+        console.log(convertedResults);
+        res.status(200).send(convertedResults);
     }catch(error) {
         console.log(error);
         res.status(400).send(error);
@@ -24,10 +99,30 @@ async function create(req, res) {
 
 }
 
+function doesIdExist(id) {
+    if(id in ProfileType) return true;
+    return false;
+}
+
+function getConvertedProfiles(id ,results) {
+    var convertedProfiles = [];
+    results.forEach((element) => {
+        convertedProfiles.push(findByIdAndConvert(id, element));
+    })
+    return convertedProfiles;
+}
+
+function findByIdAndConvert(id, one_profile) {
+    console.log(id);
+    switch(id) {
+        case ProfileType.ANBPLUS: return one_profile.getANBPlusFormat;
+        case ProfileType.DASHE: return one_profile.getDasheFormat;
+    }
+}
+
 async function getJsonFromGoogleExcel(excelId, sheetName, apiKey) {
     try {
         var profiles = [];
-        console.log(formatOptions(excelId, sheetName, apiKey));
         var response = await axios.get(formatOptions(excelId, sheetName, apiKey));
         if(response.data.values.length < 2 ) {
             return Promise.reject("Error: Google excel is in the wrong format. ");
@@ -56,7 +151,7 @@ async function getJsonFromGoogleExcel(excelId, sheetName, apiKey) {
                     element[15])
                 );
         });
-         return Promise.resolve(profiles);
+        return Promise.resolve(profiles);
     } catch (error) {
         return Promise.reject("Could not read google excel properly. " + error);
     }

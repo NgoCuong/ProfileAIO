@@ -1,19 +1,30 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { utils, write, WorkBook } from 'xlsx';
+
 @Injectable()
 export class ProfileService {
 
   constructor(private http: HttpClient) { }
 
 
-  async sendUrl(address: string): Promise<Blob> {
+  async sendUrl(address: string, toProfile: string): Promise<Blob> {
     const file = await this.http.post<Blob>('http://localhost:5000/profile/create', { url : address}, 
       {
         responseType: 'blob' as 'json' 
       }).toPromise();
       return file;
   }
+
+  async createxlsx(jsonresponse: string): Promise<Blob> {
+    const file = await this.http.get<Blob>('http://localhost:5000/profile/testing', 
+      {
+        responseType: 'blob' as 'json' 
+      }).toPromise();
+      return file;
+
+  }
+
 
   // async sendUrl(address: String) {
   //   console.log(address);
