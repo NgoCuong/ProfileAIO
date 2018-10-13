@@ -1,25 +1,31 @@
+.proxyBody {
+    background-color: #F7F7F9;
+    /* margin-bottom:  */
+}
+
 .container {
     margin-top: 100px;
+    background-color: #F7F7F9;
 }
 
 li {
     text-align: center;
-    border-bottom: 1px solid #f2f2f2;
+    border-bottom: 1px solid #e0e0e0;
     line-height: 4;
     padding: 0;
 }
 
 li:hover {
-    background-color: #f2f2f2;
+    background-color: #d0d0d0;
 }
 
 ul {
     list-style: none;
-    border: 1px solid #f2f2f2;
+    /* border: 1px solid #f2f2f2; */
     vertical-align: middle;
     padding: 0;
 }
 
 .highlight{
-    background-color: #f2f2f2
+    background-color: #d0d0d0
 }
