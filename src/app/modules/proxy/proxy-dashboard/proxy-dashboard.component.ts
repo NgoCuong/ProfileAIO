@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./proxy-dashboard.component.css']
 })
 export class ProxyDashboardComponent implements OnInit {
-
+  selectedList = [];
   constructor() { }
 
   ngOnInit() {
