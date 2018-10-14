@@ -30,7 +30,7 @@ router.post("/", async function (req, res) {
     var number = req.body.number;
     var x = new proxy(token);
     
-    var result = await x.generateServers(number);
+    var result = await x.generateServers(number, user, pass, region);
     res.send(result + " - Proxies are being generated...");
     await x.generateProxies(user, pass, region);
 });

@@ -52,7 +52,7 @@ module.exports = class ProxyGenerator {
 
     // #region Create Linode Servers
 
-    async createInstance(instanceName, instancePassword, instanceRegion) {
+    async createInstance(instancePassword, instanceRegion) {
 
         var label = this.getRandomInt(1, 1000000);
         var payload = {
@@ -83,8 +83,7 @@ module.exports = class ProxyGenerator {
 
         try {
             for (var i = 0; i < number; ++i) {
-                var rand = this.getRandomInt(0, 10000);
-                promises.push(limit(() => this.createInstance(`server${rand}`, this.pass, this.region)));
+                promises.push(limit(() => this.createInstance(this.pass, this.region)));
             }
             await Promise.all(promises)
                 .then(() => {
@@ -116,12 +115,9 @@ module.exports = class ProxyGenerator {
                 console.log(error);
             });
 
-        if (response.results == 0) {
-            return 'No servers to delete';
-        }
-        if (response != 200 ) {
-            return response;
-        } 
+        if (response == 401) return 401;
+
+
 
         var serverCount = response.data.length;
         if (serverCount == 0) {
@@ -272,9 +268,13 @@ module.exports = class ProxyGenerator {
     // #endregion 
 
     // Step 1: Create servers
-    async generateServers(proxyNumber) {;
+    async generateServers(proxyNumber, user, pass, region) {;
         try {
+            this.user = user;
+            this.pass = pass;
+            this.region = region;
             this.number = proxyNumber;
+
             console.log("Creating servers...")
             await this.createBatchInstancesLimit(this.number);
             console.log("Server creation complete!");
