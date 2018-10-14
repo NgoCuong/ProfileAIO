@@ -29,6 +29,4 @@ export class ProxyFormComponent implements OnInit {
   deleteAll() {
     this.proxyService.deleteAll();
   }
-
 }
-

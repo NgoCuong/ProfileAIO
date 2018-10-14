@@ -31,9 +31,5 @@ export class ProxyService {
 
   getRegion():  Observable<String[]> {
     return this.http.get<String[]>(environment.baseURL + '/api/proxy/regions');
-      // .subscribe(
-      //   data => console.log(data),
-      //   err => console.log(err)
-      // );
   }
 }
