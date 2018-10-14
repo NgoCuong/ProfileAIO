@@ -26,6 +26,8 @@ app.use(express.static(distDir));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+app.use('/api/proxy', require('./server/routes/proxyroute'));
+
 app.get('/api/public', function (req, res) {
   res.json({
     message: 'Hello from a public endpoint! You don\'t need to be authenticated to see this.'
