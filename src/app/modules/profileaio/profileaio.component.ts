@@ -1,11 +1,6 @@
-<<<<<<< HEAD:src/app/profileaio/profileaio.component.ts
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { ProfileService } from '../_services/profile.service';
 import { saveAs } from 'file-saver';
-=======
-import { Component, OnInit } from '@angular/core';
 import { ProfileService } from '../../core/services/profile.service';
->>>>>>> develop:src/app/modules/profileaio/profileaio.component.ts
 
 @Component({
   selector: 'app-profileaio',
@@ -15,11 +10,8 @@ import { ProfileService } from '../../core/services/profile.service';
 export class ProfileaioComponent implements OnInit {
   profiletypes = ['Dashe', 'AIO Plus'];
   address: string;
-<<<<<<< HEAD:src/app/profileaio/profileaio.component.ts
   toProfile: string;
-=======
   message: string;
->>>>>>> develop:src/app/modules/profileaio/profileaio.component.ts
   loading: Boolean = false;
   @ViewChild('downloadZipLink') private downloadZipLink: ElementRef;
 
@@ -31,7 +23,6 @@ export class ProfileaioComponent implements OnInit {
 
   async submit() {
     this.loading = true;
-<<<<<<< HEAD:src/app/profileaio/profileaio.component.ts
     // const blob = await this.profileService.sendUrl(this.address, this.toProfile);
     const blog = await this.profileService.createxlsx(this.address);
 
@@ -48,9 +39,6 @@ export class ProfileaioComponent implements OnInit {
 
   }
 
-
-=======
     // this.profileService.sendUrl(this.address);
-  }
->>>>>>> develop:src/app/modules/profileaio/profileaio.component.ts
+  
 }

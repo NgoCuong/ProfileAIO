@@ -26,7 +26,6 @@ app.use(express.static(distDir));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-<<<<<<< HEAD
 // Makes connection asynchronously.  Mongoose will queue up database
 // operations and release them when the connection is complete.
 // mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/profile", function(err, suc) {
@@ -37,9 +36,7 @@ app.use(bodyParser.json());
 //     console.log("Successfully connected to the database");
 //   }
 // });
-=======
 app.use('/api/proxy', require('./server/routes/proxyroute'));
->>>>>>> develop
 
 app.get('/api/public', function (req, res) {
   res.json({
