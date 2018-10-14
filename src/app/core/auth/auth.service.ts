@@ -5,7 +5,6 @@ import Auth0Lock from 'auth0-lock';
 
 @Injectable()
 export class AuthService {
-  userProfile: any;
 
   auth0Options = {
     theme: {
@@ -40,8 +39,6 @@ export class AuthService {
         if (error) {
           throw new Error(error);
         }
-        this.userProfile = profile;
-        console.log(this.userProfile);
         localStorage.setItem('profile', JSON.stringify(profile));
         this.router.navigate(['/']);
       });
@@ -81,8 +78,13 @@ export class AuthService {
   }
 
   public getProfileImage(): String {
-    const proof = JSON.parse(localStorage.getItem('profile'));
-    console.log(proof.picture);
-    return proof.picture;
+    return JSON.parse(localStorage.getItem('profile')).picture;
   }
+
+  public getUserID(): String {
+    const id = JSON.parse(localStorage.getItem('profile'));
+    console.log(id.sub);
+    return id.sub;
+  }
+
 }
