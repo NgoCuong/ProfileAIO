@@ -6,8 +6,8 @@ const XLSX = require('xlsx');
 
 
 //routes
-router.post('/create/:id', create);
-router.get('/testing', CreateXlsxResponse);
+router.post('/create/:id', getReponseFromGoogleExcel);
+router.get('/testing', CreateCVSResponse);
 module.exports = router;
 const apiKey = "AIzaSyD65a02MsanOy8KDEvIKfR8lTfO77kJXd4";
 
@@ -17,7 +17,8 @@ const ProfileType = Object.freeze( {
     PD: 'pd',
     CYBER: 'cyber',
     SPLASHFORCE: 'splashforce',
-    TRIP: 'trip'
+    TRIP: 'trip',
+    SNEAKERCOP: 'sneakercop'
 });
 
 async function getReponseFromGoogleExcel(req, res) {
@@ -37,6 +38,7 @@ async function getReponseFromGoogleExcel(req, res) {
         
 
 
+
     }catch(error) {
         console.log(error);
         res.status(400).send(error);
@@ -45,38 +47,67 @@ async function getReponseFromGoogleExcel(req, res) {
 
 async function CreateXlsxResponse(req, res) {
     try{
-        //data = [ { "agentNo":"324234", "subName":"30, Jul 2013 09:24 AM" }, { "agentNo":"444443", "subName":"30, Jul 2013 09:24 AM" } ];
+       /* create workbook & set props*/
+       var urlthis = 'https://docs.google.com/spreadsheets/d/18bmclCSFakTWte9Vi6fsRNCyW56ljfCCDn2THfDueR4/edit#gid=0';
+       var sheetResults = await getSheetNameFromGoogleExcel(parseExcelId(urlthis), apiKey);
+       console.log(sheetResults);
+       var results = await getJsonFromGoogleExcel(parseExcelId(urlthis), sheetResults[0], apiKey);
+       console.log("Attempting to convert to users choice of profileType");
+       var convertedResults = getConvertedProfiles('sneakercop', results);
+       
+       console.log(convertedResults);
+       const wb = { SheetNames: [], Sheets: {} };
+       wb.Props = {
+           Title: "ProfileAIO",
+           Author: "Breadboy"
+       };
+       /*create sheet data & add to workbook*/
+       var ws = XLSX.utils.json_to_sheet(convertedResults);
+       var ws_name = "Profile Sheets";
+       XLSX.utils.book_append_sheet(wb, ws, ws_name);     
+       
+       var wbout = new Buffer(XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' }));
+       var filename = "myDataFile.xlsx";
+       res.setHeader('Content-Disposition', 'attachment; filename=' + filename);
+       res.type('application/octet-stream');
+       res.status(200).send(wbout);
+       
+
+    }catch(error) {
+        console.log(error);
+        res.status(400).send(error);
+    }
+}
+
+async function CreateCVSResponse(req, res) {
+    try{
         /* create workbook & set props*/
         var urlthis = 'https://docs.google.com/spreadsheets/d/18bmclCSFakTWte9Vi6fsRNCyW56ljfCCDn2THfDueR4/edit#gid=0';
         var sheetResults = await getSheetNameFromGoogleExcel(parseExcelId(urlthis), apiKey);
         console.log(sheetResults);
         var results = await getJsonFromGoogleExcel(parseExcelId(urlthis), sheetResults[0], apiKey);
         console.log("Attempting to convert to users choice of profileType");
-        var convertedResults = getConvertedProfiles('anbplus', results);
-        
+        var convertedResults = getConvertedProfiles('sneakercop', results);
         console.log(convertedResults);
-        const wb = { SheetNames: [], Sheets: {} };
-        wb.Props = {
-            Title: "ProfileAIO",
-            Author: "Breadboy"
-        };
-        /*create sheet data & add to workbook*/
-        var ws = XLSX.utils.json_to_sheet(convertedResults);
-        var ws_name = "Profile Sheets";
-        XLSX.utils.book_append_sheet(wb, ws, ws_name);     
+        // console.log(convertedResults);
+        // convertedResults.forEach(element => {
+        //     console.log(ejoin('\n'));
+        // });
+        // inJson = JSON.parse(convertedResults);
+        // var outCSV = convertedResults.rows.join('\n');
+        // console.log(outCSV);
+
         
-        var wbout = new Buffer(XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' }));
-        var filename = "myDataFile.xlsx";
+        var filename = "sneakercop.cvs";
         res.setHeader('Content-Disposition', 'attachment; filename=' + filename);
-        res.type('application/octet-stream');
-        res.status(200).send(wbout);
+        res.set('Content-Type', 'text/csv');
+        res.status(200).send(convertedResults);
 
         
     }catch(error) {
         console.log(error);
         res.status(400).send(error);
     }
-
 
 }
 async function createJsonResponse(req, res) {
@@ -100,8 +131,8 @@ async function createJsonResponse(req, res) {
 }
 
 function doesIdExist(id) {
-    if(id in ProfileType) return true;
-    return false;
+    return (id in ProfileType);
+    
 }
 
 function getConvertedProfiles(id ,results) {
@@ -117,6 +148,7 @@ function findByIdAndConvert(id, one_profile) {
     switch(id) {
         case ProfileType.ANBPLUS: return one_profile.getANBPlusFormat;
         case ProfileType.DASHE: return one_profile.getDasheFormat;
+        case ProfileType.SNEAKERCOP: return one_profile.getSneakerCopterFormat;
     }
 }
 

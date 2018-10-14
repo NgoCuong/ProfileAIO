@@ -86,6 +86,28 @@ class Profile {
         };
     }
 
+    get getSneakerCopterFormat() {
+        return this.profileName + "," + this.state + "," + this.address;
+        // return {
+        //         profilename: this.profileName,
+        //         state: this.state, 
+        //         address: this.address,
+        //         apt: this.aptNumber,
+        //         city: this.city,
+        //         firstname: this.fName,
+        //         lastname: this.lName,
+        //         phone: this.phone, 
+        //         zip: this.zip,
+        //         country: "United States",
+        //         ccvs: this.ccv,
+        //         ccnum: this.ccNum,
+        //         month: this.Month,
+        //         year: this.Year,
+        //         email: this.email,
+        //         us: "us"
+        // };
+    }
+
     get Month() {
         var words = this.ccExp.split('/');
         return words[0];
