@@ -116,6 +116,13 @@ module.exports = class ProxyGenerator {
                 console.log(error);
             });
 
+        if (response.results == 0) {
+            return 'No servers to delete';
+        }
+        if (response != 200 ) {
+            return response;
+        } 
+
         var serverCount = response.data.length;
         if (serverCount == 0) {
             console.log("No servers to delete");
