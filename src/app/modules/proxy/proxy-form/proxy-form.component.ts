@@ -13,12 +13,14 @@ export class ProxyFormComponent implements OnInit {
 
   proxyGen = {};
   Servers = ['Linode', 'X', 'Y', 'Z'];
-  Locations = ['us-west', 'Chicago', 'Freemont'];
+  regions = [];
 
-  constructor(public auth: AuthService,
-    public proxyService: ProxyService) { }
+  constructor(
+    private proxyService: ProxyService) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.proxyService.getRegion().subscribe(regions => this.regions = regions);
+  }
 
   submit() {
     this.proxyService.getProxy(this.proxyGen);
@@ -27,6 +29,4 @@ export class ProxyFormComponent implements OnInit {
   deleteAll() {
     this.proxyService.deleteAll();
   }
-
 }
-
