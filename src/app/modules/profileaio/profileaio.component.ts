@@ -8,7 +8,7 @@ import { ProfileService } from '../../core/services/profile.service';
   styleUrls: ['./profileaio.component.css']
 })
 export class ProfileaioComponent implements OnInit {
-  profiletypes = ['Dashe', 'AIO Plus'];
+  profiletypes = ['Dashe', 'ANB Plus'];
   address: string;
   toProfile: string;
   message: string;
@@ -23,10 +23,14 @@ export class ProfileaioComponent implements OnInit {
 
   async submit() {
     this.loading = true;
-    // const blob = await this.profileService.sendUrl(this.address, this.toProfile);
-    const blog = await this.profileService.createxlsx(this.address);
+    console.log(this.toProfile);
+    const blob = await this.profileService.sendUrl(this.address, this.toProfile).catch(error => {
+      console.log(error);
+      return;
+    });
+    // const blog = await this.profileService.createxlsx(this.address);
 
-    const blob = await this.profileService.createxlsx(this.address);
+    // const blob = await this.profileService.createxlsx(this.address);
     // saveAs(blob, "faf.xlsx");
     const url = window.URL.createObjectURL(blob);
     const link = this.downloadZipLink.nativeElement;
@@ -37,8 +41,5 @@ export class ProfileaioComponent implements OnInit {
     window.URL.revokeObjectURL(url);
 
 
-  }
-
-    // this.profileService.sendUrl(this.address);
-  
+  }  
 }

@@ -15,6 +15,13 @@
                                         <input type="text" class="form-control form-control-lg rounded-0" name="address" [(ngModel)]="address" required />
                                     </div>
                                     <div class="form-group">
+                                            <label for="profiletype">Profile Type</label>
+                                            <select class="form-control" id="profiles" [(ngModel)]="toProfile" name="profileType" required>
+                                                <option *ngFor="let profile of profiletypes" [value]="profile">{{profile}}</option>
+                                            </select>
+                                        </div>
+                                    <div class="form-group">
+                                        <a class="download-zip-link" #downloadZipLink></a>
                                         <button [disabled]="loading" class="btn btn-success btn-lg float-right">Submit</button>
                                     </div>
                                 </form>

@@ -6,7 +6,7 @@ const XLSX = require('xlsx');
 
 
 //routes
-router.post('/create/:id', getReponseFromGoogleExcel);
+router.post('/create/:id', GenerateProfile);
 router.get('/testing', CreateCVSResponse);
 module.exports = router;
 const apiKey = "AIzaSyD65a02MsanOy8KDEvIKfR8lTfO77kJXd4";
@@ -21,22 +21,24 @@ const ProfileType = Object.freeze( {
     SNEAKERCOP: 'sneakercop'
 });
 
-async function getReponseFromGoogleExcel(req, res) {
+async function GenerateProfile(req, res) {
     try{
+        console.log("Creating profile for " + req.params.id)
+
         if(doesIdExist(req.params.id.toUpperCase()) == false) return res.status(500).send("NOT SUPPORTED");
         //get the Sheet names from the google excel
-        var sheetResults = await getSheetNameFromGoogleExcel(parseExcelId(req.body.url), apiKey);
+        // var sheetResults = await getSheetNameFromGoogleExcel(parseExcelId(req.body.url), apiKey);
 
-        //Take the first sheetName and add all the info
-        var results = await getJsonFromGoogleExcel(parseExcelId(req.body.url), sheetResults[0], apiKey);
+        // //Take the first sheetName and add all the info
+        // var results = await getJsonFromGoogleExcel(parseExcelId(req.body.url), sheetResults[0], apiKey);
 
-        //Convert the normal json format to the user's choice 
-        var convertedResults = getConvertedProfiles(req.params.id, results);
+        // //Convert the normal json format to the user's choice 
+        // var convertedResults = getConvertedProfiles(req.params.id, results);
 
         //determine what we are sending back to the frontend
         //xlsx or json or cvs
         
-
+        res.status(200).send("good");
 
 
     }catch(error) {
@@ -87,8 +89,10 @@ async function CreateCVSResponse(req, res) {
         console.log(sheetResults);
         var results = await getJsonFromGoogleExcel(parseExcelId(urlthis), sheetResults[0], apiKey);
         console.log("Attempting to convert to users choice of profileType");
-        var convertedResults = getConvertedProfiles('sneakercop', results);
-        console.log(convertedResults);
+        // var convertedResults = getConvertedProfiles('sneakercop', results);
+        console.log("done converting");
+        console.log(results);
+        // console.log(results);
         // console.log(convertedResults);
         // convertedResults.forEach(element => {
         //     console.log(ejoin('\n'));
@@ -101,7 +105,7 @@ async function CreateCVSResponse(req, res) {
         var filename = "sneakercop.cvs";
         res.setHeader('Content-Disposition', 'attachment; filename=' + filename);
         res.set('Content-Type', 'text/csv');
-        res.status(200).send(convertedResults);
+        res.status(200).send(results);
 
         
     }catch(error) {
@@ -144,7 +148,6 @@ function getConvertedProfiles(id ,results) {
 }
 
 function findByIdAndConvert(id, one_profile) {
-    console.log(id);
     switch(id) {
         case ProfileType.ANBPLUS: return one_profile.getANBPlusFormat;
         case ProfileType.DASHE: return one_profile.getDasheFormat;
