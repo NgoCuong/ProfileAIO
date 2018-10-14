@@ -23,16 +23,25 @@ var http = require('./HttpRequest');
 */
 router.post("/", async function (req, res) {
 
-    var token = req.body.token;
-    var region = req.body.region;
-    var user = req.body.user
-    var pass = req.body.pass;
-    var number = req.body.number;
-    var x = new proxy(token);
-    
-    var result = await x.generateServers(number, user, pass, region);
-    res.send(result + " - Proxies are being generated...");
-    await x.generateProxies(user, pass, region);
+    try {
+        var token = req.body.token;
+        var region = req.body.region;
+        var user = req.body.user
+        var pass = req.body.pass;
+        var number = req.body.number;
+        var x = new proxy(token);
+
+        var result = await x.generateServers(number, user, pass, region);
+        res.send(result);
+    } catch (err) {
+
+        if (err instanceof RangeError) {
+            console.log('No servers to generate proxies from');
+        } else {
+            res.send(err.statusCode);
+        }
+    }
+
 });
 
 /* API Endpoint: GET - /api/proxy
@@ -48,11 +57,16 @@ router.get("/", async function (req, res) {
    Used to decomission all proxies */
 router.delete("/", async function (req, res) {
 
-    var token = req.body.token;
-    var x = new proxy(token);
-    
-    var results = await x.deleteAllInstances();
-    res.send(results);
+    try {
+        var token = req.body.token;
+        var x = new proxy(token);
+
+        var results = await x.deleteAllInstances();
+        res.send(results);
+    } catch (err) {
+        res.send(err.statusCode);
+    }
+
 });
 
 
