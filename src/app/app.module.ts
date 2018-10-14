@@ -18,7 +18,6 @@ import { HeaderComponent } from './core/header/header.component';
 import { FooterComponent } from './core/footer/footer.component';
 import { ApiTestingComponent } from './modules/api-testing/api-testing.component';
 import { AuthGuardService } from './core/route-guard/auth-guard.service';
-import { AuthenticationComponent } from './modules/authentication/authentication.component';
 import { ProxyService } from './core/services/proxy.service';
 import { ProxyDashboardComponent } from './modules/proxy/proxy-dashboard/proxy-dashboard.component';
 import { ProxyFormComponent } from './modules/proxy/proxy-form/proxy-form.component';
@@ -35,7 +34,6 @@ import { ProxyMenuComponent } from './modules/proxy/proxy-menu/proxy-menu.compon
     HeaderComponent,
     FooterComponent,
     ApiTestingComponent,
-    AuthenticationComponent,
     ProxyDashboardComponent,
     ProxyFormComponent,
     ProxyMenuComponent,
