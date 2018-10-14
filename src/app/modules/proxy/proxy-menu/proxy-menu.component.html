@@ -1,0 +1,21 @@
+<section class="proxyBody">
+    <div class="row">
+      <div class="col-md-2">
+        <ul>
+          <li (click)="createForm('DashBoard');" [ngClass]="{'highlight': formType === 'DashBoard'}">DashBoard</li>
+          <li (click)="createForm('Linode')" [ngClass]="{'highlight': formType === 'Linode'}">Linode</li>
+          <li (click)="createForm('Vultr')" [ngClass]="{'highlight': formType === 'Vultr'}">Vultr</li>
+          <li (click)="createForm('Google')" [ngClass]="{'highlight': formType === 'Google'}">Google</li>
+          <li (click)="createForm('Digital Ocean')" [ngClass]="{'highlight': formType === 'Digital Ocean'}">Digital Ocean</li>
+        </ul>
+      </div>
+      <div class="col-md-8">
+        <div *ngIf="formType=='DashBoard'">
+          <app-proxy-dashboard></app-proxy-dashboard>
+        </div>
+        <div *ngIf="formType!='DashBoard'">
+          <app-proxy-form [formType]="formType"></app-proxy-form>
+        </div>
+      </div>
+  </div>
+</section>

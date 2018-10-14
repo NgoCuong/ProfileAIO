@@ -2,15 +2,31 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var path = require('path');
 var app = express();
-var mongoose = require ("mongoose"); // The reason for this demo.
+var mongoose = require("mongoose");
+var checkJwt = require('./server/auth');
+const cors = require('cors');
+
+// Only turn this on for Local
+const corsOptions =  {
+  origin: 'http://localhost:4200'
+};
+app.use(cors(corsOptions));
 
 // Create link to Angular build directory
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));
 
+// Makes connection to Mongoose 
+// mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/profile", { useNewUrlParser: true }, function (err, suc) {
+//   if (err) {
+//     console.log(err);
+//   }
+// });
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+<<<<<<< HEAD
 // Makes connection asynchronously.  Mongoose will queue up database
 // operations and release them when the connection is complete.
 // mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/profile", function(err, suc) {
@@ -21,13 +37,21 @@ app.use(bodyParser.json());
 //     console.log("Successfully connected to the database");
 //   }
 // });
+=======
+app.use('/api/proxy', require('./server/routes/proxyroute'));
+>>>>>>> develop
 
-// routes to api
-//var userRoutes = require("./server/routes/user");
-//app.use("/api", userRoutes);
+app.get('/api/public', function (req, res) {
+  res.json({
+    message: 'Hello from a public endpoint! You don\'t need to be authenticated to see this.'
+  });
+});
 
-var userRoutes = require("./server/routes/user.route");
-app.use("/user", userRoutes);
+app.get('/api/private', checkJwt, function (req, res) {
+  res.json({
+    message: 'Hello from a private endpoint! You need to be authenticated to see this.'
+  });
+});
 
 var profileRoutes = require("./server/routes/profile.route");
 app.use("/profile", profileRoutes);
