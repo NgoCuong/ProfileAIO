@@ -5,13 +5,12 @@ import Auth0Lock from 'auth0-lock';
 
 @Injectable()
 export class AuthService {
+  userProfile: any;
 
   auth0Options = {
-    container: 'hiw-login-container',
     theme: {
-      // logo: '../../../assets/profileaio.png',
-      primaryColor: '#ea5323',
-      displayName: 'Profile AIO',
+      logo: '../../../assets/profileaio.png',
+      primaryColor: '#DFA612'
     },
     languageDictionary: {
       title: 'Profile AIO'
@@ -24,8 +23,8 @@ export class AuthService {
       //   scope: 'openid profile'
       // }
     },
-    // autoclose: true,
-    // oidcConformant: true,
+    autoclose: true,
+    oidcConformant: true,
   };
 
   lock = new Auth0Lock(
@@ -37,8 +36,15 @@ export class AuthService {
   constructor(private router: Router) {
     this.lock.on('authenticated', (authResult: any) => {
       this.setSession(authResult);
-      this.setProfile();
-      this.router.navigate(['/']);
+      this.lock.getUserInfo(authResult.accessToken, (error, profile) => {
+        if (error) {
+          throw new Error(error);
+        }
+        this.userProfile = profile;
+        console.log(this.userProfile);
+        localStorage.setItem('profile', JSON.stringify(profile));
+        this.router.navigate(['/']);
+      });
     });
   }
 
@@ -49,11 +55,11 @@ export class AuthService {
     localStorage.setItem('expires_at', expiresAt);
   }
 
-  login() {
-    this.lock.show({container: 'hiw-login-container'});
+  public login() {
+    this.lock.show();
   }
 
-  logout() {
+  public logout() {
     localStorage.removeItem('access_token');
     localStorage.removeItem('id_token');
     localStorage.removeItem('expires_at');
@@ -64,24 +70,19 @@ export class AuthService {
   public isAuthenticated(): boolean {
     const expiresAt = JSON.parse(localStorage.getItem('expires_at') || '{}');
     return new Date().getTime() < expiresAt;
-
   }
 
   public getToken(): string {
     return localStorage.getItem('id_token');
   }
 
-  public setProfile(): any {
-    const token =  localStorage.getItem('access_token');
-    this.lock.getUserInfo(token, (error, profile) => {
-      if (error) {
-        throw new Error(error);
-      }
-      localStorage.setItem('profile', JSON.stringify(profile));
-    });
-  }
-
   public getProfile(): any {
     return localStorage.getItem('profile');
+  }
+
+  public getProfileImage(): String {
+    const proof = JSON.parse(localStorage.getItem('profile'));
+    console.log(proof.picture);
+    return proof.picture;
   }
 }
