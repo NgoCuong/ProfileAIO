@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 
 import { AppComponent } from './app.component';
@@ -44,6 +45,7 @@ import { ProxyMenuComponent } from './modules/proxy/proxy-menu/proxy-menu.compon
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
+    Ng2SmartTableModule
   ],
   providers: [
     ProfileService,
