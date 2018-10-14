@@ -1,9 +1,9 @@
-
+/* This class used to create linode proxies */
 
 module.exports = class ProxyGenerator {
 
-    //test
     // #region Constructor
+
     constructor(accessToken) {
         this.accessToken = accessToken;
         this.port = '3128';
@@ -23,6 +23,8 @@ module.exports = class ProxyGenerator {
 
         this.request = require('request-promise');
         this.pLimit = require('p-limit');
+        this.http = require('./HttpRequest');
+        this.api = new this.http(this.accessToken);
     }
 
     // #endregion
@@ -39,8 +41,7 @@ module.exports = class ProxyGenerator {
 
     // get number of servers created
     async getIpCount() {
-
-        var response = await this.httpRequest('https://api.linode.com/v4/linode/instances', 'get')
+        var response = await this.api.httpRequest('https://api.linode.com/v4/linode/instances', 'get')
             .catch(function (response) {
                 console.log("Err: " + response.statusCode);
             });
@@ -50,10 +51,10 @@ module.exports = class ProxyGenerator {
     // #endregion
 
     // #region Create Linode Servers
+
     async createInstance(instanceName, instancePassword, instanceRegion) {
 
         var label = this.getRandomInt(1, 1000000);
-
         var payload = {
             "region": instanceRegion,
             "type": "g6-nanode-1",
@@ -62,38 +63,16 @@ module.exports = class ProxyGenerator {
             "booted": true,
             "label": ("proxyserver" + label)
         };
-        var options = {
-            auth: {
-                'bearer': this.accessToken
-            },
-            method: 'post',
-            body: payload,
-            json: true,
-        };
 
-        try {
-            var limitReached = false;
-            var jsonData = await this.request('https://api.linode.com/v4/linode/instances', options)
-                .catch(function (reason) {
-                    console.log("\nResponse: " + reason.message);
-                    if (reason.statusCode == 400) {
-                        limitReached = true;
-                    }
-                });
-            if (limitReached == true) {
-                this.serverLimitReached = true;
-            } else {
-                var ip = jsonData.ipv4[0];
-                var id = jsonData.id;
-                var status = jsonData.status;
-                console.log(`${status} server ${ip} `);
-            }
-        } catch (response) {
-            console.log(response);
-            console.log("ERROR FAILED TO CREATE SERVER..");
-        }
+        var response = await this.api.httpRequest('https://api.linode.com/v4/linode/instances', 'post', payload)
+            .catch(function(reason) {
+                console.log("\nResponse: " + reason.message)
+            });
+
+        var ip = response.ipv4[0];
+        var status = response.status;
+        console.log(`${status} server ${ip} `);
     }
-
 
     async createBatchInstancesLimit(number) {
 
@@ -118,12 +97,13 @@ module.exports = class ProxyGenerator {
             console.log(e);
         }
     }
+
     // #endregion
 
     // #region Delete Linode Servers 
 
     async  deleteInstance(nodeId) {
-        await this.httpRequest('https://api.linode.com/v4/linode/instances/' + nodeId, 'delete')
+        await this.api.httpRequest('https://api.linode.com/v4/linode/instances/' + nodeId, 'delete')
             .catch(function (reason) {
                 console.log("\nResponse: " + reason.message);
             });
@@ -131,7 +111,7 @@ module.exports = class ProxyGenerator {
 
     async deleteAllInstances() {
 
-        var response = await this.httpRequest('https://api.linode.com/v4/linode/instances', 'get')
+        var response = await this.api.httpRequest('https://api.linode.com/v4/linode/instances', 'get')
             .catch(function (error) {
                 console.log(error);
             });
@@ -183,7 +163,7 @@ module.exports = class ProxyGenerator {
     async executeBatchCommand() {
 
         // get list of all ip: password:
-        var ips = await this.getServerIps();
+        var ips = await this.getAllPageIps();
         var promisesQueue = [];
         var len = ips.length;
 
@@ -203,6 +183,7 @@ module.exports = class ProxyGenerator {
             console.log(e);
         }
     }
+
     // #endregion
 
     // #region Fetch Server Ips
@@ -210,75 +191,53 @@ module.exports = class ProxyGenerator {
     // gets all ips per page from api call
     async getPageIps(pageNumber) {
         var ips = [];
-        var options = {
-            auth: {
-                'bearer': this.accessToken
-            },
-            method: 'get',
-            json: true,
-        };
 
-        try {
-            var jsonData = await this.request(`https://api.linode.com/v4/linode/instances?page=${pageNumber}`, options)
-                .catch(function (reason) {
-                    console.log("\nResponse: " + reason.message);
-                });
+        var response = await this.api.httpRequest(`https://api.linode.com/v4/linode/instances?page=${pageNumber}`, 'get')
+            .catch(function (reason) {
+                console.log("\nResponse: " + reason.message);
+            });
 
-            if (jsonData.data.length == 0) {
-                console.log("No instances found");
-            }
-
-            for (var i = 0; i < jsonData.data.length; i++) {
-                var machine = jsonData.data[i];
+        var serverCount = response.data.length;
+        if (serverCount == 0) {
+            console.log("No server found");
+        } else {
+            for (var i = 0; i < serverCount; i++) {
+                var machine = response.data[i];
                 ips.push(machine.ipv4[0]);
             }
             return ips;
-        } catch (response) {
-            console.log(response);
         }
     }
 
     // gathers all ips of servers
-    async getServerIps() {
+    async getAllPageIps() {
         var ips = [];
 
-        var options = {
-            auth: {
-                'bearer': this.accessToken
-            },
-            method: 'get',
-            json: true,
-        };
+        var response = await this.api.httpRequest('https://api.linode.com/v4/linode/instances/', 'get')
+            .catch(function (reason) {
+                console.log("\nResponse: " + reason.message);
+            });
 
-        try {
-            var jsonData = await this.request('https://api.linode.com/v4/linode/instances/', options)
-                .catch(function (reason) {
-                    console.log("\nResponse: " + reason.message);
-                });
-            if (jsonData.data.length == 0) {
-                console.log("No instances found");
-            }
-            var pages = jsonData.pages;
-
-            for (var i = 1; i < pages + 1; ++i) {
+        var pageCount = response.pages;
+        if (pageCount == 0) {
+            console.log("No servers found");
+        } else {
+            for (var i = 1; i < pageCount + 1; ++i) {
                 var res = await this.getPageIps(i);
                 ips = ips.concat(res);
             }
             return ips;
-        } catch (response) {
-            console.log(response);
         }
     }
 
     // #endregion
-    
+
     // #region Fatch Server Status
 
     // gets all status per page from api call
     async getPageStatus(pageNumber) {
 
-        var response = await this.httpRequest(`https://api.linode.com/v4/linode/instances?page=${pageNumber}`, 'get');
-
+        var response = await this.api.httpRequest(`https://api.linode.com/v4/linode/instances?page=${pageNumber}`, 'get');
         for (var i = 0; i < response.data.length; i++) {
             var machine = response.data[i];
             if (machine.status != 'running') {
@@ -291,7 +250,7 @@ module.exports = class ProxyGenerator {
     // gathers all server status
     async checkServerStatus() {
 
-        var response = await this.httpRequest('https://api.linode.com/v4/linode/instances/', 'get');
+        var response = await this.api.httpRequest('https://api.linode.com/v4/linode/instances/', 'get');
         var pageCount = response.pages;
 
         for (var i = 1; i < pageCount + 1; ++i) {
@@ -299,64 +258,31 @@ module.exports = class ProxyGenerator {
                 return false;
             }
         }
-
         console.log('Servers are ready!');
         return true;
     }
 
     // #endregion 
 
-    async httpRequest(uri, requestType) {
-        var options = {
-            auth: {'bearer': this.accessToken},
-            method: requestType,
-            json: true,
-        };
-        var result = await this.request(uri, options)
-            .catch(function (reason) {
-                switch(reason.statusCode) {
-                    case 200:
-                        console.log('200 OK	The request was successful');
-                        break;
-                    case 204:
-                        console.log('204 No Content	The server successfully fulfilled the request and there is no additional content to send.');
-                        break;
-                    case 400:
-                        console.log('400 Bad Request You submitted an invalid request (missing parameters, etc.)');
-                        break;
-                    case 401:
-                        console.log('401 Unauthorized You failed to authenticate for this resource.');
-                        break;
-                    case 403:
-                        console.log('403 Forbidden You are authenticated, but dont have permission to do this.');
-                        break;
-                    case 404:
-                        console.log('404 Not Found	The resource youre requesting does not exist.');
-                        break;
-                    case 429:
-                        console.log('429 Too Many Requests	Youve hit a rate limit.');
-                        break;
-                    case 500:
-                        console.log('200 OK	The request was successful');
-                        break;
-                    default:
-                        console.log('Internal Server Error	Please open a Support Ticket.');
-                }
-                return reason.statusCode;
-            }
-        );
-        return result;
+    // Step 1: Create servers
+    async generateServers(proxyNumber) {;
+        try {
+            this.number = proxyNumber;
+            console.log("Creating servers...")
+            await this.createBatchInstancesLimit(this.number);
+            console.log("Server creation complete!");
+        } catch (error) {
+            return error.body.statusCode;
+        }
+        return 200;
     }
 
-    async generateProxies(proxyNumber, user, pass, region) {
+    // Step 2: Setup servers
+    async generateProxies(user, pass, region) {
+
+        this.region = region;
         this.user = user;
         this.pass = pass;
-        this.region = region;
-        this.number = proxyNumber;
-
-        console.log("Creating servers...")
-        await this.createBatchInstancesLimit(this.number );
-        console.log("Server creation complete!");
 
         while (await this.checkServerStatus() == false) {
             console.log("Servers not up yet...waiting");
@@ -366,7 +292,7 @@ module.exports = class ProxyGenerator {
         console.log("Running scripts on servers, please wait...")
         await this.executeBatchCommand();
 
-        var iplist = await this.getServerIps();
+        var iplist = await this.getAllPageIps();
         console.log(`Scripts complete, ${iplist.length} proxies generated!`);
 
         var generatedProxyList = [];
