@@ -26,7 +26,7 @@ export class ProxyService {
         'Content-Type': 'application/json'
       }),
       body: {
-        'token': param
+        'token': param.token
       }
     };
 
