@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Http } from '@angular/http';
-import 'rxjs/add/operator/map';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs/Observable';
+
 
 @Injectable()
 export class ProxyService {
@@ -20,16 +19,25 @@ export class ProxyService {
       );
   }
 
-  deleteAll() {
-    console.log('Deleting All Proxy');
-    this.http.delete(environment.baseURL + '/api/proxy')
+  deleteAll(param) {
+    const url = environment.baseURL + '/api/proxy';
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      }),
+      body: {
+        'token': param
+      }
+    };
+
+    this.http.delete(url, httpOptions)
       .subscribe(
         data => console.log(data),
         err => console.log(err)
       );
   }
 
-  getRegion():  Observable<String[]> {
+  getRegion(): Observable<String[]> {
     return this.http.get<String[]>(environment.baseURL + '/api/proxy/regions');
   }
 }
