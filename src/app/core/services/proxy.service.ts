@@ -10,9 +10,8 @@ export class ProxyService {
   constructor(private http: HttpClient) { }
 
   getProxy(param) {
-    console.log(param);
-    console.log('sending poost requests: ' + JSON.stringify(param));
-    this.http.post(environment.baseURL + '/api/proxy', param)
+    console.log(JSON.stringify(param));
+    this.http.post(environment.baseURL + '/api/proxy', JSON.stringify(param))
       .subscribe(
         data => console.log(data),
         err => console.log(err)
