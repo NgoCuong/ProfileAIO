@@ -11,7 +11,9 @@ export class ProxyFormComponent implements OnInit {
 
   @Input() formType: string;
 
-  proxyGen = {};
+  proxyGen = {
+  };
+
   Servers = ['Linode', 'X', 'Y', 'Z'];
   regions = [];
 
@@ -27,6 +29,6 @@ export class ProxyFormComponent implements OnInit {
   }
 
   deleteAll() {
-    this.proxyService.deleteAll();
+    this.proxyService.deleteAll(this.proxyGen);
   }
 }
