@@ -4,7 +4,7 @@
    Wrapped to handle error codes 
 */
 
-module.exports = class HttpRequest { 
+module.exports = class HttpRequest {
 
     constructor(accessToken = '') {
         this.request = require('request-promise');
@@ -43,12 +43,13 @@ module.exports = class HttpRequest {
                         console.log('429 Too Many Requests	Youve hit a rate limit.');
                         break;
                     case 500:
-                        console.log('200 OK	The request was successful');
+                        console.log('Internal Server Error	Please open a Support Ticket.');
                         break;
                     default:
-                        console.log('Internal Server Error	Please open a Support Ticket.');
+                        console.log('Unknown Error');
+                        console.log(reason);
                 }
-                return reason.statusCode;
+                throw reason;
             }
             );
         return result;
