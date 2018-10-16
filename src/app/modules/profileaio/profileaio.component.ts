@@ -8,7 +8,7 @@ import { ProfileService } from '../../core/services/profile.service';
   styleUrls: ['./profileaio.component.css']
 })
 export class ProfileaioComponent implements OnInit {
-  profiletypes = ['Dashe', 'ANB Plus'];
+  profiletypes = ['Dashe', 'ANB Plus', 'Trip', 'Sneakercop'];
   address: string;
   toProfile: string;
   message: string;
@@ -24,21 +24,18 @@ export class ProfileaioComponent implements OnInit {
   async submit() {
     this.loading = true;
     console.log(this.toProfile);
-    const blob = await this.profileService.sendUrl(this.address, this.toProfile).catch(error => {
-      console.log(error);
-      return;
-    });
+    // const blob = await this.profileService.sendUrl(this.address, this.toProfile);
     // const blog = await this.profileService.createxlsx(this.address);
 
-    // const blob = await this.profileService.createxlsx(this.address);
+    const blob = await this.profileService.createxlsx(this.address, this.toProfile);
     // saveAs(blob, "faf.xlsx");
-    const url = window.URL.createObjectURL(blob);
-    const link = this.downloadZipLink.nativeElement;
-    link.href = url;
-    link.download = 'somefile.xlsx';
-    link.click();
-    this.loading = false;
-    window.URL.revokeObjectURL(url);
+    // const url = window.URL.createObjectURL(blob);
+    // const link = this.downloadZipLink.nativeElement;
+    // link.href = url;
+    // link.download = 'somefile.xlsx';
+    // link.click();
+    // this.loading = false;
+    // window.URL.revokeObjectURL(url);
 
 
   }  

@@ -29,20 +29,50 @@ export class ProfileService {
 
 
   async sendUrl(address: string, param): Promise<Blob> {
-    console.log("to profile " + encodeURI(param));
+    var filename;
     const file = await this.http.post<Blob>('http://localhost:5000/profile/create/' + param.replace(" ", ""), { url : address}, 
       {
-        responseType: 'blob' as 'json' 
+        responseType: 'blob' as 'json'
       }).toPromise();
-      return file;
+      // var contentDispositionHeader = httpResponse.headers('Content-Disposition');
+
+    // console.log
+
+    return file;
   }
 
-  async createxlsx(jsonresponse: string): Promise<Blob> {
-    const file = await this.http.get<Blob>('http://localhost:5000/profile/testing', 
-      {
-        responseType: 'blob' as 'json' 
-      }).toPromise();
-      return file;
+  getFileNameFromResponseContentDisposition(res){
+    const contentDisposition = res.headers.get('content-disposition') || '';
+    const matches = /filename=([^;]+)/ig.exec(contentDisposition);
+    const fileName = (matches[1] || 'untitled').trim();
+    return fileName;
 
+  }
+  async createxlsx(address: string, param){
+    //   this.http.post("http://localhost/a2/pdf.php", JSON.stringify(model), {
+    //     method: RequestMethod.Post,
+    //     responseType: ResponseContentType.Blob,
+    //     headers: new Headers({'Content-Type', 'application/x-www-form-urlencoded'})
+    // }).subscribe(
+    //     response => { // download file
+    //         var blob = new Blob([response.blob()], {type: 'application/pdf'});
+    //         var filename = 'file.pdf';
+    //         saveAs(blob, filename);
+    //     },
+    //     error => {
+    //         console.error(`Error: ${error.message}`);
+    //     }
+    // );
+    var fileName;
+    await this.http.post('http://localhost:5000/profile/create/' + param.replace(" ", ""), { url : address}, {
+      responseType: 'blob' as 'json'
+    }).subscribe((response: Response) => {
+      // var blob = new Blob([response.blob()])
+      console.log(response.headers);
+
+      // fileName = this.getFileNameFromResponseContentDisposition(response);
+    })
+
+    console.log(fileName);
   }
 }

@@ -1,5 +1,5 @@
-
 class Profile {
+
     constructor(profileName, email, firstName, middleName, lastName, cardHolderName, address, aptNumber, city, state, zip, ccType, ccNum, ccv, ccExp, Phone) {
         this.profileName = profileName;
         this.email = email;
@@ -17,6 +17,7 @@ class Profile {
         this.ccv = ccv;
         this.ccExp = ccExp;
         this.phone = Phone;
+        this.country = "United States";
     }
 
     get getDasheFormat() {
@@ -26,7 +27,7 @@ class Profile {
             billingAddress: "",
             billingApt: "",
             billingCity: "",
-            billingCountry: "United States",
+            billingCountry: this.country,
             billingFirstName: "",
             billingLastName: "",
             billingMatch: true,
@@ -37,7 +38,7 @@ class Profile {
             cardName: this.cardHolderName,
             cardNumber: this.ccNum,
             city: this.city,
-            country: "United States",
+            country: this.country,
             email: this.email,
             firstName: this.fName,
             lastName: this.lName,
@@ -66,7 +67,7 @@ class Profile {
             IsShippingAsBilling: "True",
             BillingFirstName: this.fName,
             BillingLastName: this.lName,
-            BillingCountry: "United States",
+            BillingCountry: this.country,
             BillingCity: this.city,
             BillingZipCode: this.zip,
             BillingPhoneNumber: this.phone,
@@ -75,7 +76,7 @@ class Profile {
             BillingAddressLine2: "",
             ShippingFirstName: this.fName,
             ShippingLastName: this.fName,
-            ShippingCountry: "United States",
+            ShippingCountry: this.country,
             ShippingCity: this.city,
             ShippingZipCode: this.zip,
             ShippingStateOrProvince: this.zip,
@@ -86,26 +87,44 @@ class Profile {
         };
     }
 
-    get getSneakerCopterFormat() {
-        return this.profileName + "," + this.state + "," + this.address;
-        // return {
-        //         profilename: this.profileName,
-        //         state: this.state, 
-        //         address: this.address,
-        //         apt: this.aptNumber,
-        //         city: this.city,
-        //         firstname: this.fName,
-        //         lastname: this.lName,
-        //         phone: this.phone, 
-        //         zip: this.zip,
-        //         country: "United States",
-        //         ccvs: this.ccv,
-        //         ccnum: this.ccNum,
-        //         month: this.Month,
-        //         year: this.Year,
-        //         email: this.email,
-        //         us: "us"
-        // };
+    get getTripFormat() {
+        return {
+                profile: this.profileName,
+                name: this.fName + " " + this.lName,
+                address: this.address,
+                apt: this.aptNumber,
+                email: this.email,
+                city: this.city,
+                zip: this.zip,
+                phone: this.phone, 
+                country: this.country,
+                state: this.state, 
+                creditcardnumber: this.ccnum,
+                cardtype: this.ccType,
+                expirymonth: this.Month,
+                expiryyear: this.Year,
+                ccvs: this.ccv,
+                ccnum: this.ccNum,
+        };
+    }
+
+    get getSneakerCopFormat() {
+        return this.profileName + "," + 
+                this.state + "," + 
+                this.address + "," +
+                this.aptNumber  + "," +
+                this.city  + "," +
+                this.fName  + "," +
+                this.lName  + "," +
+                this.phone  + "," +
+                this.zip + "," +
+                this.country  + "," +
+                this.ccv  + "," +
+                this.ccNum + "," +
+                this.Month + "," +
+                this.Year + "," +
+                this.email + "," +
+                "us";
     }
 
     get Month() {
@@ -117,6 +136,10 @@ class Profile {
     get Year() { 
         var words = this.ccExp.split('/');
         return "20"+words[1];
+    }
+
+    get ProfileName () {
+        return this.profileName;
     }
 }
 
