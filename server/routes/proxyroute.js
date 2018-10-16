@@ -24,20 +24,23 @@ var http = require('./HttpRequest');
 router.post("/", async function (req, res) {
 
     try {
-        var token = req.body.token;
+        var apiKey = req.body.apiKey;
         var region = req.body.region;
         var user = req.body.user
         var pass = req.body.pass;
         var number = req.body.number;
-        var x = new proxy(token);
+        var userId = req.body.userId;
+        var x = new proxy(apiKey);
 
-        var result = await x.generateServers(number, user, pass, region);
+        var result = await x.generateServers(userId, number, user, pass, region);
         res.send(result);
     } catch (err) {
 
+        console.log(err);
         if (err instanceof RangeError) {
             console.log('No servers to generate proxies from');
-        } else {
+        } 
+        else {
             res.send(err.statusCode);
         }
     }
@@ -58,8 +61,8 @@ router.get("/", async function (req, res) {
 router.delete("/", async function (req, res) {
 
     try {
-        var token = req.body.token;
-        var x = new proxy(token);
+        var apiKey = req.body.apiKey;
+        var x = new proxy(apiKey);
 
         var results = await x.deleteAllInstances();
         res.send(results);

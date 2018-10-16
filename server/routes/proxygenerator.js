@@ -190,7 +190,7 @@ module.exports = class ProxyGenerator {
     // #region Fetch Server Ips
 
     // gets all ips per page from api call
-    async getPageIps(pageNumber) {
+    async getPageIps(pageNumber, includeInstanceId = false) {
         try {
             var ips = [];
             var response = await this.api.httpRequest(`https://api.linode.com/v4/linode/instances?page=${pageNumber}`, 'get')
@@ -200,7 +200,11 @@ module.exports = class ProxyGenerator {
             } else {
                 for (var i = 0; i < serverCount; i++) {
                     var machine = response.data[i];
-                    ips.push(machine.ipv4[0]);
+                    if (includeInstanceId) {
+                        ips.push([machine.ipv4[0], machine.id]);
+                    } else {
+                        ips.push(machine.ipv4[0]);
+                    }
                 }
                 return ips;
             }
@@ -210,14 +214,19 @@ module.exports = class ProxyGenerator {
     }
 
     // gathers all ips of servers
-    async getAllPageIps() {
+    async getAllPageIps(includeInstanceId = false) {
         try {
             var ips = [];
             var response = await this.api.httpRequest('https://api.linode.com/v4/linode/instances/', 'get')
             var pageCount = response.pages;
             for (var i = 1; i < pageCount + 1; ++i) {
-                var res = await this.getPageIps(i);
-                ips = ips.concat(res);
+                if ( includeInstanceId) {
+                    var res = await this.getPageIps(i, true);
+                    ips = ips.concat(res);
+                } else {
+                    var res = await this.getPageIps(i);
+                    ips = ips.concat(res);
+                }
             }
             return ips;
         } catch (err) {
@@ -261,11 +270,31 @@ module.exports = class ProxyGenerator {
         return true;
     }
 
+    insertProxyDB(proxyVal, instanceId) {
+        try {
+            var proxyObject = require('./proxySchema');
+            let v = new proxyObject({
+                userId: this.userId,
+                proxy: proxyVal,
+                region: this.region,
+                instanceId: instanceId
+            });
+        
+            v.save();
+        } catch (err) {
+            throw err;
+        }        
+    }
+
+
+
+
     // #endregion 
 
     // Step 1: Create servers
-    async generateServers(proxyNumber, user, pass, region) {
+    async generateServers(userId, proxyNumber, user, pass, region) {
         try {
+            this.userId = userId;
             this.user = user;
             this.pass = pass;
             this.region = region;
@@ -274,15 +303,16 @@ module.exports = class ProxyGenerator {
             console.log("Creating servers...")
             var res = await this.createBatchInstancesLimit(this.number);
             console.log("Server creation complete!");
-            await this.generateProxies(user, pass, region);
+            await this.generateProxies(userId, user, pass, region);
         } catch (err) {
             throw err;
         }
     }
 
     // Step 2: Setup servers
-    async generateProxies(user, pass, region) {
+    async generateProxies(userId, user, pass, region) {
         try {
+            this.userId = userId;
             this.region = region;
             this.user = user;
             this.pass = pass;
@@ -295,12 +325,13 @@ module.exports = class ProxyGenerator {
             console.log("Running scripts on servers, please wait...")
             await this.executeBatchCommand();
 
-            var iplist = await this.getAllPageIps();
+            var iplist = await this.getAllPageIps(true);
             console.log(`Scripts complete, ${iplist.length} proxies generated!`);
 
             var generatedProxyList = [];
             for (var i = 0; i < iplist.length; i++) {
-                var proxy = `${iplist[i]}:${this.port}:${this.user}:${this.pass}`;
+                var proxy = `${iplist[i][0]}:${this.port}:${this.user}:${this.pass}`;
+                this.insertProxyDB(proxy, iplist[i][1]);
                 generatedProxyList.push(proxy);
                 console.log(proxy);
             }
