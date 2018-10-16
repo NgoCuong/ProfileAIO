@@ -82,9 +82,15 @@ export class AuthService {
   }
 
   public getUserID(): String {
-    const id = JSON.parse(localStorage.getItem('profile'));
-    console.log(id.sub);
-    return id.sub;
+    let id: String = null;
+    try {
+      id = JSON.parse(localStorage.getItem('profile')).sub;
+      console.log(id);
+    } catch (err) {
+      console.log(err);
+    }
+
+    return id;
   }
 
 }

@@ -9,10 +9,15 @@ export class ProxyService {
 
   constructor(private http: HttpClient) { }
 
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json'
+    })
+  };
+
   getProxy(param) {
-    console.log(param);
-    console.log('sending poost requests: ' + JSON.stringify(param));
-    this.http.post(environment.baseURL + '/api/proxy', param)
+    console.log(JSON.stringify(param));
+    return this.http.post(environment.baseURL + '/api/proxy', JSON.stringify(param), this.httpOptions)
       .subscribe(
         data => console.log(data),
         err => console.log(err)
@@ -21,20 +26,21 @@ export class ProxyService {
 
   deleteAll(param) {
     const url = environment.baseURL + '/api/proxy';
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      }),
-      body: {
-        'token': param
-      }
+
+    this.httpOptions['body'] = {
+      'token': param.token
     };
 
-    this.http.delete(url, httpOptions)
-      .subscribe(
-        data => console.log(data),
-        err => console.log(err)
-      );
+    // const httpOptions = {
+    //   headers: new HttpHeaders({
+    //     'Content-Type': 'application/json'
+    //   }),
+    //   body: {
+    //     'token': param.token
+    //   }
+    // };
+
+    return this.http.delete(url, this.httpOptions);
   }
 
   getRegion(): Observable<String[]> {
