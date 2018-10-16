@@ -11,24 +11,44 @@ export class ProxyFormComponent implements OnInit {
 
   @Input() formType: string;
 
-  proxyGen = {
-  };
+  proxyGen = {};
+  regions: String[] = [];
 
-  Servers = ['Linode', 'X', 'Y', 'Z'];
-  regions = [];
+  onSubmitloading = false;
+  onDeleteLoading = false;
 
   constructor(
-    private proxyService: ProxyService) { }
+    private proxyService: ProxyService,
+    private authService: AuthService) { }
 
   ngOnInit() {
-    this.proxyService.getRegion().subscribe(regions => this.regions = regions);
+    this.getRegions();
+  }
+
+  getRegions(): void {
+    this.proxyService.getRegion()
+      .subscribe(regions => this.regions = regions);
   }
 
   submit() {
+    this.proxyGen['user_id'] = this.authService.getUserID();
+    this.proxyGen['server'] = this.formType;
+    this.onSubmitloading = true;
     this.proxyService.getProxy(this.proxyGen);
   }
 
   deleteAll() {
-    this.proxyService.deleteAll(this.proxyGen);
+    this.onDeleteLoading = true;
+    this.proxyService.deleteAll(this.proxyGen)
+      .subscribe(
+        data => {
+          console.log(data);
+          this.onDeleteLoading = false;
+        },
+        err => {
+          console.log(err);
+          this.onDeleteLoading = false;
+        }
+      );
   }
 }

@@ -9,46 +9,38 @@ export class ProxyService {
 
   constructor(private http: HttpClient) { }
 
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json'
+    })
+  };
+
   getProxy(param) {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
     console.log(JSON.stringify(param));
-    this.http.post(environment.baseURL + '/api/proxy', JSON.stringify(param), httpOptions)
+    return this.http.post(environment.baseURL + '/api/proxy', JSON.stringify(param), this.httpOptions)
       .subscribe(
         data => console.log(data),
         err => console.log(err)
       );
   }
 
-  /*
-  /** POST: add a new hero to the server */
-// addHero (hero: Hero): Observable<Hero> {
-//   return this.http.post<Hero>(this.heroesUrl, hero, httpOptions).pipe(
-//     tap((hero: Hero) => this.log(`added hero w/ id=${hero.id}`)),
-//     catchError(this.handleError<Hero>('addHero'))
-//   );
-// }
-
-
   deleteAll(param) {
     const url = environment.baseURL + '/api/proxy';
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      }),
-      body: {
-        'token': param.token
-      }
+
+    this.httpOptions['body'] = {
+      'token': param.token
     };
 
-    this.http.delete(url, httpOptions)
-      .subscribe(
-        data => console.log(data),
-        err => console.log(err)
-      );
+    // const httpOptions = {
+    //   headers: new HttpHeaders({
+    //     'Content-Type': 'application/json'
+    //   }),
+    //   body: {
+    //     'token': param.token
+    //   }
+    // };
+
+    return this.http.delete(url, this.httpOptions);
   }
 
   getRegion(): Observable<String[]> {
