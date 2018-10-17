@@ -12,6 +12,14 @@ const corsOptions =  {
 };
 app.use(cors(corsOptions));
 
+//testing the use of socket
+
+//attach the io instance to app
+
+// app.io = io;
+
+
+
 // Create link to Angular build directory
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));
@@ -63,3 +71,16 @@ var server = app.listen(process.env.PORT || 8080, function () {
   var port = server.address().port;
   console.log("App now running on port", port);
 });
+
+const io = require('socket.io')(server);
+
+io.sockets.on('connection', function(socket) {
+  console.log("Socket connected");
+  io.emit("message", "trying to connect");
+  // id[0] = socket.id;
+  socket.on('disconnect', function(opt, cb) {
+    console.log("Socket disconnected");
+  });
+});
+app.io = io;
+

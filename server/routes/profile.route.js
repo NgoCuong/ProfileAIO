@@ -22,23 +22,30 @@ const ProfileType = Object.freeze( {
     TRIP: 'trip',
     SNEAKERCOP: 'sneakercop'
 });
+function sleep(ms){
+    return new Promise(resolve=>{
+        setTimeout(resolve,ms)
+    })
+}
 
-async function GenerateProfile(req, res) {
+
+async function GenerateProfile(req, res, io) {
     try{
         console.log("Creating profile for " + req.params.id)
 
         if(doesIdExist(req.params.id.toUpperCase()) == false) return res.status(500).send("NOT SUPPORTED");
         //get the Sheet names from the google excel
         var sheetResults = await getSheetNameFromGoogleExcel(parseExcelId(req.body.url), apiKey);
-
+        // await sleep(3000)
+        req.app.io.emit("message", "reading excel");
         // //Take the first sheetName and add all the info
         var results = await getJsonFromGoogleExcel(parseExcelId(req.body.url), sheetResults[0], apiKey);
-
+        req.app.io.emit("message", "Converting to profile Type");
         // //Convert the normal json format to the user's choice 
-        var convertedResults = getConvertedProfiles(req.params.id, results);
+        var convertedResults = getConvertedProfiles(req.params.id.toLowerCase(), results);
 
         //determine what we are sending back to the frontend
-        switch(req.params.id) {
+        switch(req.params.id.toLowerCase()) {
             case ProfileType.ANBPLUS: 
                 console.log("Running anb");
                 await CreateANBResponse(req, res, convertedResults);
@@ -51,8 +58,9 @@ async function GenerateProfile(req, res) {
                 break;
             case ProfileType.TRIP: 
                 console.log("Running trip");
-            await CreateTripReponse(req, res, convertedResults);
+                await CreateTripReponse(req, res, convertedResults);
                 console.log("Done running trip");
+                break;
         }        
     }catch(error) {
         console.log(error);
@@ -62,7 +70,6 @@ async function GenerateProfile(req, res) {
 
 async function CreateTripReponse(req, res, convertedProfiles) {
     try{
-        console.log("Fdafs");
         var filename = "tripProfile.zip";
         var zip = archiver('zip');
         // var urlthis = 'https://docs.google.com/spreadsheets/d/18bmclCSFakTWte9Vi6fsRNCyW56ljfCCDn2THfDueR4/edit#gid=0';
@@ -73,7 +80,9 @@ async function CreateTripReponse(req, res, convertedProfiles) {
 
         // Send the file to the page output.
         zip.pipe(res);
-        res.setHeader('Content-Disposition', 'attachment; filename=' + filename).type('application/zip').status(200);
+        res.setHeader('Content-Disposition', 'attachment; filename=' + filename)
+        res.type('application/zip');
+        res.status(200);
         
         // Create zip with some files.
         convertedProfiles.forEach((element, index) => {

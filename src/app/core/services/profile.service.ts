@@ -4,6 +4,7 @@ import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { environment } from '../../../environments/environment';
 
+
 @Injectable()
 export class ProfileService {
 
@@ -30,7 +31,7 @@ export class ProfileService {
 
   async sendUrl(address: string, param): Promise<Blob> {
     var filename;
-    const file = await this.http.post<Blob>('http://localhost:5000/profile/create/' + param.replace(" ", ""), { url : address}, 
+    const file = await this.http.post<Blob>('http://localhost:5000/profile/create/' + param.replace(" ", "").toLowerCase(), { url : address}, 
       {
         responseType: 'blob' as 'json'
       }).toPromise();
