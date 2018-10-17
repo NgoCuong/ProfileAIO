@@ -78,7 +78,7 @@ module.exports = class ProxyGenerator {
             for (var i = 0; i < number; ++i) {
                 promises.push(limit(() => this.createInstance(this.user ,this.pass, this.region)));
             }
-            await Promise.all(promises);
+            Promise.all(promises);
             return JSON.stringify({ 'created': number }, null, 3);
         } catch (err) {
             throw err;
@@ -170,7 +170,7 @@ module.exports = class ProxyGenerator {
             this.region = region;
             this.number = proxyNumber;
 
-            var res = await this.createBatchInstancesLimit(this.number);
+            return await this.createBatchInstancesLimit(this.number);
         } catch (err) {
             throw err;
         }
