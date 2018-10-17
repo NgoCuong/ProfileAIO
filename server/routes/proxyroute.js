@@ -24,32 +24,47 @@ var http = require('./HttpRequest');
 router.post("/", async function (req, res) {
 
     try {
-        var token = req.body.token;
+        var apiKey = req.body.apiKey;
         var region = req.body.region;
         var user = req.body.user
         var pass = req.body.pass;
         var number = req.body.number;
-        var x = new proxy(token);
+        var userId = req.body.userId;
 
-        var result = await x.generateServers(number, user, pass, region);
+        var x = new proxy(apiKey);
+        var result = await x.generateProxies(userId, number, user, pass, region);
         res.send(result);
     } catch (err) {
 
+        console.log(err);
         if (err instanceof RangeError) {
             console.log('No servers to generate proxies from');
-        } else {
+        }
+        else {
             res.send(err.statusCode);
         }
     }
 
 });
 
+
 /* API Endpoint: GET - /api/proxy
-   Used to fetch all active proxies */
+   Used to fetch proxies from database */
 router.get("/", async function (req, res) {
 
-    // pull proxies from MongoDB
-    res.send('Will be implemented');
+    try {
+        var userId = req.query.userId;
+        var proxy = require('./proxySchema');
+        var query = proxy.find({
+            'userId':userId
+        });
+        query.select('proxy region instanceId userId');
+        query.exec(function (err, result) {
+            res.send(result);
+        });
+    } catch (err) {
+        console.log(err);
+    }
 });
 
 
@@ -58,8 +73,8 @@ router.get("/", async function (req, res) {
 router.delete("/", async function (req, res) {
 
     try {
-        var token = req.body.token;
-        var x = new proxy(token);
+        var apiKey = req.body.apiKey;
+        var x = new proxy(apiKey);
 
         var results = await x.deleteAllInstances();
         res.send(results);
