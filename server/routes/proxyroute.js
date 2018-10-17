@@ -32,7 +32,7 @@ router.post("/", async function (req, res) {
         var userId = req.body.userId;
         var x = new proxy(apiKey);
 
-        var result = await x.generateServers(userId, number, user, pass, region);
+        var result = await x.generateProxies(userId, number, user, pass, region);
         res.send(result);
     } catch (err) {
 
