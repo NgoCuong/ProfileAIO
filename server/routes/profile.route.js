@@ -54,7 +54,7 @@ async function GenerateProfile(req, res, io) {
             case ProfileType.SNEAKERCOP: 
                 console.log("Running sneakercop");
                 await CreateSneakerCopResponse(req, res, convertedResults);
-                console.log("Done runing sneakercop");
+                console.log("Done running sneakercop");
                 break;
             case ProfileType.TRIP: 
                 console.log("Running trip");
