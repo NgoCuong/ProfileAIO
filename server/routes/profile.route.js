@@ -138,7 +138,6 @@ async function CreateSneakerCopResponse(req, res, convertedProfiles) {
 async function createDasheResponse(req, res, convertedProfiles) {
     try{
         console.log("Attempting to convert to users choice of profileType");
-        var convertedResults = getConvertedProfiles(req.params.id, convertedProfiles);
         var filename = "dashe.json";
         res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
         res.setHeader('Content-Disposition', 'attachment; filename=' + filename);
