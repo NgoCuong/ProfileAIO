@@ -28,16 +28,11 @@ export class ProfileService {
       );
   }
 
-<<<<<<< HEAD
 
 
   async sendUrl(address: string, param): Promise<Blob> {
     var filename;
     const file = await this.http.post<Blob>('http://localhost:5000/profile/create/' + param.replace(" ", "").toLowerCase(), { url : address}, 
-=======
-  async sendUrl(address: string, toProfile: string): Promise<Blob> {
-    const file = await this.http.post<Blob>('http://localhost:5000/profile/create', { url : address}, 
->>>>>>> develop
       {
         responseType: 'blob' as 'json'
       }).toPromise();
