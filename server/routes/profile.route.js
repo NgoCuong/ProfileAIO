@@ -9,7 +9,6 @@ var fs = require('fs');
 
 //routes
 router.post('/create/:id', GenerateProfile);
-// router.get('/testing', CreateZipReponse);
 module.exports = router;
 const apiKey = "AIzaSyD65a02MsanOy8KDEvIKfR8lTfO77kJXd4";
 
@@ -36,13 +35,14 @@ async function GenerateProfile(req, res, io) {
         if(doesIdExist(req.params.id.toUpperCase()) == false) return res.status(500).send("NOT SUPPORTED");
         //get the Sheet names from the google excel
         var sheetResults = await getSheetNameFromGoogleExcel(parseExcelId(req.body.url), apiKey);
-        // await sleep(3000)
-        req.app.io.emit("message", "reading excel");
+
+        // req.app.io.emit("message", "reading excel");
         // //Take the first sheetName and add all the info
         var results = await getJsonFromGoogleExcel(parseExcelId(req.body.url), sheetResults[0], apiKey);
-        req.app.io.emit("message", "Converting to profile Type");
+        // req.app.io.emit("message", "Converting to profile Type");
         // //Convert the normal json format to the user's choice 
         var convertedResults = getConvertedProfiles(req.params.id.toLowerCase(), results);
+        console.log("after conversion " + convertedResults);
 
         //determine what we are sending back to the frontend
         switch(req.params.id.toLowerCase()) {
@@ -61,10 +61,11 @@ async function GenerateProfile(req, res, io) {
                 await CreateTripReponse(req, res, convertedResults);
                 console.log("Done running trip");
                 break;
-        }        
+        }  
+        // req.app.io.emit("message", "Successfully converted profile to " + req.params.id);
     }catch(error) {
         console.log(error);
-        res.status(400).send(error);
+        //res.status(400).send(error);
     }
 }
 
@@ -72,18 +73,11 @@ async function CreateTripReponse(req, res, convertedProfiles) {
     try{
         var filename = "tripProfile.zip";
         var zip = archiver('zip');
-        // var urlthis = 'https://docs.google.com/spreadsheets/d/18bmclCSFakTWte9Vi6fsRNCyW56ljfCCDn2THfDueR4/edit#gid=0';
-
-        // var sheetResults = await getSheetNameFromGoogleExcel(parseExcelId(urlthis), apiKey);
-        // var results = await getJsonFromGoogleExcel(parseExcelId(urlthis), sheetResults[0], apiKey);
-        // var convertedResults = getConvertedProfiles('trip', results);
-
         // Send the file to the page output.
         zip.pipe(res);
         res.setHeader('Content-Disposition', 'attachment; filename=' + filename)
         res.type('application/zip');
         res.status(200);
-        
         // Create zip with some files.
         convertedProfiles.forEach((element, index) => {
             zip.append(JSON.stringify(element), {name: index + "_profile.json"});
@@ -96,18 +90,7 @@ async function CreateTripReponse(req, res, convertedProfiles) {
 }
 
 async function CreateANBResponse(req, res, convertedProfiles) {
-    try{
-       /* create workbook & set props*/
-    //    var urlthis = 'https://docs.google.com/spreadsheets/d/18bmclCSFakTWte9Vi6fsRNCyW56ljfCCDn2THfDueR4/edit#gid=0';
-    //    var sheetResults = await getSheetNameFromGoogleExcel(parseExcelId(urlthis), apiKey);
-    //    console.log(sheetResults);
-    //    var results = await getJsonFromGoogleExcel(parseExcelId(urlthis), sheetResults[0], apiKey);
-    //    console.log("Attempting to convert to users choice of profileType");
-    //    var convertedResults = getConvertedProfiles('sneakercop', results);
-       
-    //    console.log(convertedProfiles);
-    
-    
+    try{    
         const wb = { SheetNames: [], Sheets: {} };
         wb.Props = {
            Title: "ProfileAIO",
@@ -119,7 +102,7 @@ async function CreateANBResponse(req, res, convertedProfiles) {
         XLSX.utils.book_append_sheet(wb, ws, ws_name);     
         
         var wbout = new Buffer(XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' }));
-        var filename = "myDataFile.xlsx";
+        var filename = "anbplus.xlsx";
         res.setHeader('Content-Disposition', 'attachment; filename=' + filename);
         res.type('application/octet-stream');
         res.status(200).send(wbout);
@@ -132,12 +115,10 @@ async function CreateANBResponse(req, res, convertedProfiles) {
 async function CreateSneakerCopResponse(req, res, convertedProfiles) {
     try{
         console.log("CreateSneakerCopResponse");
-        // var sheetResults = await getSheetNameFromGoogleExcel(parseExcelId(req.body.url), apiKey);
-        // var results = await getJsonFromGoogleExcel(parseExcelId(req.body.url), sheetResults[0], apiKey);
-        // var convertedResults = getConvertedProfiles('sneakercop', results);
         var filename = "sneakercop.csv";
         res.setHeader('Content-Disposition', 'attachment; filename=' + filename);
         res.set('Content-Type', 'text/csv');
+        console.log(convertedProfiles);
         res.status(200).send(convertedProfiles.join('\n'));
     }catch(error) {
         console.log(error);
@@ -148,15 +129,11 @@ async function CreateSneakerCopResponse(req, res, convertedProfiles) {
 
 async function createDasheResponse(req, res, convertedProfiles) {
     try{
-        // console.log(req.params.id);
-        // if(doesIdExist(req.params.id.toUpperCase()) == false) return res.status(500).send("NOT SUPPORTED");
-
-        // var sheetResults = await getSheetNameFromGoogleExcel(parseExcelId(req.body.url), apiKey);
-        // console.log(sheetResults);
-        // var results = await getJsonFromGoogleExcel(parseExcelId(req.body.url), sheetResults[0], apiKey);
         console.log("Attempting to convert to users choice of profileType");
         var convertedResults = getConvertedProfiles(req.params.id, results);
-        // console.log(convertedResults);
+        var filename = "dashe.json";
+        res.setHeader('Content-Disposition', 'attachment; filename=' + filename);
+        res.set('Content-Type', 'application/json');
         res.status(200).send(convertedResults);
     }catch(error) {
         console.log(error);
@@ -181,16 +158,7 @@ function findByIdAndConvertProfile(id, one_profile) {
     switch(id) {
         case ProfileType.ANBPLUS: return one_profile.getANBPlusFormat;
         case ProfileType.DASHE: return one_profile.getDasheFormat;
-        case ProfileType.SNEAKERCOP: return one_profile.getsneakercopFormat;
-        case ProfileType.TRIP: return one_profile.getTripFormat;
-    }
-}
-
-async function findByIdAndReturnReponse(req, res) {
-    switch(id) {
-        case ProfileType.ANBPLUS: return one_profile.getANBPlusFormat;
-        case ProfileType.DASHE: return one_profile.getDasheFormat;
-        case ProfileType.SNEAKERCOP: return one_profile.getsneakercopFormat;
+        case ProfileType.SNEAKERCOP: return one_profile.getSneakerCopFormat;
         case ProfileType.TRIP: return one_profile.getTripFormat;
     }
 }

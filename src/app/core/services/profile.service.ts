@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,HttpResponse } from '@angular/common/http';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { environment } from '../../../environments/environment';
+import { saveAs } from 'file-saver';
 
 
 @Injectable()
@@ -42,38 +43,23 @@ export class ProfileService {
     return file;
   }
 
-  getFileNameFromResponseContentDisposition(res){
-    const contentDisposition = res.headers.get('content-disposition') || '';
-    const matches = /filename=([^;]+)/ig.exec(contentDisposition);
-    const fileName = (matches[1] || 'untitled').trim();
-    return fileName;
-
+  getFileNameFromHttpResponse(httpResponse) {
+    var contentDispositionHeader = httpResponse.headers.get('Content-Disposition');
+    var result = contentDispositionHeader.split(';')[1].trim().split('=')[1];
+    return result.replace(/"/g, '');
   }
-  async createxlsx(address: string, param){
-    //   this.http.post("http://localhost/a2/pdf.php", JSON.stringify(model), {
-    //     method: RequestMethod.Post,
-    //     responseType: ResponseContentType.Blob,
-    //     headers: new Headers({'Content-Type', 'application/x-www-form-urlencoded'})
-    // }).subscribe(
-    //     response => { // download file
-    //         var blob = new Blob([response.blob()], {type: 'application/pdf'});
-    //         var filename = 'file.pdf';
-    //         saveAs(blob, filename);
-    //     },
-    //     error => {
-    //         console.error(`Error: ${error.message}`);
-    //     }
-    // );
+
+  async downloadFile(address: string, param){
     var fileName;
-    await this.http.post('http://localhost:5000/profile/create/' + param.replace(" ", ""), { url : address}, {
-      responseType: 'blob' as 'json'
-    }).subscribe((response: Response) => {
-      // var blob = new Blob([response.blob()])
-      console.log(response.headers);
+    await this.http.post<any>('http://localhost:5000/profile/create/' + param.replace(" ", ""), { url : address}, {
+      responseType: 'blob' as 'json',
+      observe: 'response' as 'response'
 
-      // fileName = this.getFileNameFromResponseContentDisposition(response);
-    })
-
-    console.log(fileName);
+    }).subscribe((res: HttpResponse<any>) => {
+      fileName = this.getFileNameFromHttpResponse(res);
+      console.log("FIle Name " + fileName);
+      var blob = new Blob([res.body]);
+      saveAs(blob, fileName);
+    });
   }
 }
