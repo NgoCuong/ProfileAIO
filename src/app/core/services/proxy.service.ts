@@ -34,7 +34,7 @@ export class ProxyService {
     const url = environment.baseURL + '/api/proxy';
 
     this.httpOptions['body'] = {
-      'token': param.token
+      'apiKey': param.apiKey
     };
     return this.http.delete(url, this.httpOptions);
   }
