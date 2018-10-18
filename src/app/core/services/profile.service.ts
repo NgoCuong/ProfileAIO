@@ -28,23 +28,12 @@ export class ProfileService {
       );
   }
 
-<<<<<<< HEAD
-
-
   async sendUrl(address: string, param): Promise<Blob> {
     var filename;
-    const file = await this.http.post<Blob>('http://localhost:5000/profile/create/' + param.replace(" ", "").toLowerCase(), { url : address}, 
-=======
-  async sendUrl(address: string, toProfile: string): Promise<Blob> {
-    const file = await this.http.post<Blob>('http://localhost:5000/profile/create', { url : address}, 
->>>>>>> develop
+    const file = await this.http.post<Blob>(environment.baseURL + '/profile/create/' + param.replace(" ", "").toLowerCase(), { url : address}, 
       {
         responseType: 'blob' as 'json'
       }).toPromise();
-      // var contentDispositionHeader = httpResponse.headers('Content-Disposition');
-
-    // console.log
-
     return file;
   }
 
@@ -56,7 +45,7 @@ export class ProfileService {
 
   async downloadFile(address: string, param){
     var fileName;
-    await this.http.post<any>('http://localhost:5000/profile/create/' + param.replace(" ", ""), { url : address}, {
+    await this.http.post<any>(environment.baseURL + '/profile/create/' + param.replace(" ", "").toLowerCase(), { url : address}, {
       responseType: 'blob' as 'json',
       observe: 'response' as 'response'
 
