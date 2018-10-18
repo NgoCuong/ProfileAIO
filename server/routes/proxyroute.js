@@ -3,25 +3,90 @@
    Buisness logic for each endpoint 
 */
 
-var express = require('express')
+var express = require('express');
 var router = express.Router();
-
 var proxy = require('./proxygenerator');
 var http = require('./HttpRequest');
 
 /*  
-    API Endpoint: POST - /api/proxy
-    Used to create proxies, requires body
-    Ex. Json Body
-    {   
-        "token": "3c5686daacefc2ddde5545c155f1de8cadba10321233685ff2f622ebc98285c70",
-        "region": "us-west",
-        "user": "profileaio",
-        "pass": "10dOlLaRpRofItNoTBaD",
-        "number": 2
-    } 
+    API DOCUMENTATION : https://docs.google.com/spreadsheets/d/1WTLrAxsa7oFJMgAXAi5Blz2WA_kjjX88YbA0_XZrwB0/edit#gid=1554877026
 */
-router.post("/", async function (req, res) {
+
+// Deletes all proxies for specified userId from database & provider
+router.delete("/proxies", async function (req, res) {
+    try {
+        var apiKey = req.body.apiKey;
+        var userId = req.body.userId;
+        var x = new proxy(apiKey);
+
+        var proxySchema = require('./proxySchema');
+        var response = await proxySchema.find({
+            'userId': userId
+        });
+        var response2 = await proxySchema.deleteMany({
+            'userId':userId
+        });
+
+        for (var i = 0; i < response2.n; ++i) {
+            x.deleteInstance(response[i].instanceId);
+        }
+        res.statusCode(200).send(response2.n);
+    } catch (err) {
+        res.send(err.statusCode);
+    }
+});
+
+// Delete a proxy for specified userId from database & provider
+router.delete("/proxy", async function (req, res) {
+    try {
+        var apiKey = req.body.apiKey;
+        var proxyId = req.body.proxy;
+        var x = new proxy(apiKey);
+
+        var proxySchema = require('./proxySchema');
+        var response = await proxySchema.findOneAndRemove({
+            'proxy': proxyId
+        });
+        var result = await x.deleteInstance(response.instanceId)
+        res.send(result);
+    } catch (err) {
+        res.send(err.statusCode);
+    }
+});
+
+// Get all regions for linode provider
+router.get("/regions", async function (req, res) {
+
+    var api = new http(this.accessToken);
+    var response = await api.httpRequest('https://api.linode.com/v4/regions', 'get');
+    var regions = [];
+
+    for (var i = 0; i < response.results; ++i) {
+        regions.push(response.data[i].id);
+    }
+    res.send(JSON.stringify(regions));
+});
+
+// Get all proxies for a userId
+router.get("/proxies", async function (req, res) {
+    try {
+        var userId = req.query.userId == "null" ? null : req.query.userId;
+        var proxy = require('./proxySchema');
+        var query = proxy.find({
+            'userId': userId
+        });
+        console.log(`Fetching proxies for ${userId}`)
+        query.select('proxy region instanceId userId');
+        query.exec(function (err, result) {
+            res.send(result);
+        });
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+// Create proxies for linode provider
+router.post("/proxies", async function (req, res) {
 
     try {
         var apiKey = req.body.apiKey;
@@ -46,58 +111,5 @@ router.post("/", async function (req, res) {
     }
 
 });
-
-
-/* API Endpoint: GET - /api/proxy
-   Used to fetch proxies from database */
-router.get("/", async function (req, res) {
-
-    try {
-        var userId = req.query.userId;
-        var proxy = require('./proxySchema');
-        var query = proxy.find({
-            'userId':userId
-        });
-        query.select('proxy region instanceId userId');
-        query.exec(function (err, result) {
-            res.send(result);
-        });
-    } catch (err) {
-        console.log(err);
-    }
-});
-
-
-/* API Endpoint: DELETE - /api/proxy
-   Used to decomission all proxies */
-router.delete("/", async function (req, res) {
-
-    try {
-        var apiKey = req.body.apiKey;
-        var x = new proxy(apiKey);
-
-        var results = await x.deleteAllInstances();
-        res.send(results);
-    } catch (err) {
-        res.send(err.statusCode);
-    }
-
-});
-
-
-/* API Endpoint: GET - /api/proxy/regions
-   Used to get all supported regions on linode */
-router.get("/regions", async function (req, res) {
-
-    var api = new http(this.accessToken);
-    var response = await api.httpRequest('https://api.linode.com/v4/regions', 'get');
-    var regions = [];
-
-    for (var i = 0; i < response.results; ++i) {
-        regions.push(response.data[i].id);
-    }
-    res.send(JSON.stringify(regions));
-});
-
 
 module.exports = router;

@@ -91,33 +91,14 @@ module.exports = class ProxyGenerator {
         return (status == 'running' ? true : false);
     }
 
-    async  deleteInstance(nodeId) {
-        await this.api.httpRequest('https://api.linode.com/v4/linode/instances/' + nodeId, 'delete')
+    async deleteInstance(nodeId) {
+        var res = await this.api.httpRequest('https://api.linode.com/v4/linode/instances/' + nodeId, 'delete')
             .catch(function (err) {
                 console.log("\nResponse: " + err.message);
                 throw err;
             });
-    }
-
-    async deleteAllInstances() {
-        try {
-            var response = await this.api.httpRequest('https://api.linode.com/v4/linode/instances', 'get')
-
-            var serverCount = response.data.length;
-            if (serverCount == 0) {
-                console.log("No servers to delete");
-            } else {
-                for (var i = 0; i < serverCount; i++) {
-                    var machine = response.data[i];
-                    console.log("Deleting server %s", machine.ipv4[0]);
-                    this.deleteInstance(machine.id);
-                }
-                console.log(`Deleted ${serverCount} servers`);
-            }
-            return JSON.stringify({ 'deleted': serverCount }, null, 3);
-        } catch (err) {
-            throw err;
-        }
+        console.log(`${nodeId}...deleted`);
+        return res;
     }
 
     executeCommand(ip, pass, bashCommand) {
@@ -153,7 +134,8 @@ module.exports = class ProxyGenerator {
                 userId: this.userId,
                 proxy: proxyVal,
                 region: this.region,
-                instanceId: instanceId
+                instanceId: instanceId,
+                server: "linode"
             });
 
             v.save();
