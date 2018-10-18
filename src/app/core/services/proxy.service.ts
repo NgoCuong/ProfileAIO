@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs/Observable';
+import { Proxy } from '../../share/models/proxy';
 
 
 @Injectable()
@@ -15,7 +16,12 @@ export class ProxyService {
     })
   };
 
-  getProxy(param) {
+  getProxy(userId): Observable<Proxy[]> {
+    const params = new HttpParams().set('userId', userId);
+    return this.http.get<Proxy[]>(environment.baseURL + '/api/proxy', { params: params });
+  }
+
+  createProxy(param) {
     console.log(JSON.stringify(param));
     return this.http.post(environment.baseURL + '/api/proxy', JSON.stringify(param), this.httpOptions)
       .subscribe(
@@ -28,18 +34,8 @@ export class ProxyService {
     const url = environment.baseURL + '/api/proxy';
 
     this.httpOptions['body'] = {
-      'token': param.token
+      'apiKey': param.apiKey
     };
-
-    // const httpOptions = {
-    //   headers: new HttpHeaders({
-    //     'Content-Type': 'application/json'
-    //   }),
-    //   body: {
-    //     'token': param.token
-    //   }
-    // };
-
     return this.http.delete(url, this.httpOptions);
   }
 

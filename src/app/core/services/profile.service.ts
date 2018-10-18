@@ -26,8 +26,6 @@ export class ProfileService {
       );
   }
 
-
-
   async sendUrl(address: string, toProfile: string): Promise<Blob> {
     const file = await this.http.post<Blob>('http://localhost:5000/profile/create', { url : address}, 
       {

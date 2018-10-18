@@ -31,10 +31,10 @@ export class ProxyFormComponent implements OnInit {
   }
 
   submit() {
-    this.proxyGen['user_id'] = this.authService.getUserID();
+    this.proxyGen['userId'] = this.authService.getUserID();
     this.proxyGen['server'] = this.formType;
     this.onSubmitloading = true;
-    this.proxyService.getProxy(this.proxyGen);
+    this.proxyService.createProxy(this.proxyGen);
   }
 
   deleteAll() {
