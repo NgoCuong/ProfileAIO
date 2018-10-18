@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { PROXIES } from '../../../core/services/mock-proxy';
 import { SETTINGS } from './smart-table-settings';
 import { ProxyService } from '../../../core/services/proxy.service';
 import { AuthService } from '../../../core/auth/auth.service';
+import { Proxy } from '../../../share/models/proxy';
 
 @Component({
   selector: 'app-proxy-dashboard',
@@ -15,10 +15,17 @@ export class ProxyDashboardComponent implements OnInit {
     private auth: AuthService) { }
 
   settings = SETTINGS;
-  data = PROXIES;
+  proxyList: Proxy[] = [];
 
   ngOnInit() {
-    this.proxyService.getProxy(this.auth.getUserID());
+    this.getProxy();
+  }
+
+  getProxy(): void {
+    this.proxyService.getProxy(this.auth.getUserID())
+      .subscribe(proxyList => {
+        this.proxyList = proxyList;
+      });
   }
 
   onDeleteConfirm(event): void {

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs/Observable';
+import { Proxy } from '../../share/models/proxy';
 
 
 @Injectable()
@@ -15,13 +16,9 @@ export class ProxyService {
     })
   };
 
-  getProxy(userId) {
+  getProxy(userId): Observable<Proxy[]> {
     const params = new HttpParams().set('userId', userId);
-    return this.http.get(environment.baseURL + '/api/proxy', { params: params })
-      .subscribe(
-        data => console.log(data),
-        err => console.log(err)
-      );
+    return this.http.get<Proxy[]>(environment.baseURL + '/api/proxy', { params: params });
   }
 
   createProxy(param) {
