@@ -8,7 +8,7 @@ const cors = require('cors');
 
 // Only turn this on for Local
 const corsOptions =  {
-  origin: 'http://localhost:4200'
+  origin: 'http://nameless-hollows-54410.herokuapp.com'
 };
 app.use(cors(corsOptions));
 
