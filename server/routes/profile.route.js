@@ -61,6 +61,11 @@ async function GenerateProfile(req, res, io) {
                 await CreateTripReponse(req, res, convertedResults);
                 console.log("Done running trip");
                 break;
+            case ProfileType.DASHE:
+                console.log("Running dashe");
+                await createDasheResponse(req, res, convertedResults);
+                console.log("Done running dashe");
+                break;               
         }  
         // req.app.io.emit("message", "Successfully converted profile to " + req.params.id);
     }catch(error) {
@@ -75,6 +80,7 @@ async function CreateTripReponse(req, res, convertedProfiles) {
         var zip = archiver('zip');
         // Send the file to the page output.
         zip.pipe(res);
+        res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
         res.setHeader('Content-Disposition', 'attachment; filename=' + filename)
         res.type('application/zip');
         res.status(200);
@@ -103,6 +109,7 @@ async function CreateANBResponse(req, res, convertedProfiles) {
         
         var wbout = new Buffer(XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' }));
         var filename = "anbplus.xlsx";
+        res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
         res.setHeader('Content-Disposition', 'attachment; filename=' + filename);
         res.type('application/octet-stream');
         res.status(200).send(wbout);
@@ -116,6 +123,7 @@ async function CreateSneakerCopResponse(req, res, convertedProfiles) {
     try{
         console.log("CreateSneakerCopResponse");
         var filename = "sneakercop.csv";
+        res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
         res.setHeader('Content-Disposition', 'attachment; filename=' + filename);
         res.set('Content-Type', 'text/csv');
         console.log(convertedProfiles);
@@ -132,6 +140,7 @@ async function createDasheResponse(req, res, convertedProfiles) {
         console.log("Attempting to convert to users choice of profileType");
         var convertedResults = getConvertedProfiles(req.params.id, results);
         var filename = "dashe.json";
+        res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
         res.setHeader('Content-Disposition', 'attachment; filename=' + filename);
         res.set('Content-Type', 'application/json');
         res.status(200).send(convertedResults);
