@@ -50,6 +50,7 @@ export class ProfileService {
       observe: 'response' as 'response'
 
     }).subscribe((res: HttpResponse<any>) => {
+      console.log(res);
       fileName = this.getFileNameFromHttpResponse(res);
       console.log("FIle Name " + fileName);
       var blob = new Blob([res.body]);
