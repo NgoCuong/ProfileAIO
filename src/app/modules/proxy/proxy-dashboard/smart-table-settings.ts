@@ -1,6 +1,6 @@
 export const SETTINGS = {
     columns: {
-        id: {
+        instanceId: {
             title: 'ID',
             filter: false
         },
