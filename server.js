@@ -16,26 +16,21 @@ app.use(cors(corsOptions));
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));
 
-// Makes connection to Mongoose 
-// mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/profile", { useNewUrlParser: true }, function (err, suc) {
-//   if (err) {
-//     console.log(err);
-//   }
-// });
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // Makes connection asynchronously.  Mongoose will queue up database
 // operations and release them when the connection is complete.
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/profile", function(err, suc) {
-  if(err) {
-    console.log("Cannot connect to the database");
-    console.log(err);
-  } else {
-    console.log("Successfully connected to the database");
-  }
-});
+// mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/profile", function(err, suc) {
+//   if(err) {
+//     console.log("Cannot connect to the database");
+//     console.log(err);
+//   } else {
+//     console.log("Successfully connected to the database");
+//   }
+// });
+
 app.use('/api/proxy', require('./server/routes/proxyroute'));
 
 app.get('/api/public', function (req, res) {
@@ -63,3 +58,15 @@ var server = app.listen(process.env.PORT || 8080, function () {
   var port = server.address().port;
   console.log("App now running on port", port);
 });
+
+// const io = require('socket.io')(server);
+
+// io.sockets.on('connection', function(socket) {
+//   console.log("Socket connected");
+//   io.emit("message", "Connected to socket");
+//   socket.on('disconnect', function(opt, cb) {
+//     console.log("Socket disconnected");
+//   });
+// });
+// app.io = io;
+
