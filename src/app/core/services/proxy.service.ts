@@ -16,30 +16,51 @@ export class ProxyService {
     })
   };
 
-  getProxy(userId): Observable<Proxy[]> {
+  getProxy(provider, userId): Observable<Proxy[]> {
     const params = new HttpParams().set('userId', userId);
-    return this.http.get<Proxy[]>(environment.baseURL + '/api/proxy', { params: params });
+    return this.http.get<Proxy[]>(environment.baseURL + '/api/' + provider + '/proxies', { params: params });
   }
 
-  createProxy(param) {
+  createProxy(provider, param) {
     console.log(JSON.stringify(param));
-    return this.http.post(environment.baseURL + '/api/proxy', JSON.stringify(param), this.httpOptions)
+    console.log(provider);
+    return this.http.post(environment.baseURL + '/api/' + provider + '/proxies', JSON.stringify(param), this.httpOptions)
       .subscribe(
         data => console.log(data),
         err => console.log(err)
       );
   }
 
-  deleteAll(param) {
-    const url = environment.baseURL + '/api/proxy';
+  deleteAll(provider, param) {
+    const url = environment.baseURL + '/api/' + provider + '/proxies';
 
     this.httpOptions['body'] = {
-      'apiKey': param.apiKey
+      'apiKey': param.apiKey,
+      'userId': param.userId
     };
+    console.log(url);
+    console.log(this.httpOptions['body']);
     return this.http.delete(url, this.httpOptions);
   }
 
-  getRegion(): Observable<String[]> {
-    return this.http.get<String[]>(environment.baseURL + '/api/proxy/regions');
+//   api/linode/proxy	"{
+//     ""apiKey"": ""3c5686daacefc2ddde5545c1"",
+//      ""proxy"": ""102:163:34:12:4331:profileai:35sdf4#$""
+// }"
+
+
+  delete(provider, param) {
+    const url = environment.baseURL + '/api/' + provider + '/proxy';
+    this.httpOptions['body'] = {
+      'apiKey': param.apiKey,
+      'proxy': param.proxy
+    };
+    console.log(url);
+    console.log(this.httpOptions['body']);
+    return this.http.delete(url, this.httpOptions);
+  }
+
+  getRegion(provider): Observable<String[]> {
+    return this.http.get<String[]>(environment.baseURL + '/api/' + provider + '/regions');
   }
 }

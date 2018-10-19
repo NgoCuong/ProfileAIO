@@ -1,5 +1,5 @@
 <section>
-  <div class="panel panel-default profile-area">
+  <!-- <div class="panel panel-default profile-area">
     <div class="panel-heading">
       <h3>Profile</h3>
     </div>
@@ -11,6 +11,68 @@
         <h3 class="nickname">{{ profile?.nickname }}</h3>
       </div>
       <pre class="full-profile">{{ profile | json }}</pre>
+    </div>
+  </div> -->
+  <!-- "{
+    ""linodeApiKey"": ""3c5686daacefc2ddde5545c15"",
+    ""userId"" : ""twitter|1231234234"",
+    ""defaultUserName: ""bob"",
+    ""defaultPassword"": ""testtest123123"",
+    ""googleApiKey"": ""123fd42fsdf132e12,
+    ""name"": ""yungyeezy"",
+    ""pictureUrl"":""asdasda.com"",
+}" -->
+
+  <div class="row">
+    <div class="col-md-6 mx-auto">
+      <div class="card rounded-0">
+        <div class="card-header">
+          <h3 class="mb-0">Settings
+            <button class="btn btn-danger btn-lg float-right">Reset</button>
+          </h3>
+        </div>
+        <div class="card-body">
+          <form name="form" (ngSubmit)="onSave()" #f="ngForm" novalidate>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="url">Google Excel Address</label>
+                  <input type="text" class="form-control form-control-lg" name="url" [(ngModel)]="userSetting.url" />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="linodeApiKey">Linode Api Key</label>
+                  <input type="text" class="form-control form-control-lg" name="linodeApiKey" [(ngModel)]="userSetting.linodeApiKey" />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="username">Proxy Username</label>
+                  <input type="text" class="form-control form-control-lg" id="username" [(ngModel)]="userSetting.user" name="username">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="orm-group">
+                  <label for="password">Proxy Password</label>
+                  <input type="text" class="form-control form-control-lg" id="password" [(ngModel)]="userSetting.pass" name="password">
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="row">
+                <div class="col-md-12">
+                  <button class="btn btn-success btn-lg float-right">Save</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
 </section>
