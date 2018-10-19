@@ -22,16 +22,27 @@ export class ProxyDashboardComponent implements OnInit {
   }
 
   getProxy(): void {
-    this.proxyService.getProxy(this.auth.getUserID())
+    this.proxyService.getProxy('linode', this.auth.getUserID())
       .subscribe(proxyList => {
         this.proxyList = proxyList;
       });
   }
 
+  delete(param) {
+    // return this.proxyService.delete('linode', param);
+  }
+
   onDeleteConfirm(event): void {
-    console.log('Deleted');
-    console.log(event);
-    event.confirm.resolve();
+    // this.delete(event.data)
+    //   .subscribe(
+    //     data => {
+    //       console.log(data);
+    //       event.confirm.resolve();
+    //     },
+    //     err => {
+    //       console.log(err);
+    //     }
+    //   );
   }
 
   onMouseOver(event): void {
