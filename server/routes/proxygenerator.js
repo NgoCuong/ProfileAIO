@@ -2,6 +2,7 @@
 
 module.exports = class ProxyGenerator {
 
+
     constructor(accessToken) {
         this.accessToken = accessToken;
         this.port = '3128';
@@ -12,13 +13,16 @@ module.exports = class ProxyGenerator {
         this.api = new this.http(this.accessToken);
     }
 
+
     getRandomInt(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
+
     sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
+
 
     async createInstance(instanceUser, instancePassword, instanceRegion) {
 
@@ -42,9 +46,8 @@ module.exports = class ProxyGenerator {
             while (!await this.isServerUp(id)) {
                 await this.sleep(10000);
             }
-
             console.log(`${ip}...ready, running script`)
-            
+
             var bashCommand =
                 "yum -y update && " +
                 "yum -y install squid httpd-tools wget && " +
@@ -60,8 +63,6 @@ module.exports = class ProxyGenerator {
 
             await this.sleep(10000);
             await this.executeCommand(ip, instancePassword, bashCommand);
-            //await this.execRemote(ip, 'root', instancePassword, '3128')
-            console.log("script complete");
 
             var proxy = `${ip}:${this.port}:${instanceUser}:${instancePassword}`;
             await this.insertProxyDB(proxy, id);
@@ -72,13 +73,14 @@ module.exports = class ProxyGenerator {
     }
 
 
-
-
-
     async isServerUp(serverId) {
-        var response = await this.api.httpRequest(`https://api.linode.com/v4/linode/instances/${serverId}`, 'get');
-        var status = response.status;
-        return (status == 'running' ? true : false);
+        try {
+            var response = await this.api.httpRequest(`https://api.linode.com/v4/linode/instances/${serverId}`, 'get');
+            var status = response.status;
+            return (status == 'running' ? true : false);
+        } catch (err) {
+            throw err;
+        }
     }
 
 
@@ -105,7 +107,6 @@ module.exports = class ProxyGenerator {
             } else {
                 for (var i = 0; i < serverCount; i++) {
                     var machine = response.data[i];
-                    //console.log("Deleting server %s", machine.ipv4[0]);
                     await this.deleteInstance(accessToken, machine.id);
                 }
                 console.log(`Deleted ${serverCount} servers`);
@@ -120,11 +121,10 @@ module.exports = class ProxyGenerator {
         try {
             return new Promise(function (resolve) {
                 var exec = require('ssh-exec');
-                //var v_host = ip;
                 exec(bashCommand, {
-                    user: 'root',
-                    host: ip,
-                    password: pass
+                    'user': 'root',
+                    'host': ip,
+                    'password': pass
                 }, function () {
                     resolve();
                 })
@@ -145,7 +145,6 @@ module.exports = class ProxyGenerator {
                 instanceId: instanceId,
                 server: "linode"
             });
-
             v.save();
         } catch (err) {
             throw err;
@@ -154,15 +153,14 @@ module.exports = class ProxyGenerator {
 
 
     async generateProxies(userId, proxyNumber, user, pass, region) {
-        try {
 
+        try {
             this.userId = userId;
             this.user = user;
             this.pass = pass;
             this.region = region;
             this.number = proxyNumber;
             await this.validateToken();
-
 
             // number of concurent requests limit
             var concurentLimit = 10;
@@ -179,22 +177,6 @@ module.exports = class ProxyGenerator {
         }
     }
 
-    // async generateProxies(userId, proxyNumber, user, pass, region) {
-    //     try {
-    //         this.userId = userId;
-    //         this.user = user;
-    //         this.pass = pass;
-    //         this.region = region;
-    //         this.number = proxyNumber;
-    //         await this.validateToken();
-    //         var res = await this.createBatchInstancesLimit(this.number)
-
-    //         return res
-    //     } catch (err) {
-    //         throw err;
-    //     }
-    // }
-
 
     async validateToken() {
         try {
@@ -203,5 +185,6 @@ module.exports = class ProxyGenerator {
             throw err;
         }
     }
+
 };
 

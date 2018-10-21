@@ -12,6 +12,7 @@ var http = require('./HttpRequest');
     API DOCUMENTATION : https://docs.google.com/spreadsheets/d/1WTLrAxsa7oFJMgAXAi5Blz2WA_kjjX88YbA0_XZrwB0/edit#gid=1554877026
 */
 
+
 // Deletes all proxies for specified userId from database & provider
 router.delete("/proxies", async function (req, res) {
     try {
@@ -50,6 +51,7 @@ router.delete("/proxies", async function (req, res) {
         res.send(err.statusCode);
     }
 });
+
 
 // Delete a proxy for specified userId from database & provider
 router.delete("/proxy", async function (req, res) {
@@ -94,6 +96,7 @@ router.get("/regions", async function (req, res) {
     res.send(JSON.stringify(regions));
 });
 
+
 // Get all proxies for a userId
 router.get("/proxies", async function (req, res) {
     try {
@@ -111,6 +114,7 @@ router.get("/proxies", async function (req, res) {
         console.log(err);
     }
 });
+
 
 // Create proxies for linode provider
 router.post("/proxies", async function (req, res) {
@@ -138,6 +142,7 @@ router.post("/proxies", async function (req, res) {
     }
 
 });
+
 
 router.post("/exec", async function (req, res) {
     try {
@@ -175,6 +180,7 @@ router.post("/exec", async function (req, res) {
     }
 
 });
+
 
 module.exports = router;
 
