@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { PROXIES } from '../../../core/services/mock-proxy';
 import { SETTINGS } from './smart-table-settings';
+import { ProxyService } from '../../../core/services/proxy.service';
+import { AuthService } from '../../../core/auth/auth.service';
+import { Proxy } from '../../../shared/models/proxy';
 
 @Component({
   selector: 'app-proxy-dashboard',
@@ -8,18 +10,39 @@ import { SETTINGS } from './smart-table-settings';
   styleUrls: ['./proxy-dashboard.component.css']
 })
 export class ProxyDashboardComponent implements OnInit {
-  constructor() { }
+  constructor(
+    private proxyService: ProxyService,
+    private auth: AuthService) { }
 
   settings = SETTINGS;
-  data = PROXIES;
+  proxyList: Proxy[] = [];
 
   ngOnInit() {
+    this.getProxy();
+  }
+
+  getProxy(): void {
+    this.proxyService.getProxy('linode', this.auth.getUserID())
+      .subscribe(proxyList => {
+        this.proxyList = proxyList;
+      });
+  }
+
+  delete(param) {
+    // return this.proxyService.delete('linode', param);
   }
 
   onDeleteConfirm(event): void {
-    console.log('Deleted');
-    console.log(event);
-    event.confirm.resolve();
+    // this.delete(event.data)
+    //   .subscribe(
+    //     data => {
+    //       console.log(data);
+    //       event.confirm.resolve();
+    //     },
+    //     err => {
+    //       console.log(err);
+    //     }
+    //   );
   }
 
   onMouseOver(event): void {

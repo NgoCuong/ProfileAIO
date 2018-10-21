@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,HttpResponse } from '@angular/common/http';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { environment } from '../../../environments/environment';
+import { saveAs } from 'file-saver';
+
 
 @Injectable()
 export class ProfileService {
@@ -26,22 +28,33 @@ export class ProfileService {
       );
   }
 
-
-
-  async sendUrl(address: string, toProfile: string): Promise<Blob> {
-    const file = await this.http.post<Blob>('http://localhost:5000/profile/create', { url : address}, 
+  async sendUrl(address: string, param): Promise<Blob> {
+    var filename;
+    const file = await this.http.post<Blob>(environment.baseURL + '/profile/create/' + param.replace(" ", "").toLowerCase(), { url : address}, 
       {
-        responseType: 'blob' as 'json' 
+        responseType: 'blob' as 'json'
       }).toPromise();
-      return file;
+    return file;
   }
 
-  async createxlsx(jsonresponse: string): Promise<Blob> {
-    const file = await this.http.get<Blob>('http://localhost:5000/profile/testing', 
-      {
-        responseType: 'blob' as 'json' 
-      }).toPromise();
-      return file;
+  getFileNameFromHttpResponse(httpResponse) {
+    var contentDispositionHeader = httpResponse.headers.get('Content-Disposition');
+    var result = contentDispositionHeader.split(';')[1].trim().split('=')[1];
+    return result.replace(/"/g, '');
+  }
 
+  async downloadFile(address: string, param){
+    var fileName;
+    await this.http.post<any>(environment.baseURL + '/profile/create/' + param.replace(" ", "").toLowerCase(), { url : address}, {
+      responseType: 'blob' as 'json',
+      observe: 'response' as 'response'
+
+    }).subscribe((res: HttpResponse<any>) => {
+      console.log(res);
+      fileName = this.getFileNameFromHttpResponse(res);
+      console.log("FIle Name " + fileName);
+      var blob = new Blob([res.body]);
+      saveAs(blob, fileName);
+    });
   }
 }
