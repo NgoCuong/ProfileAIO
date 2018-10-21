@@ -17,7 +17,7 @@ var http = require('./HttpRequest');
 router.delete("/proxies", async function (req, res) {
     try {
         var apiKey = req.body.apiKey;
-        var userId = req.body.userId;
+        var userId = req.user.sub;
 
         if (typeof userId === "undefined" || typeof apiKey === "undefined") {
             res.send(400, "Missing body elements");
@@ -100,7 +100,7 @@ router.get("/regions", async function (req, res) {
 // Get all proxies for a userId
 router.get("/proxies", async function (req, res) {
     try {
-        var userId = req.query.userId == "null" ? null : req.query.userId;
+        var userId = req.user.sub == "null" ? null : req.user.sub;
         var proxy = require('./proxySchema');
         var query = proxy.find({
             'userId': userId
@@ -124,7 +124,7 @@ router.post("/proxies", async function (req, res) {
         var user = req.body.user
         var pass = req.body.pass;
         var number = req.body.number;
-        var userId = req.body.userId;
+        var userId = req.user.sub;
 
         var x = new proxy(apiKey);
         var result = await x.generateProxies(userId, number, user, pass, region);
@@ -139,44 +139,6 @@ router.post("/proxies", async function (req, res) {
         } else {
             console.log(err);
         }
-    }
-
-});
-
-
-router.post("/exec", async function (req, res) {
-    try {
-
-        node_ssh = require('node-ssh');
-        ssh = new node_ssh();
-
-        await ssh.connect({
-            'host':'172.104.26.36',
-            'username':'root',
-            'password': '5fgdj423fds'
-        });
-
-        var bashCommand =
-        "yum -y update && " +
-        "yum -y install squid httpd-tools wget && " +
-        "systemctl start squid && " +
-        "systemctl enable squid && " +
-        "touch /etc/squid/passwd && " +
-        `htpasswd -b /etc/squid/passwd profileaio 5fgdj423fds && ` +
-        "wget -O /etc/squid/squid.conf https://raw.githubusercontent.com/dzt/easy-proxy/master/confg/userpass/squid.conf && " +
-        "systemctl restart squid.service && " +
-        "systemctl enable squid.service && " +
-        `iptables -I INPUT -p tcp --dport 3128 -j ACCEPT && ` +
-        "iptables-save";
-
-        await ssh.execCommand(bashCommand).then(function(result) {
-            console.log('STDOUT: ' + result.stdout)
-            console.log('STDERR: ' + result.stderr)
-        });
-
-
-    } catch (Err) {
-        console.log(Err);
     }
 
 });

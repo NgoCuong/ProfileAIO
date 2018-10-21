@@ -12,9 +12,9 @@ var router = express.Router();
 
 
 // Delete a user from database
-router.delete("/user", async function (req, res) {
+router.delete("/", async function (req, res) {
     try {
-        var userId = req.body.userId;
+        var userId = req.user.sub;
 
         if (typeof userId === "undefined") {
             res.send(400, "Missing body elements");
@@ -38,9 +38,9 @@ router.delete("/user", async function (req, res) {
 
 
 // Fetches user info from database
-router.get("/user", async function (req, res) {
+router.get("/", async function (req, res) {
     try {
-        var userId = req.query.userId;
+        var userId = req.user.sub;
         if (typeof userId === "undefined") {
             res.send(400, "Query parameter empty");
         } else {
@@ -61,9 +61,9 @@ router.get("/user", async function (req, res) {
 
 
 // Creates user entry into database
-router.post("/user", async function (req, res) {
+router.post("/", async function (req, res) {
     try {
-        var userId = req.body.userId;
+        var userId = req.user.sub;
         if (typeof userId === "undefined") {
             res.send(400, "userId must be defined");
         } else {
@@ -93,9 +93,9 @@ router.post("/user", async function (req, res) {
 
 
 // Updates one or more user property
-router.patch("/user", async function (req, res) {
+router.patch("/", async function (req, res) {
     try {
-        var userId = req.body.userId;
+        var userId = req.user.sub;
         if (typeof userId === "undefined") {
             res.send(400, "userId must be defined");
         } else {
@@ -122,7 +122,7 @@ router.patch("/user", async function (req, res) {
 
 
 // Updates all user properties
-router.put("user", function (req, res) {
+router.put("/", function (req, res) {
     try {
         res.send("will be implemented");
     } catch (err) {
@@ -149,6 +149,3 @@ router.get("/all/proxies", function (req, res) {
 
 
 module.exports = router;
-
-
-

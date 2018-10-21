@@ -32,9 +32,12 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/profile", funct
     console.log("Successfully connected to the database");
   }
 });
-app.use('/api/linode', require('./server/routes/proxyroute'));
 
-app.use('/api/', require('./server/routes/user.route'))
+
+app.use('/api/linode', checkJwt, require('./server/routes/proxyroute'));
+
+app.use('/api/user', checkJwt, require('./server/routes/user.route'))
+
 
 app.get('/api/public', function (req, res) {
   res.json({
