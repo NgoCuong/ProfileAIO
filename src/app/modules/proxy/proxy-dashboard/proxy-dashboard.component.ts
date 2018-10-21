@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SETTINGS } from './smart-table-settings';
 import { ProxyService } from '../../../core/services/proxy.service';
 import { AuthService } from '../../../core/auth/auth.service';
-import { Proxy } from '../../../share/models/proxy';
+import { Proxy } from '../../../shared/models/proxy';
 
 @Component({
   selector: 'app-proxy-dashboard',

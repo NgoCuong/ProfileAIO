@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs/Observable';
-import { Proxy } from '../../share/models/proxy';
+import { Proxy } from '../../shared/models/proxy';
 
 
 @Injectable()

@@ -6,7 +6,9 @@ import Auth0Lock from 'auth0-lock';
 @Injectable()
 export class AuthService {
 
-  auth0Options = {
+  public userProfile: any;
+
+  private auth0Options = {
     theme: {
       logo: '../../../assets/profileaio.png',
       primaryColor: '#DFA612'
@@ -26,7 +28,7 @@ export class AuthService {
     oidcConformant: true,
   };
 
-  lock = new Auth0Lock(
+  private lock = new Auth0Lock(
     environment.auth0.clientId,
     environment.auth0.domain,
     this.auth0Options
@@ -34,34 +36,40 @@ export class AuthService {
 
   constructor(private router: Router) {
     this.lock.on('authenticated', (authResult: any) => {
-      this.setSession(authResult);
       this.lock.getUserInfo(authResult.accessToken, (error, profile) => {
         if (error) {
           throw new Error(error);
         }
-        localStorage.setItem('profile', JSON.stringify(profile));
+        this.setSession(authResult, profile);
+        this.userProfile = profile;
         this.router.navigate(['/']);
       });
     });
   }
 
-  private setSession(authResult): void {
+  public login(): void {
+    this.lock.show();
+  }
+
+  public logout(): void {
+    this.removeSession();
+    this.userProfile = undefined;
+    this.router.navigate(['/']);
+  }
+
+  private setSession(authResult, profile): void {
     const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
     localStorage.setItem('access_token', authResult.accessToken);
     localStorage.setItem('id_token', authResult.idToken);
     localStorage.setItem('expires_at', expiresAt);
+    localStorage.setItem('profile', JSON.stringify(profile));
   }
 
-  public login() {
-    this.lock.show();
-  }
-
-  public logout() {
+  private removeSession(): void {
     localStorage.removeItem('access_token');
     localStorage.removeItem('id_token');
     localStorage.removeItem('expires_at');
     localStorage.removeItem('profile');
-    this.router.navigate(['/']);
   }
 
   public isAuthenticated(): boolean {
@@ -69,28 +77,38 @@ export class AuthService {
     return new Date().getTime() < expiresAt;
   }
 
-  public getToken(): string {
-    return localStorage.getItem('id_token');
-  }
+  public getProfile(cb): void {
+    const accessToken = localStorage.getItem('access_token');
+    if (!accessToken) {
+      this.logout();
+      return;
+    }
 
-  public getProfile(): any {
-    return localStorage.getItem('profile');
+    const self = this;
+    this.lock.getUserInfo(accessToken, (err, profile) => {
+      if (err) {
+        this.logout();
+        return;
+      }
+
+      self.userProfile = profile;
+      cb(profile);
+    });
   }
 
   public getProfileImage(): String {
-    return JSON.parse(localStorage.getItem('profile')).picture;
+    const profile = localStorage.getItem('profile');
+    if (profile) {
+      return JSON.parse(profile).picture;
+    }
+    return null;
   }
 
   public getUserID(): String {
-    let id: String = null;
-    try {
-      id = JSON.parse(localStorage.getItem('profile')).sub;
-      console.log(id);
-    } catch (err) {
-      console.log(err);
+    const profile = localStorage.getItem('profile');
+    if (profile) {
+      return JSON.parse(profile).sub;
     }
-
-    return id;
+    return null;
   }
-
 }
