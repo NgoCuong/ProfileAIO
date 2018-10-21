@@ -121,7 +121,7 @@ router.post("/proxies", async function (req, res) {
     try {
         var apiKey = req.body.apiKey;
         var region = req.body.region;
-        var user = req.body.user
+        var user = req.body.user;
         var pass = req.body.pass;
         var number = req.body.number;
         var userId = req.user.sub;
