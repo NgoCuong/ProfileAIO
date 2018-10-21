@@ -49,7 +49,7 @@ router.get("/", async function (req, res) {
                 'userId': userId
             });
             console.log(`Fetching user info for ${userId}`)
-            query.select('userId userName linodeKey defaultUserName defaultPassword googleUri');
+            query.select('userId userName linodeKey proxyUsername proxyPassword googleUri');
             query.exec(function (err, result) {
                 res.send(result);
             });
