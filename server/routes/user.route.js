@@ -87,7 +87,7 @@ router.post("/", async function (req, res) {
             res.send(200, "User added successfully!");
         }
     } catch (err) {
-        es.send(err.statusCode);
+        res.send(err.statusCode);
     }
 });
 
