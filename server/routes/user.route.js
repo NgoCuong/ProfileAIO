@@ -69,8 +69,8 @@ router.post("/", async function (req, res) {
         } else {
             var userName = req.body.userName == "undefined" ? "" : req.body.userName;
             var linodeKey = req.body.linodeKey == "undefined" ? "" : req.body.linodeKey;
-            var defaultUserName = req.body.defaultUserName == "undefined" ? "" : req.body.defaultUserName;
-            var defaultPassword = req.body.defaultPassword == "undefined" ? "" : req.body.defaultPassword;
+            var proxyUsername = req.body.proxyUsername == "undefined" ? "" : req.body.proxyUsername;
+            var proxyPassword = req.body.proxyPassword == "undefined" ? "" : req.body.proxyPassword;
             var googleUri = req.body.googleUri == "undefined" ? "" : req.body.googleUri;
 
             var userSchema = require('./userSchema');
@@ -79,8 +79,8 @@ router.post("/", async function (req, res) {
                 'userId': userId,
                 'userName': userName,
                 'linodeKey': linodeKey,
-                'defaultUserName': defaultUserName,
-                'defaultPassword': defaultPassword,
+                'proxyUsername': proxyUsername,
+                'proxyPassword': proxyPassword,
                 'googleUri': googleUri
             });
             query.save();
