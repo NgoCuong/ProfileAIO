@@ -34,6 +34,8 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/profile", funct
 });
 app.use('/api/linode', require('./server/routes/proxyroute'));
 
+app.use('/api/', require('./server/routes/user.route'))
+
 app.get('/api/public', function (req, res) {
   res.json({
     message: 'Hello from a public endpoint! You don\'t need to be authenticated to see this.'
