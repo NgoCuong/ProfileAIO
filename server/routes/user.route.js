@@ -45,7 +45,7 @@ router.get("/", async function (req, res) {
             res.send(400, "Query parameter empty");
         } else {
             var userSchema = require('./userSchema');
-            var query = userSchema.find({
+            var query = userSchema.findOne({
                 'userId': userId
             });
             console.log(`Fetching user info for ${userId}`)
@@ -55,7 +55,7 @@ router.get("/", async function (req, res) {
             });
         }
     } catch (err) {
-        console.log(err);
+        res.send(400, err);
     }
 });
 
@@ -75,7 +75,7 @@ router.post("/", async function (req, res) {
 
             var userSchema = require('./userSchema');
             var query = new userSchema({
-
+                '_id': userId,
                 'userId': userId,
                 'userName': userName,
                 'linodeKey': linodeKey,
@@ -83,11 +83,29 @@ router.post("/", async function (req, res) {
                 'proxyPassword': proxyPassword,
                 'googleUri': googleUri
             });
-            query.save();
-            res.send(200, "User added successfully!");
+            await query.save(async function (err) {
+                if (err && err.code === 11000) {
+                    var userSchema = require('./userSchema');
+                    Object.assign(userSchema, req.body);
+                    await userSchema.updateOne(
+                        { 'userId': userId },
+                        { $set: req.body },
+                        function (err, rawResponse) {
+                            if (err) throw err;
+                            if (rawResponse.n == 0) {
+                                res.send(200, "User already exists, no new values to update values");
+                            } else {
+                                res.send(200, "User already exists, updated user values.");
+                            }
+                        }
+                    );
+                } else {
+                    res.send(200, "User added successfully!");
+                }
+            });
         }
     } catch (err) {
-        res.send(err.statusCode);
+        res.send(400, err);
     }
 });
 
@@ -116,7 +134,7 @@ router.patch("/", async function (req, res) {
             );
         }
     } catch (err) {
-
+        res.send(400, err);
     }
 })
 
@@ -126,7 +144,7 @@ router.put("/", function (req, res) {
     try {
         res.send("will be implemented");
     } catch (err) {
-
+        res.send(400, err);
     }
 });
 
@@ -135,13 +153,13 @@ router.put("/", function (req, res) {
 router.get("/all/proxies", function (req, res) {
     try {
         var proxySchema = require('./proxySchema');
-            var query = proxySchema.find();
-            console.log(`Fetching all proxies`)
-            query.select('userId proxy region instanceId server');
-            query.exec(function (err, result) {
-                if (err) throw err;
-                res.send(result);
-            });
+        var query = proxySchema.find();
+        console.log(`Fetching all proxies`)
+        query.select('userId proxy region instanceId server');
+        query.exec(function (err, result) {
+            if (err) throw err;
+            res.send(result);
+        });
     } catch (err) {
         send(400, 'failed to fetch all proxies')
     }
