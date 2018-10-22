@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
 import { UserService } from '../../core/services/user.service';
+import { User } from '../../shared/models/user';
 
 @Component({
   selector: 'app-profile',
@@ -9,42 +10,51 @@ import { UserService } from '../../core/services/user.service';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  //   "{
-  //     ""linodeApiKey"": ""3c5686daacefc2ddde5545c15"",
-  //     ""userId"" : ""twitter|1231234234"",
-  //     ""defaultUserName: ""bob"",
-  //     ""defaultPassword"": ""testtest123123"",
-  //     ""googleApiKey"": ""123fd42fsdf132e12,
-  //     ""name"": ""yungyeezy"",
-  //     ""pictureUrl"":""asdasda.com"",
-  // }"
   profile: any = null;
-  userSetting = {
-    // linodeApiKey: String = '';
-    // proxyUser: String = '';
-    // proxyPass: String = '';
-  };
+  user: User;
+  onLoading = false;
 
   constructor(
     private route: ActivatedRoute,
     private auth: AuthService,
-    private userService: UserService) { }
-
-  ngOnInit() {
-    if (this.auth.userProfile) {
-      this.profile = this.auth.userProfile;
-    } else {
-      this.auth.getProfile((profile) => {
-        if (profile) {
-          this.profile = profile;
-        }
-      });
-    }
+    private userService: UserService) {
+    this.user = new User();
   }
 
-  onSave() {
-    this.userSetting['userId'] = this.auth.getUserID();
-    this.userSetting['name'] = 'young yeezy';
-    this.userService.saveUserSettings(this.userSetting);
+  ngOnInit() {
+    this.userService.getUser()
+      .subscribe(
+        data => {
+          if(data[0]) {
+            console.log('success');
+            console.log(data);
+            this.user = data[0];
+          }
+        }
+      );
+  }
+
+  private onSave(): void {
+    console.log(this.user);
+    this.onLoading = true;
+    this.userService.saveUserSettings(this.user)
+      .subscribe(
+        data => {
+          console.log('success');
+          console.log(data);
+          this.onLoading = false;
+        }
+      );
+  }
+
+  private onDelete(): void {
+    this.userService.deleteUser()
+      .subscribe(
+        data => {
+          console.log('success');
+          console.log(data);
+          this.user = new User();
+        }
+      );
   }
 }

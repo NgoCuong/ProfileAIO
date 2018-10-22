@@ -103,12 +103,4 @@ export class AuthService {
     }
     return null;
   }
-
-  public getUserID(): String {
-    const profile = localStorage.getItem('profile');
-    if (profile) {
-      return JSON.parse(profile).sub;
-    }
-    return null;
-  }
 }

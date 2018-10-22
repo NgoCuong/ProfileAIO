@@ -28,7 +28,7 @@
       <div class="card rounded-0">
         <div class="card-header">
           <h3 class="mb-0">Settings
-            <button class="btn btn-danger btn-lg float-right">Reset</button>
+            <button class="btn btn-danger btn-lg float-right" (click)="onDelete()">Delete</button>
           </h3>
         </div>
         <div class="card-body">
@@ -36,37 +36,37 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="form-group">
-                  <label for="url">Google Excel Address</label>
-                  <input type="text" class="form-control form-control-lg" name="url" [(ngModel)]="userSetting.url" />
+                  <label for="googleUri">Google Excel Address</label>
+                  <input type="text" class="form-control form-control-lg" name="googleUri" id="googleUri" [ngModel]="user?.googleUri" (ngModelChange)="user.googleUri=$event"/>
                 </div>
               </div>
             </div>
             <div class="row">
               <div class="col-md-12">
                 <div class="form-group">
-                  <label for="linodeApiKey">Linode Api Key</label>
-                  <input type="text" class="form-control form-control-lg" name="linodeApiKey" [(ngModel)]="userSetting.linodeApiKey" />
+                  <label for="linodeKey">Linode Api Key</label>
+                  <input type="text" class="form-control form-control-lg" name="linodeKey" [ngModel]="user?.linodeKey" (ngModelChange)="user.linodeKey=$event" />
                 </div>
               </div>
             </div>
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                  <label for="username">Proxy Username</label>
-                  <input type="text" class="form-control form-control-lg" id="username" [(ngModel)]="userSetting.user" name="username">
+                  <label for="proxyUsername">Proxy Username</label>
+                  <input type="text" class="form-control form-control-lg" id="proxyUsername" [ngModel]="user?.proxyUsername" name="proxyUsername" (ngModelChange)="user.proxyUsername=$event">
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="orm-group">
-                  <label for="password">Proxy Password</label>
-                  <input type="text" class="form-control form-control-lg" id="password" [(ngModel)]="userSetting.pass" name="password">
+                  <label for="proxyPassword">Proxy Password</label>
+                  <input type="text" class="form-control form-control-lg" id="proxyPassword" [ngModel]="user?.proxyPassword" name="proxyPassword" (ngModelChange)="user.proxyPassword=$event">
                 </div>
               </div>
             </div>
             <div class="form-group">
               <div class="row">
                 <div class="col-md-12">
-                  <button class="btn btn-success btn-lg float-right">Save</button>
+                  <button [disabled]="onLoading" class="btn btn-success btn-lg float-right">Save</button>
                 </div>
               </div>
             </div>
