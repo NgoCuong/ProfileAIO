@@ -35,7 +35,7 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/profile", funct
 
 
 app.use('/api/linode', checkJwt, require('./server/routes/proxyroute'));
-//
+
 app.use('/api/user', checkJwt, require('./server/routes/user.route'))
 
 
