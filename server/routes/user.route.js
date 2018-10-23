@@ -17,9 +17,9 @@ router.delete("/", async function (req, res) {
         var userId = req.user.sub;
 
         if (typeof userId === "undefined") {
-            res.send(400, "Missing body elements");
+            return res.status(403).json({msg: "Forbidden Access"});
+            // res.send(400, "Missing body elements");
         } else {
-
             var userSchema = require('./userSchema');
             var response = await userSchema.findOne({
                 'userId': userId
@@ -27,12 +27,15 @@ router.delete("/", async function (req, res) {
 
             if (response != null) {
                 await response.delete();
-                res.send(200, "Delete O.K.");
+                // res.send(200, "Delete O.K.");
+                return res.status(200).json({msg: "Successfully Deleted"});
             }
-            res.send(400, "Not found");
+            return res.status(400).json({msg: ""});
+            // res.send(400, "Not found");
         }
     } catch (err) {
-        res.send(err.statusCode);
+        // res.send(err.statusCode);
+        return res.status(400).json(err);
     }
 });
 
@@ -51,7 +54,8 @@ router.get("/", async function (req, res) {
             console.log(`Fetching user info for ${userId}`)
             query.select('userId userName linodeKey proxyUsername proxyPassword googleUri');
             query.exec(function (err, result) {
-                res.send(result);
+                // res.send(result);
+                return res.status(200).json(result);
             });
         }
     } catch (err) {
@@ -61,7 +65,7 @@ router.get("/", async function (req, res) {
 
 
 // Creates user entry into database
-router.post("/", async function (req, res) {
+router.post("/", async (req, res) => {
     try {
         var userId = req.user.sub;
         if (typeof userId === "undefined") {
@@ -83,6 +87,7 @@ router.post("/", async function (req, res) {
                 'proxyPassword': proxyPassword,
                 'googleUri': googleUri
             });
+
             await query.save(async function (err) {
                 if (err && err.code === 11000) {
                     var userSchema = require('./userSchema');
@@ -93,14 +98,14 @@ router.post("/", async function (req, res) {
                         function (err, rawResponse) {
                             if (err) throw err;
                             if (rawResponse.n == 0) {
-                                res.send(200, "User already exists, no new values to update values");
+                                res.status(200).send({msg: "User already exists, no new values to update values"});
                             } else {
-                                res.send(200, "User already exists, updated user values.");
+                                res.status(200).send({msg: "User already exists, updated user values."});
                             }
                         }
                     );
                 } else {
-                    res.send(200, "User added successfully!");
+                    res.status(200).send({msg: "User added successfully!"});
                 }
             });
         }

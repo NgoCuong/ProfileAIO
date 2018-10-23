@@ -16,9 +16,8 @@ export class ProxyService {
     })
   };
 
-  getProxy(provider, userId): Observable<Proxy[]> {
-    const params = new HttpParams().set('userId', userId);
-    return this.http.get<Proxy[]>(environment.baseURL + '/api/' + provider + '/proxies', { params: params });
+  getProxy(provider): Observable<Proxy[]> {
+    return this.http.get<Proxy[]>(environment.baseURL + '/api/' + provider + '/proxies');
   }
 
   createProxy(provider, param) {
@@ -35,8 +34,7 @@ export class ProxyService {
     const url = environment.baseURL + '/api/' + provider + '/proxies';
 
     this.httpOptions['body'] = {
-      'apiKey': param.apiKey,
-      'userId': param.userId
+      'apiKey': param.apiKey
     };
     console.log(url);
     console.log(this.httpOptions['body']);

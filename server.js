@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 // Makes connection asynchronously.  Mongoose will queue up database
 // operations and release them when the connection is complete.
 
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/profile", function(err, suc) {
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/profile", { useNewUrlParser: true }, function(err, suc) {
   if(err) {
     console.log("Cannot connect to the database");
     console.log(err);
