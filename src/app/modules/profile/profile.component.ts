@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { AuthService } from '../../core/auth/auth.service';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../shared/models/user';
 
@@ -9,41 +7,30 @@ import { User } from '../../shared/models/user';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent implements OnInit {
-  profile: any = null;
-  user: User;
-  onLoading = false;
 
-  constructor(
-    private route: ActivatedRoute,
-    private auth: AuthService,
-    private userService: UserService) {
-    this.user = new User();
-  }
+export class ProfileComponent implements OnInit {
+  private user: User = {};
+
+  constructor(private userService: UserService) { }
 
   ngOnInit() {
     this.userService.getUser()
       .subscribe(
         data => {
-          if(data[0]) {
-            console.log('success');
+          if (data[0]) {
             console.log(data);
             this.user = data[0];
           }
-        }
+        },
+        err => console.log(err)
       );
   }
 
   private onSave(): void {
-    console.log(this.user);
-    this.onLoading = true;
     this.userService.saveUserSettings(this.user)
       .subscribe(
-        data => {
-          console.log('success');
-          console.log(data);
-          this.onLoading = false;
-        }
+        data => console.log(data),
+        err => console.log(err)
       );
   }
 
@@ -51,10 +38,10 @@ export class ProfileComponent implements OnInit {
     this.userService.deleteUser()
       .subscribe(
         data => {
-          console.log('success');
           console.log(data);
-          this.user = new User();
-        }
+          this.user = {};
+        },
+        err => console.log(err)
       );
   }
 }

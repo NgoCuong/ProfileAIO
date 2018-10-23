@@ -1,8 +1,8 @@
-export class User {
-    _id: String;
-    googleUri: String;
-    linodeKey: String;
-    proxyPassword: String;
-    proxyUsername: String;
-    userId: String;
+export interface User {
+    _id?: string;
+    googleUri?: string;
+    linodeKey?: string;
+    proxyPassword?: string;
+    proxyUsername?: string;
+    userId?: string;
 }

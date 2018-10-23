@@ -9,24 +9,15 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json'
-    })
-  };
-
-  public saveUserSettings(user: User) {
-    console.log(user);
-    return this.http.post(environment.baseURL + '/api/user', JSON.stringify(user), this.httpOptions);
+  public saveUserSettings(user: User): Observable<any> {
+    return this.http.post(`${environment.baseURL}/api/user`, user);
   }
 
   public getUser(): Observable<User> {
-    return this.http.get<User>(environment.baseURL + '/api/user');
+    return this.http.get<User>(`${environment.baseURL}/api/user`);
   }
 
-  public deleteUser() {
-    console.log('on delete');
-    return this.http.delete(environment.baseURL + '/api/user', this.httpOptions);
+  public deleteUser(): Observable<any> {
+    return this.http.delete(`${environment.baseURL}/api/user`);
   }
-
 }

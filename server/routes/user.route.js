@@ -17,9 +17,9 @@ router.delete("/", async function (req, res) {
         var userId = req.user.sub;
 
         if (typeof userId === "undefined") {
-            res.send(400, "Missing body elements");
+            return res.status(403).json({msg: "Forbidden Access"});
+            // res.send(400, "Missing body elements");
         } else {
-
             var userSchema = require('./userSchema');
             var response = await userSchema.findOne({
                 'userId': userId
@@ -27,12 +27,15 @@ router.delete("/", async function (req, res) {
 
             if (response != null) {
                 await response.delete();
-                res.send(200, "Delete O.K.");
+                // res.send(200, "Delete O.K.");
+                return res.status(200).json({msg: "Successfully Deleted"});
             }
-            res.send(400, "Not found");
+            return res.status(400).json({msg: ""});
+            // res.send(400, "Not found");
         }
     } catch (err) {
-        res.send(err.statusCode);
+        // res.send(err.statusCode);
+        return res.status(400).json(err);
     }
 });
 
@@ -51,7 +54,8 @@ router.get("/", async function (req, res) {
             console.log(`Fetching user info for ${userId}`)
             query.select('userId userName linodeKey proxyUsername proxyPassword googleUri');
             query.exec(function (err, result) {
-                res.send(result);
+                // res.send(result);
+                return res.status(200).json(result);
             });
         }
     } catch (err) {
@@ -61,7 +65,7 @@ router.get("/", async function (req, res) {
 
 
 // Creates user entry into database
-router.post("/", async function (req, res) {
+router.post("/", async (req, res) => {
     try {
         var userId = req.user.sub;
         if (typeof userId === "undefined") {
@@ -75,7 +79,6 @@ router.post("/", async function (req, res) {
 
             var userSchema = require('./userSchema');
             var query = new userSchema({
-
                 'userId': userId,
                 'userName': userName,
                 'linodeKey': linodeKey,
@@ -84,7 +87,8 @@ router.post("/", async function (req, res) {
                 'googleUri': googleUri
             });
             query.save();
-            res.send(200, "User added successfully!");
+            // res.send(200, "User added successfully!");
+            res.status(200).send({msg: "User added successfully!"});
         }
     } catch (err) {
         res.send(err.statusCode);
