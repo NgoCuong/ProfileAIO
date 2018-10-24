@@ -17,9 +17,9 @@ router.delete("/", async function (req, res) {
         var userId = req.user.sub;
 
         if (typeof userId === "undefined") {
-            res.send(400, "Missing body elements");
+            return res.status(403).json({msg: "Forbidden Access"});
+            // res.send(400, "Missing body elements");
         } else {
-
             var userSchema = require('./userSchema');
             var response = await userSchema.findOne({
                 'userId': userId
@@ -27,12 +27,15 @@ router.delete("/", async function (req, res) {
 
             if (response != null) {
                 await response.delete();
-                res.send(200, "Delete O.K.");
+                // res.send(200, "Delete O.K.");
+                return res.status(200).json({msg: "Successfully Deleted"});
             }
-            res.send(400, "Not found");
+            return res.status(400).json({msg: ""});
+            // res.send(400, "Not found");
         }
     } catch (err) {
-        res.send(err.statusCode);
+        // res.send(err.statusCode);
+        return res.status(400).json(err);
     }
 });
 
@@ -45,23 +48,24 @@ router.get("/", async function (req, res) {
             res.send(400, "Query parameter empty");
         } else {
             var userSchema = require('./userSchema');
-            var query = userSchema.find({
+            var query = userSchema.findOne({
                 'userId': userId
             });
             console.log(`Fetching user info for ${userId}`)
             query.select('userId userName linodeKey proxyUsername proxyPassword googleUri');
             query.exec(function (err, result) {
-                res.send(result);
+                // res.send(result);
+                return res.status(200).json(result);
             });
         }
     } catch (err) {
-        console.log(err);
+        res.send(400, err);
     }
 });
 
 
 // Creates user entry into database
-router.post("/", async function (req, res) {
+router.post("/", async (req, res) => {
     try {
         var userId = req.user.sub;
         if (typeof userId === "undefined") {
@@ -75,7 +79,7 @@ router.post("/", async function (req, res) {
 
             var userSchema = require('./userSchema');
             var query = new userSchema({
-
+                '_id': userId,
                 'userId': userId,
                 'userName': userName,
                 'linodeKey': linodeKey,
@@ -83,11 +87,30 @@ router.post("/", async function (req, res) {
                 'proxyPassword': proxyPassword,
                 'googleUri': googleUri
             });
-            query.save();
-            res.send(200, "User added successfully!");
+
+            await query.save(async function (err) {
+                if (err && err.code === 11000) {
+                    var userSchema = require('./userSchema');
+                    Object.assign(userSchema, req.body);
+                    await userSchema.updateOne(
+                        { 'userId': userId },
+                        { $set: req.body },
+                        function (err, rawResponse) {
+                            if (err) throw err;
+                            if (rawResponse.n == 0) {
+                                res.status(200).send({msg: "User already exists, no new values to update values"});
+                            } else {
+                                res.status(200).send({msg: "User already exists, updated user values."});
+                            }
+                        }
+                    );
+                } else {
+                    res.status(200).send({msg: "User added successfully!"});
+                }
+            });
         }
     } catch (err) {
-        res.send(err.statusCode);
+        res.send(400, err);
     }
 });
 
@@ -116,7 +139,7 @@ router.patch("/", async function (req, res) {
             );
         }
     } catch (err) {
-
+        res.send(400, err);
     }
 })
 
@@ -126,7 +149,7 @@ router.put("/", function (req, res) {
     try {
         res.send("will be implemented");
     } catch (err) {
-
+        res.send(400, err);
     }
 });
 
@@ -135,13 +158,13 @@ router.put("/", function (req, res) {
 router.get("/all/proxies", function (req, res) {
     try {
         var proxySchema = require('./proxySchema');
-            var query = proxySchema.find();
-            console.log(`Fetching all proxies`)
-            query.select('userId proxy region instanceId server');
-            query.exec(function (err, result) {
-                if (err) throw err;
-                res.send(result);
-            });
+        var query = proxySchema.find();
+        console.log(`Fetching all proxies`)
+        query.select('userId proxy region instanceId server');
+        query.exec(function (err, result) {
+            if (err) throw err;
+            res.send(result);
+        });
     } catch (err) {
         send(400, 'failed to fetch all proxies')
     }

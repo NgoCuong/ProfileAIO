@@ -22,7 +22,7 @@ export class ProxyDashboardComponent implements OnInit {
   }
 
   getProxy(): void {
-    this.proxyService.getProxy('linode', this.auth.getUserID())
+    this.proxyService.getProxy('linode')
       .subscribe(proxyList => {
         this.proxyList = proxyList;
       });
