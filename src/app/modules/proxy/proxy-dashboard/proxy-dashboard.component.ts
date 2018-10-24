@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { SETTINGS } from './smart-table-settings';
 import { ProxyService } from '../../../core/services/proxy.service';
-import { AuthService } from '../../../core/auth/auth.service';
 import { Proxy } from '../../../shared/models/proxy';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-proxy-dashboard',
@@ -10,25 +10,21 @@ import { Proxy } from '../../../shared/models/proxy';
   styleUrls: ['./proxy-dashboard.component.css']
 })
 export class ProxyDashboardComponent implements OnInit {
-  constructor(
-    private proxyService: ProxyService,
-    private auth: AuthService) { }
 
-  settings = SETTINGS;
-  proxyList: Proxy[] = [];
+  public proxies$: Observable<Proxy[]>;
+  private settings = SETTINGS;
+
+  constructor(private proxyService: ProxyService) { }
 
   ngOnInit() {
     this.getProxy();
   }
 
-  getProxy(): void {
-    this.proxyService.getProxy('linode')
-      .subscribe(proxyList => {
-        this.proxyList = proxyList;
-      });
+  private getProxy(): void {
+    this.proxies$ = this.proxyService.getProxies();
   }
 
-  delete(param) {
+  private delete(param) {
     // return this.proxyService.delete('linode', param);
   }
 

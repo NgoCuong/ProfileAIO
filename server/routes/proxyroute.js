@@ -16,7 +16,7 @@ var http = require('./HttpRequest');
 // Deletes all proxies for specified userId from database & provider
 router.delete("/proxies", async function (req, res) {
     try {
-        var apiKey = req.body.apiKey;
+        var apiKey = req.query.apiKey;
         var userId = req.user.sub;
 
         if (typeof userId === "undefined" || typeof apiKey === "undefined") {
@@ -58,6 +58,7 @@ router.delete("/proxy", async function (req, res) {
     try {
         var apiKey = req.body.apiKey;
         var proxyId = req.body.proxy;
+
 
         if (typeof proxyId === "undefined" || typeof apiKey === "undefined") {
             res.status(400).json({msg: "Missing body elements"});
@@ -108,7 +109,7 @@ router.get("/proxies", async function (req, res) {
         console.log(`Fetching proxies for ${userId}`)
         query.select('proxy region instanceId userId, server');
         query.exec(function (err, result) {
-            res.status(200).json({msg: result});
+            res.status(200).json(result);
         });
     } catch (err) {
         console.log(err);
@@ -120,10 +121,11 @@ router.get("/proxies", async function (req, res) {
 // Create proxies for linode provider
 router.post("/proxies", async function (req, res) {
     try {
+        console.log(req.body);
         var apiKey = req.body.apiKey;
         var region = req.body.region;
-        var user = req.body.user;
-        var pass = req.body.pass;
+        var user = req.body.proxyUsername;
+        var pass = req.body.proxyPassword;
         var number = req.body.number;
         var userId = req.user.sub;
 
