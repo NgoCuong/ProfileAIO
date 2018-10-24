@@ -10,30 +10,37 @@ import { User } from '../../shared/models/user';
 
 export class ProfileComponent implements OnInit {
   private user: User = {};
+  public loading: boolean = false;
 
   constructor(private userService: UserService) { }
 
   ngOnInit() {
+    this.loading = true;
     this.userService.getUser()
       .subscribe(
-        data => this.user = data,
-        err => console.log(err)
+        user => this.user = user,
+        error => console.log(error),
+        () => this.loading = false
       );
   }
 
   private onSave(): void {
+    this.loading = true;
     this.userService.saveUserSettings(this.user)
       .subscribe(
         data => console.log(data),
-        err => console.log(err)
+        err => console.log(err),
+        () => this.loading = false
       );
   }
 
   private onDelete(): void {
+    this.loading = true;
     this.userService.deleteUser()
       .subscribe(
         data => this.user = {},
-        err => console.log(err)
+        err => console.log(err),
+        () => this.loading = false
       );
   }
 }
