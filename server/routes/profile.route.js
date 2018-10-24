@@ -13,7 +13,8 @@ module.exports = router;
 const apiKey = "AIzaSyD65a02MsanOy8KDEvIKfR8lTfO77kJXd4";
 
 const ProfileType = Object.freeze( {
-    DASHE: 'dashe',
+    DASHEV1: 'dashev1',
+    DASHEV2: 'dashev2',
     ANBPLUS: 'anbplus',
     PD: 'pd',
     CYBER: 'cyber',
@@ -36,10 +37,10 @@ async function GenerateProfile(req, res, io) {
         //get the Sheet names from the google excel
         var sheetResults = await getSheetNameFromGoogleExcel(parseExcelId(req.body.url), apiKey);
 
-        // req.app.io.emit("message", "reading excel");
+        req.app.io.emit("message", "reading excel");
         // //Take the first sheetName and add all the info
         var results = await getJsonFromGoogleExcel(parseExcelId(req.body.url), sheetResults[0], apiKey);
-        // req.app.io.emit("message", "Converting to profile Type");
+        req.app.io.emit("message", "Converting to profile Type");
         // //Convert the normal json format to the user's choice 
         var convertedResults = getConvertedProfiles(req.params.id.toLowerCase(), results);
         console.log("after conversion " + convertedResults);
@@ -61,11 +62,15 @@ async function GenerateProfile(req, res, io) {
                 await CreateTripReponse(req, res, convertedResults);
                 console.log("Done running trip");
                 break;
-            case ProfileType.DASHE:
-                console.log("Running dashe");
+            case ProfileType.DASHEV1:
+                console.log("Running dasheV1");
                 await createDasheResponse(req, res, convertedResults);
-                console.log("Done running dashe");
-                break;               
+                console.log("Done running dasheV1");
+                break;    
+            case ProfileType.DASHEV2:
+                console.log("Running dasheV1");
+                await createDasheResponse(req, res, convertedResults);
+                console.log("Done running dasheV1");
         }  
         // req.app.io.emit("message", "Successfully converted profile to " + req.params.id);
     }catch(error) {
@@ -165,7 +170,8 @@ function getConvertedProfiles(id ,results) {
 function findByIdAndConvertProfile(id, one_profile) {
     switch(id) {
         case ProfileType.ANBPLUS: return one_profile.getANBPlusFormat;
-        case ProfileType.DASHE: return one_profile.getDasheFormat;
+        case ProfileType.DASHEV1: return one_profile.getDasheFormatV1;
+        case ProfileType.DASHEV2: return one_profile.getDasheFormatV2;
         case ProfileType.SNEAKERCOP: return one_profile.getSneakerCopFormat;
         case ProfileType.TRIP: return one_profile.getTripFormat;
     }
@@ -178,29 +184,14 @@ async function getJsonFromGoogleExcel(excelId, sheetName, apiKey) {
         if(response.data.values.length < 2 ) {
             return Promise.reject("Error: Google excel is in the wrong format. ");
         }
-        // console.log(response.data);
         //skip the first one since its the row headers
         response.data.values.forEach((element, index) => {
             if(index < 1 ) return;
             profiles.push(
-                new profile(
-                    element[0],
-                    element[1],
-                    element[2],
-                    element[3],
-                    element[4],
-                    element[5],
-                    element[6],
-                    element[7],
-                    element[8],
-                    element[9],
-                    element[10],
-                    element[11],
-                    element[12],
-                    element[13],
-                    element[14],
-                    element[15])
-                );
+                new profile( element[0], element[1], element[2], element[3],
+                    element[4], element[5], element[6], element[7],
+                    element[8], element[9], element[10], element[11],
+                    element[12], element[13], element[14], element[15]));
         });
         return Promise.resolve(profiles);
     } catch (error) {

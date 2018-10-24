@@ -20,7 +20,86 @@ class Profile {
         this.country = "United States";
     }
 
-    get getDasheFormat() {
+    /*
+
+    "ProfileName2": {
+        "billing": {
+        "address": "Address",
+        "apt": "Apt",
+        "city": "Portland",
+        "country": "United States",
+        "firstName": "FName",
+        "lastName": "LName",
+        "phoneNumber": "5033802012",
+        "state": "OR",
+        "zipCode": "97236"
+        },
+        "billingMatch": true,
+        "card": {
+        "cvv": "123",
+        "holder": "Card Name",
+        "month": "01",
+        "number": "4561456278941235",
+        "year": "2019"
+        },
+        "email": "Email@email.com",
+        "profileName": "ProfileName2",
+        "shipping": {
+        "address": "Address",
+        "apt": "Apt",
+        "city": "Portland",
+        "country": "United States",
+        "firstName": "FName",
+        "lastName": "LName",
+        "phoneNumber": "5033802012",
+        "state": "OR",
+        "zipCode": "97236"
+        }
+    }
+    */
+    get getDasheFormatV2() {
+        var o = {};
+        var key = this.profileName;
+        o[key] = [];
+        var billing = {
+            address: this.address,
+            apt: this.aptNumber,
+            city: this.city,
+            country: this.country,
+            firstName: this.fName,
+            lastName: this.lName,
+            phoneNumber: this.phone,
+            state: this.state,
+            zipCode: this.zip,
+        };
+        o[key].push(billing);
+        o[key].push({billing: "true"});
+        var card = {
+            cvv: this.cvv,
+            holder: this.ccType,
+            month: this.Month,
+            number: this.ccNum,
+            year: this.Year
+        } 
+        o[key].push(card);
+        o[key].push({email: this.email});
+        o[key].push({profileName: this.profileName});
+        var shipping = {
+            address: this.address,
+            apt: this.aptNumber,
+            city: this.city,
+            country: this.country,
+            firstName: this.fName,
+            lastName: this.lName,
+            phoneNumber: this.phone,
+            state: this.state,
+            zipCode: this.zip,            
+        }
+        o[key].push(shipping);
+        return o;
+    }
+
+    get getDasheFormatV1() {
         return {
             address: this.address,
             apt: this.aptNumber,
