@@ -1,16 +1,54 @@
 <section>
-  <div class="panel panel-default profile-area">
-    <div class="panel-heading">
-      <h3>Profile</h3>
-    </div>
-    <div class="panel-body">
-      <img src="{{profile?.picture}}" class="avatar" alt="avatar">
-      <div>
-        <label>
-          <i class="glyphicon glyphicon-user"></i> Nickname</label>
-        <h3 class="nickname">{{ profile?.nickname }}</h3>
+  <div class="row">
+    <div class="col-md-6 mx-auto">
+      <div class="card rounded-0">
+        <div class="card-header">
+          <h3 class="mb-0">Settings
+            <button class="btn btn-danger btn-lg float-right" (click)="onDelete()" [disabled]="loading">Delete</button>
+          </h3>
+        </div>
+        <div class="card-body">
+          <form name="form" (ngSubmit)="onSave()" #f="ngForm" novalidate>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="googleUri">Google Excel Address</label>
+                  <input type="text" class="form-control form-control-lg" name="googleUri" id="googleUri" [ngModel]="user?.googleUri" (ngModelChange)="user.googleUri=$event"/>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="linodeKey">Linode Api Key</label>
+                  <input type="text" class="form-control form-control-lg" name="linodeKey" [ngModel]="user?.linodeKey" (ngModelChange)="user.linodeKey=$event" />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="proxyUsername">Proxy Username</label>
+                  <input type="text" class="form-control form-control-lg" id="proxyUsername" [ngModel]="user?.proxyUsername" name="proxyUsername" (ngModelChange)="user.proxyUsername=$event">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="orm-group">
+                  <label for="proxyPassword">Proxy Password</label>
+                  <input type="text" class="form-control form-control-lg" id="proxyPassword" [ngModel]="user?.proxyPassword" name="proxyPassword" (ngModelChange)="user.proxyPassword=$event">
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="row">
+                <div class="col-md-12">
+                  <button [disabled]="loading" class="btn btn-success btn-lg float-right">Save</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
-      <pre class="full-profile">{{ profile | json }}</pre>
     </div>
   </div>
 </section>

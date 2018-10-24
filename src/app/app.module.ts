@@ -22,6 +22,7 @@ import { ProxyService } from './core/services/proxy.service';
 import { ProxyDashboardComponent } from './modules/proxy/proxy-dashboard/proxy-dashboard.component';
 import { ProxyFormComponent } from './modules/proxy/proxy-form/proxy-form.component';
 import { ProxyMenuComponent } from './modules/proxy/proxy-menu/proxy-menu.component';
+import { UserService } from './core/services/user.service';
 
 
 @NgModule({
@@ -54,7 +55,8 @@ import { ProxyMenuComponent } from './modules/proxy/proxy-menu/proxy-menu.compon
       multi: true
     },
     AuthService,
-    AuthGuardService
+    AuthGuardService,
+    UserService
   ],
   bootstrap: [AppComponent]
 })

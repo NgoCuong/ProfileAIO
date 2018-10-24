@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs/Observable';
-import { Proxy } from '../../share/models/proxy';
+import { Proxy } from '../../shared/models/proxy';
 
 
 @Injectable()
@@ -10,36 +10,23 @@ export class ProxyService {
 
   constructor(private http: HttpClient) { }
 
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json'
-    })
-  };
-
-  getProxy(userId): Observable<Proxy[]> {
-    const params = new HttpParams().set('userId', userId);
-    return this.http.get<Proxy[]>(environment.baseURL + '/api/proxy', { params: params });
+  getProxies(): Observable<Proxy[]> {
+    return this.http.get<Proxy[]>(`${environment.baseURL}/api/linode/proxies`);
   }
 
-  createProxy(param) {
-    console.log(JSON.stringify(param));
-    return this.http.post(environment.baseURL + '/api/proxy', JSON.stringify(param), this.httpOptions)
-      .subscribe(
-        data => console.log(data),
-        err => console.log(err)
-      );
+  createProxy(provider, param): Observable<any> {
+    return this.http.post(environment.baseURL + '/api/' + provider + '/proxies', param);
   }
 
-  deleteAll(param) {
-    const url = environment.baseURL + '/api/proxy';
-
-    this.httpOptions['body'] = {
-      'apiKey': param.apiKey
-    };
-    return this.http.delete(url, this.httpOptions);
+  deleteAll(provider, param): Observable<any> {
+    return this.http.delete(`${environment.baseURL}/api/${provider}/proxies`, {
+      params: {
+        'apiKey': param.apiKey
+      }
+    });
   }
 
-  getRegion(): Observable<String[]> {
-    return this.http.get<String[]>(environment.baseURL + '/api/proxy/regions');
+  getRegion(provider): Observable<String[]> {
+    return this.http.get<String[]>(environment.baseURL + '/api/' + provider + '/regions');
   }
 }

@@ -1,6 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { AuthService } from '../../../core/auth/auth.service';
 import { ProxyService } from '../../../core/services/proxy.service';
+import { UserService } from '../../../core/services/user.service';
+import { User } from '../../../shared/models/user';
+import { ProxyForm } from '../../../shared/models/proxy-form';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-proxy-form',
@@ -11,44 +14,41 @@ export class ProxyFormComponent implements OnInit {
 
   @Input() formType: string;
 
-  proxyGen = {};
-  regions: String[] = [];
+  private user: User = {};
+  private proxyForm: ProxyForm = {};
+
+  public regions$: Observable<String[]>;
 
   onSubmitloading = false;
   onDeleteLoading = false;
 
   constructor(
     private proxyService: ProxyService,
-    private authService: AuthService) { }
+    private userService: UserService) { }
 
   ngOnInit() {
     this.getRegions();
+    this.userService.getUser()
+      .subscribe(user => {
+        this.proxyForm = {
+          'apiKey': user.linodeKey,
+          'proxyPassword': user.proxyPassword,
+          'proxyUsername': user.proxyUsername
+        };
+      });
   }
 
-  getRegions(): void {
-    this.proxyService.getRegion()
-      .subscribe(regions => this.regions = regions);
+  private getRegions(): void {
+    this.regions$ = this.proxyService.getRegion(this.formType);
   }
 
-  submit() {
-    this.proxyGen['userId'] = this.authService.getUserID();
-    this.proxyGen['server'] = this.formType;
-    this.onSubmitloading = true;
-    this.proxyService.createProxy(this.proxyGen);
+  public onSubmit() {
+    this.proxyService.createProxy(this.formType, this.proxyForm)
+      .subscribe(data => console.log(data), err => console.log(err));
   }
 
-  deleteAll() {
-    this.onDeleteLoading = true;
-    this.proxyService.deleteAll(this.proxyGen)
-      .subscribe(
-        data => {
-          console.log(data);
-          this.onDeleteLoading = false;
-        },
-        err => {
-          console.log(err);
-          this.onDeleteLoading = false;
-        }
-      );
+  public onDeleteAll() {
+    this.proxyService.deleteAll(this.formType, this.proxyForm)
+      .subscribe( data => console.log(data), err => console.log(err));
   }
 }
