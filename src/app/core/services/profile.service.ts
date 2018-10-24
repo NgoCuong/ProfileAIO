@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient,HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { environment } from '../../../environments/environment';
@@ -30,7 +30,7 @@ export class ProfileService {
 
   async sendUrl(address: string, param): Promise<Blob> {
     var filename;
-    const file = await this.http.post<Blob>(environment.baseURL + '/profile/create/' + param.replace(" ", "").toLowerCase(), { url : address}, 
+    const file = await this.http.post<Blob>(environment.baseURL + '/profile/create/' + param.replace(" ", "").toLowerCase(), { url: address },
       {
         responseType: 'blob' as 'json'
       }).toPromise();
@@ -43,9 +43,9 @@ export class ProfileService {
     return result.replace(/"/g, '');
   }
 
-  async downloadFile(address: string, param){
+  async downloadFile(address: string, param) {
     var fileName;
-    await this.http.post<any>(environment.baseURL + '/profile/create/' + param.replace(" ", "").toLowerCase(), { url : address}, {
+    await this.http.post<any>(environment.baseURL + '/profile/create/' + param.replace(" ", "").toLowerCase(), { url: address }, {
       responseType: 'blob' as 'json',
       observe: 'response' as 'response'
 

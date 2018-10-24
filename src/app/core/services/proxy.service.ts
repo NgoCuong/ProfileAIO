@@ -10,15 +10,15 @@ export class ProxyService {
 
   constructor(private http: HttpClient) { }
 
-  getProxies(): Observable<Proxy[]> {
+  public getProxies(): Observable<Proxy[]> {
     return this.http.get<Proxy[]>(`${environment.baseURL}/api/linode/proxies`);
   }
 
-  createProxy(provider, param): Observable<any> {
-    return this.http.post(environment.baseURL + '/api/' + provider + '/proxies', param);
+  public createProxy(provider, data): Observable<any> {
+    return this.http.post(environment.baseURL + '/api/' + provider + '/proxies', data);
   }
 
-  deleteAll(provider, param): Observable<any> {
+  public deleteAll(provider, param): Observable<any> {
     return this.http.delete(`${environment.baseURL}/api/${provider}/proxies`, {
       params: {
         'apiKey': param.apiKey
@@ -26,7 +26,7 @@ export class ProxyService {
     });
   }
 
-  getRegion(provider): Observable<String[]> {
+  public getRegion(provider): Observable<String[]> {
     return this.http.get<String[]>(environment.baseURL + '/api/' + provider + '/regions');
   }
 }
