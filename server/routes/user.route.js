@@ -18,7 +18,6 @@ router.delete("/", async function (req, res) {
 
         if (typeof userId === "undefined") {
             return res.status(403).json({msg: "Forbidden Access"});
-            // res.send(400, "Missing body elements");
         } else {
             var userSchema = require('./userSchema');
             var response = await userSchema.findOne({
@@ -27,14 +26,11 @@ router.delete("/", async function (req, res) {
 
             if (response != null) {
                 await response.delete();
-                // res.send(200, "Delete O.K.");
                 return res.status(200).json({msg: "Successfully Deleted"});
             }
             return res.status(400).json({msg: ""});
-            // res.send(400, "Not found");
         }
     } catch (err) {
-        // res.send(err.statusCode);
         return res.status(400).json(err);
     }
 });
@@ -45,7 +41,7 @@ router.get("/", async function (req, res) {
     try {
         var userId = req.user.sub;
         if (typeof userId === "undefined") {
-            res.send(400, "Query parameter empty");
+            res.status(400).json({msg: "Query parameter empty"});
         } else {
             var userSchema = require('./userSchema');
             var query = userSchema.findOne({
@@ -54,12 +50,11 @@ router.get("/", async function (req, res) {
             console.log(`Fetching user info for ${userId}`)
             query.select('userId userName linodeKey proxyUsername proxyPassword googleUri');
             query.exec(function (err, result) {
-                // res.send(result);
                 return res.status(200).json(result);
             });
         }
     } catch (err) {
-        res.send(400, err);
+        res.status(400).json({msg: err});
     }
 });
 
@@ -69,7 +64,7 @@ router.post("/", async (req, res) => {
     try {
         var userId = req.user.sub;
         if (typeof userId === "undefined") {
-            res.send(400, "userId must be defined");
+            res.status(400).json({msg: "userId must be defined."});
         } else {
             var userName = req.body.userName == "undefined" ? "" : req.body.userName;
             var linodeKey = req.body.linodeKey == "undefined" ? "" : req.body.linodeKey;
@@ -98,19 +93,19 @@ router.post("/", async (req, res) => {
                         function (err, rawResponse) {
                             if (err) throw err;
                             if (rawResponse.n == 0) {
-                                res.status(200).send({msg: "User already exists, no new values to update values"});
+                                res.status(200).json({msg: "User already exists, no new values to update values"});
                             } else {
-                                res.status(200).send({msg: "User already exists, updated user values."});
+                                res.status(200).json({msg: "User already exists, updated user values."});
                             }
                         }
                     );
                 } else {
-                    res.status(200).send({msg: "User added successfully!"});
+                    res.status(200).json({msg: "User added successfully!"});
                 }
             });
         }
     } catch (err) {
-        res.send(400, err);
+        res.status(400).json({msg: err});
     }
 });
 
@@ -120,7 +115,7 @@ router.patch("/", async function (req, res) {
     try {
         var userId = req.user.sub;
         if (typeof userId === "undefined") {
-            res.send(400, "userId must be defined");
+            res.status(400).send({msg: "userId must be defined"});
         } else {
 
             var userSchema = require('./userSchema');
@@ -131,15 +126,15 @@ router.patch("/", async function (req, res) {
                 function (err, rawResponse) {
                     if (err) throw err;
                     if (rawResponse.n == 0) {
-                        res.send(400, "no values updated")
+                        res.status(400).json({msg: "No values updated."});
                     } else {
-                        res.send(200, "success");
+                        res.status(200).json({msg: "Values updated successfully"});
                     }
                 }
             );
         }
     } catch (err) {
-        res.send(400, err);
+        res.status(400).json({msg: err});
     }
 })
 
@@ -163,10 +158,10 @@ router.get("/all/proxies", function (req, res) {
         query.select('userId proxy region instanceId server');
         query.exec(function (err, result) {
             if (err) throw err;
-            res.send(result);
+            res.status(200).json({msg: result});
         });
     } catch (err) {
-        send(400, 'failed to fetch all proxies')
+        res.status(200).json({msg: "Failed to fetch all proxies"});
     }
 });
 
