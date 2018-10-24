@@ -16,12 +16,7 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
     this.userService.getUser()
       .subscribe(
-        data => {
-          if (data[0]) {
-            console.log(data);
-            this.user = data[0];
-          }
-        },
+        data => this.user = data,
         err => console.log(err)
       );
   }
@@ -37,10 +32,7 @@ export class ProfileComponent implements OnInit {
   private onDelete(): void {
     this.userService.deleteUser()
       .subscribe(
-        data => {
-          console.log(data);
-          this.user = {};
-        },
+        data => this.user = {},
         err => console.log(err)
       );
   }
