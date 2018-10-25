@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
-import { environment } from '../../../environments/environment';
 import { saveAs } from 'file-saver';
 
 
@@ -13,7 +12,7 @@ export class ProfileService {
 
   public() {
 
-    this.http.get(environment.baseURL + '/api/public')
+    this.http.get('/api/public')
       .subscribe(
         data => console.log(data),
         err => console.log(err)
@@ -21,7 +20,7 @@ export class ProfileService {
   }
 
   private() {
-    this.http.get(environment.baseURL + '/api/private')
+    this.http.get('/api/private')
       .subscribe(
         data => console.log(data),
         err => console.log(err)
@@ -30,7 +29,7 @@ export class ProfileService {
 
   async sendUrl(address: string, param): Promise<Blob> {
     var filename;
-    const file = await this.http.post<Blob>(environment.baseURL + '/profile/create/' + param.replace(" ", "").toLowerCase(), { url: address },
+    const file = await this.http.post<Blob>('/profile/create/' + param.replace(" ", "").toLowerCase(), { url: address },
       {
         responseType: 'blob' as 'json'
       }).toPromise();
@@ -45,7 +44,7 @@ export class ProfileService {
 
   async downloadFile(address: string, param) {
     var fileName;
-    await this.http.post<any>(environment.baseURL + '/profile/create/' + param.replace(" ", "").toLowerCase(), { url: address }, {
+    await this.http.post<any>('/profile/create/' + param.replace(" ", "").toLowerCase(), { url: address }, {
       responseType: 'blob' as 'json',
       observe: 'response' as 'response'
 

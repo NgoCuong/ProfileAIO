@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs/Observable';
 import { Proxy } from '../../shared/models/proxy';
 
@@ -11,15 +10,15 @@ export class ProxyService {
   constructor(private http: HttpClient) { }
 
   public getProxies(): Observable<Proxy[]> {
-    return this.http.get<Proxy[]>(`${environment.baseURL}/api/linode/proxies`);
+    return this.http.get<Proxy[]>('/api/linode/proxies');
   }
 
   public createProxy(provider, data): Observable<any> {
-    return this.http.post(environment.baseURL + '/api/' + provider + '/proxies', data);
+    return this.http.post(`/api/${provider}/proxies`, data);
   }
 
   public deleteAll(provider, param): Observable<any> {
-    return this.http.delete(`${environment.baseURL}/api/${provider}/proxies`, {
+    return this.http.delete(`/api/${provider}/proxies`, {
       params: {
         'apiKey': param.apiKey
       }
@@ -27,6 +26,6 @@ export class ProxyService {
   }
 
   public getRegion(provider): Observable<String[]> {
-    return this.http.get<String[]>(environment.baseURL + '/api/' + provider + '/regions');
+    return this.http.get<String[]>(`/api/${provider}/regions`);
   }
 }
