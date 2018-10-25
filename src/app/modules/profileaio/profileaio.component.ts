@@ -23,12 +23,11 @@ export class ProfileaioComponent implements OnInit {
 
   ngOnInit() {
     this.botList$ = this.profileService.getBotList();
-
     this.userService.getUser()
       .subscribe(user => this.profileForm.address = user.googleUri);
   }
 
-  public onSubmit() {
+  public onSubmit(): void {
     this.profileService.downloadFile(this.profileForm);
   }
 }
