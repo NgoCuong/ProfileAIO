@@ -17,7 +17,6 @@ app.use(cors(corsOptions));
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));
 
-
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 

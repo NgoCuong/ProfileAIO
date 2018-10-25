@@ -16,11 +16,11 @@ var http = require('./HttpRequest');
 // Deletes all proxies for specified userId from database & provider
 router.delete("/proxies", async function (req, res) {
     try {
-        var apiKey = req.body.apiKey;
+        var apiKey = req.query.apiKey;
         var userId = req.user.sub;
 
         if (typeof userId === "undefined" || typeof apiKey === "undefined") {
-            res.send(400, "Missing body elements");
+            res.status(400).json({msg: "Missing body elements"});
             return;
         }
 
@@ -43,12 +43,12 @@ router.delete("/proxies", async function (req, res) {
                 'userId': userId
             });
 
-            res.send(200, "Delete successful.");
+            res.status(200).json({msg: "Delete successful"});
         } else {
-            res.send(400, "userId, not found");
+            res.status(400).json({msg: "userId not found"});
         }
     } catch (err) {
-        res.send(err.statusCode);
+        res.status(400).json({msg: err});
     }
 });
 
@@ -59,8 +59,9 @@ router.delete("/proxy", async function (req, res) {
         var apiKey = req.body.apiKey;
         var proxyId = req.body.proxy;
 
+
         if (typeof proxyId === "undefined" || typeof apiKey === "undefined") {
-            res.send(400, "Missing body elements");
+            res.status(400).json({msg: "Missing body elements"});
         } else {
             var x = new proxy(apiKey);
 
@@ -74,11 +75,11 @@ router.delete("/proxy", async function (req, res) {
                 await response.delete();
                 res.send(result);
             }
-            res.send(400, "Not found");
+            res.status(400).json({msg: "Not found"});
         }
 
     } catch (err) {
-        res.send(err.statusCode);
+        res.status(400).json({msg: err});
     }
 });
 
@@ -108,10 +109,11 @@ router.get("/proxies", async function (req, res) {
         console.log(`Fetching proxies for ${userId}`)
         query.select('proxy region instanceId userId, server');
         query.exec(function (err, result) {
-            res.send(result);
+            res.status(200).json(result);
         });
     } catch (err) {
         console.log(err);
+        res.status(400).json({msg: err});
     }
 });
 
@@ -119,16 +121,17 @@ router.get("/proxies", async function (req, res) {
 // Create proxies for linode provider
 router.post("/proxies", async function (req, res) {
     try {
+        console.log(req.body);
         var apiKey = req.body.apiKey;
         var region = req.body.region;
-        var user = req.body.user;
-        var pass = req.body.pass;
+        var user = req.body.proxyUsername;
+        var pass = req.body.proxyPassword;
         var number = req.body.number;
         var userId = req.user.sub;
 
         var x = new proxy(apiKey);
         var result = await x.generateProxies(userId, number, user, pass, region);
-        res.send(result);
+        res.status(200).json({msg: result});
     } catch (err) {
         console.log(err);
         if (err instanceof RangeError) {

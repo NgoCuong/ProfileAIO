@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs/Observable';
 import { Proxy } from '../../shared/models/proxy';
 
@@ -10,55 +9,23 @@ export class ProxyService {
 
   constructor(private http: HttpClient) { }
 
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json'
-    })
-  };
-
-  getProxy(provider): Observable<Proxy[]> {
-    return this.http.get<Proxy[]>(environment.baseURL + '/api/' + provider + '/proxies');
+  public getProxies(): Observable<Proxy[]> {
+    return this.http.get<Proxy[]>('/api/linode/proxies');
   }
 
-  createProxy(provider, param) {
-    console.log(JSON.stringify(param));
-    console.log(provider);
-    return this.http.post(environment.baseURL + '/api/' + provider + '/proxies', JSON.stringify(param), this.httpOptions)
-      .subscribe(
-        data => console.log(data),
-        err => console.log(err)
-      );
+  public createProxy(provider, data): Observable<any> {
+    return this.http.post(`/api/${provider}/proxies`, data);
   }
 
-  deleteAll(provider, param) {
-    const url = environment.baseURL + '/api/' + provider + '/proxies';
-
-    this.httpOptions['body'] = {
-      'apiKey': param.apiKey
-    };
-    console.log(url);
-    console.log(this.httpOptions['body']);
-    return this.http.delete(url, this.httpOptions);
+  public deleteAll(provider, param): Observable<any> {
+    return this.http.delete(`/api/${provider}/proxies`, {
+      params: {
+        'apiKey': param.apiKey
+      }
+    });
   }
 
-//   api/linode/proxy	"{
-//     ""apiKey"": ""3c5686daacefc2ddde5545c1"",
-//      ""proxy"": ""102:163:34:12:4331:profileai:35sdf4#$""
-// }"
-
-
-  delete(provider, param) {
-    const url = environment.baseURL + '/api/' + provider + '/proxy';
-    this.httpOptions['body'] = {
-      'apiKey': param.apiKey,
-      'proxy': param.proxy
-    };
-    console.log(url);
-    console.log(this.httpOptions['body']);
-    return this.http.delete(url, this.httpOptions);
-  }
-
-  getRegion(provider): Observable<String[]> {
-    return this.http.get<String[]>(environment.baseURL + '/api/' + provider + '/regions');
+  public getRegion(provider): Observable<String[]> {
+    return this.http.get<String[]>(`/api/${provider}/regions`);
   }
 }
