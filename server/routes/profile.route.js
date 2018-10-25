@@ -37,13 +37,10 @@ async function GenerateProfile(req, res, io) {
         //get the Sheet names from the google excel
         var sheetResults = await getSheetNameFromGoogleExcel(parseExcelId(req.body.url), apiKey);
 
-        req.app.io.emit("message", "reading excel");
         // //Take the first sheetName and add all the info
         var results = await getJsonFromGoogleExcel(parseExcelId(req.body.url), sheetResults[0], apiKey);
-        req.app.io.emit("message", "Converting to profile Type");
         // //Convert the normal json format to the user's choice 
         var convertedResults = getConvertedProfiles(req.params.id.toLowerCase(), results);
-        console.log("after conversion " + convertedResults);
 
         //determine what we are sending back to the frontend
         switch(req.params.id.toLowerCase()) {
@@ -68,11 +65,10 @@ async function GenerateProfile(req, res, io) {
                 console.log("Done running dasheV1");
                 break;    
             case ProfileType.DASHEV2:
-                console.log("Running dasheV1");
+                console.log("Running dasheV2");
                 await createDasheResponse(req, res, convertedResults);
-                console.log("Done running dasheV1");
+                console.log("Done running dasheV2");
         }  
-        // req.app.io.emit("message", "Successfully converted profile to " + req.params.id);
     }catch(error) {
         console.log(error);
         //res.status(400).send(error);

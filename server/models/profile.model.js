@@ -60,7 +60,7 @@ class Profile {
     get getDasheFormatV2() {
         var o = {};
         var key = this.profileName;
-        o[key] = [];
+        // o[key] = {};
         var billing = {
             address: this.address,
             apt: this.aptNumber,
@@ -72,31 +72,36 @@ class Profile {
             state: this.state,
             zipCode: this.zip,
         };
-        o[key].push(billing);
-        o[key].push({billing: "true"});
-        var card = {
-            cvv: this.cvv,
-            holder: this.ccType,
-            month: this.Month,
-            number: this.ccNum,
-            year: this.Year
-        } 
-        o[key].push(card);
-        o[key].push({email: this.email});
-        o[key].push({profileName: this.profileName});
-        var shipping = {
-            address: this.address,
-            apt: this.aptNumber,
-            city: this.city,
-            country: this.country,
-            firstName: this.fName,
-            lastName: this.lName,
-            phoneNumber: this.phone,
-            state: this.state,
-            zipCode: this.zip,            
-        }
-        o[key].push(shipping);
-        return o;
+        o[key] = {
+            billing
+        };
+        
+        return o.profileName;
+        // o[key].push(billing);
+        // o[key].push({billing: "true"});
+        // var card = {
+        //     cvv: this.cvv,
+        //     holder: this.ccType,
+        //     month: this.Month,
+        //     number: this.ccNum,
+        //     year: this.Year
+        // } 
+        // o[key].push(card);
+        // o[key].push({email: this.email});
+        // o[key].push({profileName: this.profileName});
+        // var shipping = {
+        //     address: this.address,
+        //     apt: this.aptNumber,
+        //     city: this.city,
+        //     country: this.country,
+        //     firstName: this.fName,
+        //     lastName: this.lName,
+        //     phoneNumber: this.phone,
+        //     state: this.state,
+        //     zipCode: this.zip,            
+        // }
+        // o[key].push(shipping);
+        // return o;
     }
 
     get getDasheFormatV1() {
