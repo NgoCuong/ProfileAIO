@@ -40,8 +40,4 @@ export class ProxyDashboardComponent implements OnInit {
     //     }
     //   );
   }
-
-  onMouseOver(event): void {
-    // console.log(event);
-  }
 }

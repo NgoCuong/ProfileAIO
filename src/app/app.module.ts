@@ -10,19 +10,18 @@ import { AppRoutingModule } from './/app-routing.module';
 import { HomeComponent } from './modules/home/home.component';
 import { ProfileaioComponent } from './modules/profileaio/profileaio.component';
 import { ProfileService } from './core/services/profile.service';
-import { AuthService } from './core/auth/auth.service';
-import { CallbackComponent } from './core/auth/callback/callback.component';
 import { ProfileComponent } from './modules/profile/profile.component';
-import { TokenInterceptor } from './core/token.interceptor';
 import { HeaderComponent } from './core/header/header.component';
 import { FooterComponent } from './core/footer/footer.component';
-import { ApiTestingComponent } from './modules/api-testing/api-testing.component';
 import { AuthGuardService } from './core/route-guard/auth-guard.service';
 import { ProxyService } from './core/services/proxy.service';
 import { ProxyDashboardComponent } from './modules/proxy/proxy-dashboard/proxy-dashboard.component';
 import { ProxyFormComponent } from './modules/proxy/proxy-form/proxy-form.component';
 import { ProxyMenuComponent } from './modules/proxy/proxy-menu/proxy-menu.component';
 import { UserService } from './core/services/user.service';
+import { CallbackComponent } from './shared/callback/callback.component';
+import { AuthService } from './core/services/auth.service';
+import { TokenInterceptor } from './core/interceptors/token.interceptor';
 
 
 @NgModule({
@@ -34,7 +33,6 @@ import { UserService } from './core/services/user.service';
     ProfileComponent,
     HeaderComponent,
     FooterComponent,
-    ApiTestingComponent,
     ProxyDashboardComponent,
     ProxyFormComponent,
     ProxyMenuComponent,

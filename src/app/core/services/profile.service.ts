@@ -1,60 +1,38 @@
 import { Injectable } from '@angular/core';
-import { HttpClient,HttpResponse } from '@angular/common/http';
-import { Http } from '@angular/http';
-import 'rxjs/add/operator/map';
-import { environment } from '../../../environments/environment';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { saveAs } from 'file-saver';
+import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 
+import { ProfileForm } from '../../shared/models/profile-form';
 
 @Injectable()
 export class ProfileService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private httpClient: HttpClient) { }
 
-  public() {
-
-    this.http.get(environment.baseURL + '/api/public')
-      .subscribe(
-        data => console.log(data),
-        err => console.log(err)
-      );
+  // TODO pull these from database later on
+  public getBotList(): Observable<string[]> {
+    return of(['Dashe', 'ANB Plus', 'Trip', 'Sneakercop']);
   }
 
-  private() {
-    this.http.get(environment.baseURL + '/api/private')
-      .subscribe(
-        data => console.log(data),
-        err => console.log(err)
-      );
+  public downloadFile(data: ProfileForm): void {
+    this.createProfile(data)
+      .subscribe((res => {
+        const fileName = this.getFileNameFromHttpResponse(res);
+        const blob = new Blob([res.body]);
+        saveAs(blob, fileName);
+      }));
   }
 
-  async sendUrl(address: string, param): Promise<Blob> {
-    var filename;
-    const file = await this.http.post<Blob>(environment.baseURL + '/profile/create/' + param.replace(" ", "").toLowerCase(), { url : address}, 
-      {
-        responseType: 'blob' as 'json'
-      }).toPromise();
-    return file;
+  private createProfile(param: ProfileForm): Observable<HttpResponse<any>> {
+    return this.httpClient.post('/profile/create/' + param.toProfile.replace(' ', ''),
+      { url: param.address }, { observe: 'response', responseType: 'blob' });
   }
 
-  getFileNameFromHttpResponse(httpResponse) {
-    var contentDispositionHeader = httpResponse.headers.get('Content-Disposition');
-    var result = contentDispositionHeader.split(';')[1].trim().split('=')[1];
+  private getFileNameFromHttpResponse(httpResponse): string {
+    const contentDispositionHeader = httpResponse.headers.get('Content-Disposition');
+    const result = contentDispositionHeader.split(';')[1].trim().split('=')[1];
     return result.replace(/"/g, '');
-  }
-
-  async downloadFile(address: string, param){
-    var fileName;
-    await this.http.post<any>(environment.baseURL + '/profile/create/' + param.replace(" ", "").toLowerCase(), { url : address}, {
-      responseType: 'blob' as 'json',
-      observe: 'response' as 'response'
-
-    }).subscribe((res: HttpResponse<any>) => {
-      console.log(res);
-      fileName = this.getFileNameFromHttpResponse(res);
-      console.log("FIle Name " + fileName);
-      var blob = new Blob([res.body]);
-      saveAs(blob, fileName);
-    });
   }
 }
