@@ -13,7 +13,6 @@ import { ProfileService } from './core/services/profile.service';
 import { ProfileComponent } from './modules/profile/profile.component';
 import { HeaderComponent } from './core/header/header.component';
 import { FooterComponent } from './core/footer/footer.component';
-import { ApiTestingComponent } from './modules/api-testing/api-testing.component';
 import { AuthGuardService } from './core/route-guard/auth-guard.service';
 import { ProxyService } from './core/services/proxy.service';
 import { ProxyDashboardComponent } from './modules/proxy/proxy-dashboard/proxy-dashboard.component';
@@ -34,7 +33,6 @@ import { TokenInterceptor } from './core/interceptors/token.interceptor';
     ProfileComponent,
     HeaderComponent,
     FooterComponent,
-    ApiTestingComponent,
     ProxyDashboardComponent,
     ProxyFormComponent,
     ProxyMenuComponent,
