@@ -3,7 +3,7 @@ var app = express();
 var bodyParser = require("body-parser");
 var path = require('path');
 var mongoose = require("mongoose");
-var checkJwt = require('./server/auth');
+var checkJwt = require('./server/middlewares/auth');
 var cors = require('cors');
 
 const corsOptions =  {
@@ -29,7 +29,7 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/profile", { use
 
 //Routes
 app.use('/api/linode', checkJwt, require('./server/routes/proxyroute'));
-app.use('/api/user', checkJwt, require('./server/routes/user.route'))
+app.use('/api/user', checkJwt, require('./server/routes/userRoute'))
 app.use("/api/profile", require("./server/routes/profile.route"));
 app.get('*', (req, res) => {
   res.sendFile(path.join(distDir, 'index.html'));
