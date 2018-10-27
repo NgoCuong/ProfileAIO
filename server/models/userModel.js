@@ -1,7 +1,6 @@
 var mongoose = require('mongoose');
 
-var userSchema = mongoose.Schema({
-    _id: String,
+var userSchema = new mongoose.Schema({
     userId: String,
     linodeKey: String,
     proxyUsername: String,

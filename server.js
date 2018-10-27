@@ -18,6 +18,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 //Database Connection
+mongoose.set('useFindAndModify', false);
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/profile", { useNewUrlParser: true }, function(err, suc) {
   if(err) {
     console.log("Cannot connect to the database");
@@ -26,6 +27,7 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/profile", { use
     console.log("Successfully connected to the database");
   }
 });
+
 
 //Routes
 app.use('/api/linode', checkJwt, require('./server/routes/proxyroute'));
