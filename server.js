@@ -28,9 +28,8 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/profile", { use
   }
 });
 
-
 //Routes
-app.use('/api/linode', checkJwt, require('./server/routes/proxyroute'));
+app.use('/api/proxy', checkJwt, require('./server/routes/proxyRoute'));
 app.use('/api/user', checkJwt, require('./server/routes/userRoute'))
 app.use("/api/profile", require("./server/routes/profile.route"));
 app.get('*', (req, res) => {

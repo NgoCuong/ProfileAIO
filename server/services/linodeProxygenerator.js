@@ -9,7 +9,7 @@ module.exports = class ProxyGenerator {
 
         this.request = require('request-promise');
         this.pLimit = require('p-limit');
-        this.http = require('./HttpRequest');
+        this.http = require('../routes/HttpRequest');
         this.api = new this.http(this.accessToken);
     }
 
@@ -137,7 +137,7 @@ module.exports = class ProxyGenerator {
 
     insertProxyDB(proxyVal, instanceId) {
         try {
-            var proxyObject = require('./proxySchema');
+            var proxyObject = require('../models/proxyModel');
             let v = new proxyObject({
                 userId: this.userId,
                 proxy: proxyVal,
