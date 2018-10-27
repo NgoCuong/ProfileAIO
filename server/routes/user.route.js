@@ -1,8 +1,4 @@
-/*
-   Routes file used for API endpoint
-   Buisness logic for each endpoint 
-*/
-
+var userSchema = require('../models/user.model');
 var express = require('express');
 var router = express.Router();
 
@@ -10,8 +6,6 @@ var router = express.Router();
     API DOCUMENTATION : https://docs.google.com/spreadsheets/d/1WTLrAxsa7oFJMgAXAi5Blz2WA_kjjX88YbA0_XZrwB0/edit#gid=1554877026
 */
 
-
-// Delete a user from database
 router.delete("/", async function (req, res) {
     try {
         var userId = req.user.sub;
@@ -19,7 +13,7 @@ router.delete("/", async function (req, res) {
         if (typeof userId === "undefined") {
             return res.status(403).json({msg: "Forbidden Access"});
         } else {
-            var userSchema = require('./userSchema');
+            
             var response = await userSchema.findOne({
                 'userId': userId
             });
@@ -43,7 +37,6 @@ router.get("/", async function (req, res) {
         if (typeof userId === "undefined") {
             res.status(400).json({msg: "Query parameter empty"});
         } else {
-            var userSchema = require('./userSchema');
             var query = userSchema.findOne({
                 'userId': userId
             });
@@ -72,7 +65,6 @@ router.post("/", async (req, res) => {
             var proxyPassword = req.body.proxyPassword == "undefined" ? "" : req.body.proxyPassword;
             var googleUri = req.body.googleUri == "undefined" ? "" : req.body.googleUri;
 
-            var userSchema = require('./userSchema');
             var query = new userSchema({
                 '_id': userId,
                 'userId': userId,
@@ -85,7 +77,6 @@ router.post("/", async (req, res) => {
 
             await query.save(async function (err) {
                 if (err && err.code === 11000) {
-                    var userSchema = require('./userSchema');
                     Object.assign(userSchema, req.body);
                     await userSchema.updateOne(
                         { 'userId': userId },
@@ -117,8 +108,6 @@ router.patch("/", async function (req, res) {
         if (typeof userId === "undefined") {
             res.status(400).send({msg: "userId must be defined"});
         } else {
-
-            var userSchema = require('./userSchema');
             Object.assign(userSchema, req.body);
             await userSchema.updateOne(
                 { 'userId': userId },
@@ -164,6 +153,5 @@ router.get("/all/proxies", function (req, res) {
         res.status(200).json({msg: "Failed to fetch all proxies"});
     }
 });
-
 
 module.exports = router;

@@ -16,7 +16,7 @@
                                     </div>
                                     <div class="form-group">
                                             <label for="botList">Bot Type</label>
-                                            <select class="form-control" id="botList" [(ngModel)]="profileForm.toProfile" name="botList" required>
+                                            <select class="form-control" id="botList" [(ngModel)]="profileForm.botName" name="botList" required>
                                                 <option *ngFor="let bot of botList$ | async" [value]="bot">{{bot}}</option>
                                             </select>
                                         </div>

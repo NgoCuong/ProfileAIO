@@ -26,7 +26,7 @@ export class ProfileService {
   }
 
   private createProfile(param: ProfileForm): Observable<HttpResponse<any>> {
-    return this.httpClient.post('/profile/create/' + param.toProfile.replace(' ', ''),
+    return this.httpClient.post('/api/profile/create/' + param.botName.replace(' ', ''),
       { url: param.address }, { observe: 'response', responseType: 'blob' });
   }
 
