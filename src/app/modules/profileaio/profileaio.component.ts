@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { _ } from 'underscore';
 
 import { ProfileService } from '../../core/services/profile.service';
 import { UserService } from '../../core/services/user.service';
@@ -23,8 +24,16 @@ export class ProfileaioComponent implements OnInit {
 
   ngOnInit() {
     this.botList$ = this.profileService.getBotList();
+    this.getUserSetting();
+  }
+
+  private getUserSetting(): void {
     this.userService.getUser()
-      .subscribe(user => this.profileForm.address = user.googleUri);
+      .subscribe(user => {
+        if (!_.isEmpty(user)) {
+          this.profileForm.address = user.googleUri;
+        }
+      });
   }
 
   public onSubmit(): void {
