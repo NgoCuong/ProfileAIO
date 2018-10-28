@@ -17,7 +17,11 @@
 	   background: -webkit-linear-gradient(left, #0855ad 0%,#305c8f 35%,#0755ad 68%,#2779d1 100%);
        /* background: linear-gradient(to right, #6819e8 0%,#7437d0 35%,#615fde 68%,#6980f2 100%); */
 }
-   
+
+    #box3{
+        background: -webkit-linear-gradient(left, #2a3b54 0%, #04485b 35%, #005353 68%, #275a40 100%);;
+    }
+
    #particles-js {
     position: fixed;
     top: 0;

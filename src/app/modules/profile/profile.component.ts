@@ -26,11 +26,11 @@ export class ProfileComponent implements OnInit {
 
   private onSave(): void {
     this.loading = true;
-    console.log(this.userParam);
+    // console.log(this.userParam);
     this.userService.saveUserSettings(this.userParam)
       .subscribe(
-        data => console.log(data),
-        err => console.log(err),
+        // data => console.log(data),
+        // err => console.log(err),
         () => this.loading = false
       );
   }
@@ -40,7 +40,7 @@ export class ProfileComponent implements OnInit {
     this.userService.deleteUser()
       .subscribe(
         data => this.userParam = {},
-        err => console.log(err),
+        // err => console.log(err),
         () => this.loading = false
       );
   }

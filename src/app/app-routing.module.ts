@@ -12,7 +12,7 @@ const routes: Routes  = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent},
   { path: 'profileaio', component: ProfileaioComponent, canActivate: [AuthGuardService]},
-  { path: 'proxy', component: ProxyMenuComponent, canActivate: [AuthGuardService]},
+  // { path: 'proxy', component: ProxyMenuComponent, canActivate: [AuthGuardService]},
   { path: 'callback', component: CallbackComponent},
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuardService]},
   { path: 'raffle', component: RaffleComponent},
