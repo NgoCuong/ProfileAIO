@@ -1,6 +1,6 @@
 var Proxy = require('../models/proxyModel');
 var proxyGen = require('../services/linodeProxygenerator');
-var http = require('../routes/HttpRequest');
+var http = require('../services/HttpRequest');
 
 exports.getRegions = async (req, res) => {
   var api = new http(this.accessToken);
@@ -13,10 +13,8 @@ exports.getRegions = async (req, res) => {
   res.send(JSON.stringify(regions));
 };
 
-
 exports.createProxy = async (req, res) => {
   try {
-    console.log(req.body);
     var apiKey = req.body.apiKey;
     var region = req.body.region;
     var user = req.body.proxyUsername;
@@ -41,7 +39,6 @@ exports.createProxy = async (req, res) => {
 };
 
 exports.deleteAll = async (req, res) => {
-  console.log("Deleting Proxies");
   try {
     var apiKey = req.query.apiKey;
     var userId = req.user.sub;
@@ -55,9 +52,7 @@ exports.deleteAll = async (req, res) => {
 
     // Step 1. Validate API token
     await x.validateToken(apiKey);
-
-    var proxySchema = require('../models/proxyModel');
-    var response = await proxySchema.find({
+    var response = await Proxy.find({
       'userId': userId
     });
 
@@ -66,7 +61,7 @@ exports.deleteAll = async (req, res) => {
       await x.deleteAllInstances(apiKey);
 
       // Step 3. Delete all proxies from database
-      await proxySchema.deleteMany({
+      await Proxy.deleteMany({
         'userId': userId
       });
 

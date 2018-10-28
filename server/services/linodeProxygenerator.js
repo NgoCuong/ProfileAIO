@@ -9,7 +9,7 @@ module.exports = class ProxyGenerator {
 
         this.request = require('request-promise');
         this.pLimit = require('p-limit');
-        this.http = require('../routes/HttpRequest');
+        this.http = require('../services/HttpRequest');
         this.api = new this.http(this.accessToken);
     }
 
