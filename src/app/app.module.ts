@@ -22,6 +22,7 @@ import { UserService } from './core/services/user.service';
 import { CallbackComponent } from './shared/callback/callback.component';
 import { AuthService } from './core/services/auth.service';
 import { TokenInterceptor } from './core/interceptors/token.interceptor';
+import { RaffleComponent } from './modules/raffle/raffle.component';
 
 
 @NgModule({
@@ -36,6 +37,7 @@ import { TokenInterceptor } from './core/interceptors/token.interceptor';
     ProxyDashboardComponent,
     ProxyFormComponent,
     ProxyMenuComponent,
+    RaffleComponent,
   ],
   imports: [
     BrowserModule,
