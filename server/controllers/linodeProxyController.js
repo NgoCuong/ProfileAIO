@@ -1,6 +1,8 @@
 var Proxy = require('../models/proxyModel');
 var proxyGen = require('../services/linodeProxygenerator');
 var http = require('../services/HttpRequest');
+var statusMessage = require('../services/StatusMessage');
+var proxyStatus = require('../models/proxyStatusModel');
 
 exports.getRegions = async (req, res) => {
   var api = new http(this.accessToken);
@@ -13,6 +15,24 @@ exports.getRegions = async (req, res) => {
   res.send(JSON.stringify(regions));
 };
 
+exports.getStatus = async (req, res) => {
+  var userId = req.user.sub;
+  if (typeof userId === "undefined") {
+    return res.status(403).json({ msg: "User is not logged in" });
+  }
+  proxyStatus.findOne({ userId: userId, proxyProvider: "linode" }, function (err, status) {
+    if (err) {
+      console.log(`${err}`);
+      return res.status(500).json({ msg: "server error" });
+    }
+    if (status) {
+      return res.status(200).json(status);
+    } else {
+      console.log("Status not found");
+    }
+  });
+}
+
 exports.createProxy = async (req, res) => {
   try {
     var apiKey = req.body.apiKey;
@@ -23,6 +43,7 @@ exports.createProxy = async (req, res) => {
     var userId = req.user.sub;
 
     var x = new proxyGen(apiKey);
+    statusMessage.setStatusMessage(userId, "linode", "Generating Proxy");
     var result = await x.generateProxies(userId, number, user, pass, region);
     res.status(200).json({ msg: result });
   } catch (err) {

@@ -2,12 +2,17 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Proxy } from '../../shared/models/proxy';
+import { ProxyStatus } from '../../shared/models/proxy-status';
 
 
 @Injectable()
 export class ProxyService {
 
   constructor(private http: HttpClient) { }
+
+  public getStatus(provider): Observable<ProxyStatus> {
+    return this.http.get<ProxyStatus>(`/api/proxy/${provider}`);
+  }
 
   public getProxies(): Observable<Proxy[]> {
     return this.http.get<Proxy[]>('/api/proxy');

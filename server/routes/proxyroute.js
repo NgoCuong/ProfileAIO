@@ -7,6 +7,7 @@ router.route("/")
     .get(proxyController.getProxies);
 
 router.route("/linode")
+    .get(linodeProxyController.getStatus)
     .post(linodeProxyController.createProxy)
     .delete(linodeProxyController.deleteAll);
 
