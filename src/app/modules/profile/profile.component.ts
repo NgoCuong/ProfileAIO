@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../shared/models/user';
+import { _ } from 'underscore';
 
 @Component({
   selector: 'app-profile',
@@ -9,24 +10,24 @@ import { User } from '../../shared/models/user';
 })
 
 export class ProfileComponent implements OnInit {
-  private user: User = {};
+  public userParam: User = {};
   public loading: boolean = false;
 
   constructor(private userService: UserService) { }
 
   ngOnInit() {
-    this.loading = true;
     this.userService.getUser()
-      .subscribe(
-        user => this.user = user,
-        error => console.log(error),
-        () => this.loading = false
-      );
+      .subscribe(userParam => {
+        if (!_.isEmpty(userParam)) {
+          this.userParam = userParam;
+        }
+      });
   }
 
   private onSave(): void {
     this.loading = true;
-    this.userService.saveUserSettings(this.user)
+    console.log(this.userParam);
+    this.userService.saveUserSettings(this.userParam)
       .subscribe(
         data => console.log(data),
         err => console.log(err),
@@ -38,7 +39,7 @@ export class ProfileComponent implements OnInit {
     this.loading = true;
     this.userService.deleteUser()
       .subscribe(
-        data => this.user = {},
+        data => this.userParam = {},
         err => console.log(err),
         () => this.loading = false
       );

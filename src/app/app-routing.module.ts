@@ -6,6 +6,7 @@ import { ProfileComponent } from './modules/profile/profile.component';
 import { AuthGuardService } from './core/route-guard/auth-guard.service';
 import { ProxyMenuComponent } from './modules/proxy/proxy-menu/proxy-menu.component';
 import { CallbackComponent } from './shared/callback/callback.component';
+import { RaffleComponent } from './modules/raffle/raffle.component';
 
 const routes: Routes  = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -14,6 +15,7 @@ const routes: Routes  = [
   { path: 'proxy', component: ProxyMenuComponent, canActivate: [AuthGuardService]},
   { path: 'callback', component: CallbackComponent},
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuardService]},
+  { path: 'raffle', component: RaffleComponent},
   { path: '**', redirectTo: '/home' },
 ];
 

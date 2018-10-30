@@ -11,33 +11,37 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="apiKey">Api Key</label>
-                                    <input type="text" class="form-control form-control-lg" name="apiKey" [ngModel]="proxyForm?.apiKey" (ngModelChange)="proxyForm.apiKey=$event" required />
+                                    <input type="text" class="form-control form-control-lg" name="apiKey" [(ngModel)]="proxyForm.apiKey" required />
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <label for="region">Region</label>
-                                <select id="region" class="form-control" [ngModel]="proxyForm?.region" (ngModelChange)="proxyForm.region=$event" name="region" required>
+                                <select id="region" class="form-control" [(ngModel)]="proxyForm.region" name="region" required>
                                     <option *ngFor="let region of regions$ | async" [ngValue]="region">{{region}}</option>
                                 </select>
                             </div>
                             <div class="col-md-2">
                                 <label for="number">No.</label>
-                                <input class="form-control" type="number" value="20" [ngModel]="proxyForm?.number" (ngModelChange)="proxyForm.number=$event"  id="number" name="number">
+                                <input class="form-control" type="number" value="20" [(ngModel)]="proxyForm.number"  id="number" name="number">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 form-group">
                                 <label for="username">Username</label>
-                                <input type="text" class="form-control" id="username" [ngModel]="proxyForm?.proxyUsername" (ngModelChange)="proxyForm.proxyUsername=$event" name="username">
+                                <input type="text" class="form-control" id="username" [(ngModel)]="proxyForm.proxyUsername" name="username">
                             </div>
                             <div class="col-md-6 form-group">
                                 <label for="password">Password</label>
-                                <input type="text" class="form-control" id="password" [ngModel]="proxyForm?.proxyPassword" (ngModelChange)="proxyForm.proxyPassword=$event"  name="password">
+                                <input type="text" class="form-control" id="password" [(ngModel)]="proxyForm.proxyPassword"  name="password">
                             </div>
                         </div>
                         <div class="form-group">
                             <button [disabled]="onSubmitloading" class="btn btn-success btn-lg float-right">Submit</button>
+                            <!-- <button [disabled]="onSubmitloading" type="button" class="btn btn-success btn-lg" (click)="checkProgress()">Check Proresss</button> -->
                             <button [disabled]="onDeleteLoading" type="button" class="btn btn-lg btn-danger" (click)="onDeleteAll()">Delete All!</button>
+                        </div>
+                        <div class="col-md-12">
+                            <span>Status:</span> {{ status?.statusMessage }}
                         </div>
                     </form>
                 </div>
