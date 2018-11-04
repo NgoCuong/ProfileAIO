@@ -53,7 +53,7 @@ export class ProxyFormComponent implements OnInit {
   public onSubmit() {
     this.proxyService.createProxy(this.formType, this.proxyForm)
       .subscribe(data => console.log(data), err => console.log(err));
-      this.checkProgress();
+      // this.checkProgress();
   }
 
   public onDeleteAll() {

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { SETTINGS } from './smart-table-settings';
 import { ProxyService } from '../../../core/services/proxy.service';
 import { Proxy } from '../../../shared/models/proxy';
 import { Observable } from 'rxjs/Observable';
@@ -11,8 +10,7 @@ import { Observable } from 'rxjs/Observable';
 })
 export class ProxyDashboardComponent implements OnInit {
 
-  public proxies$: Observable<Proxy[]>;
-  private settings = SETTINGS;
+  public proxies: Proxy[];
 
   constructor(private proxyService: ProxyService) { }
 
@@ -21,7 +19,8 @@ export class ProxyDashboardComponent implements OnInit {
   }
 
   private getProxy(): void {
-    this.proxies$ = this.proxyService.getProxies();
+    this.proxyService.getProxies()
+      .subscribe(proxies => this.proxies = proxies);
   }
 
   private delete(param) {
@@ -39,5 +38,25 @@ export class ProxyDashboardComponent implements OnInit {
     //       console.log(err);
     //     }
     //   );
+  }
+
+  public copyClipboard(event) {
+    const proxiesToCopy = this.proxies.map(proxies => proxies.proxy).join('\n');
+    this.copyTextToClipboard(proxiesToCopy);
+  }
+
+
+  private copyTextToClipboard(val) {
+    const selBox = document.createElement('textarea');
+    selBox.style.position = 'fixed';
+    selBox.style.left = '0';
+    selBox.style.top = '0';
+    selBox.style.opacity = '0';
+    selBox.value = val;
+    document.body.appendChild(selBox);
+    selBox.focus();
+    selBox.select();
+    document.execCommand('copy');
+    document.body.removeChild(selBox);
   }
 }
